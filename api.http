@@ -1,0 +1,23 @@
+POST https://localhost:5001/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Martini",
+    "email" : "zhao435021640@gmail.com",
+    "password": "123456",
+    "role": "Clerk"
+}
+
+###
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+    "email" : "zhao435021640@gmail.com",
+    "password": "123456",
+    "role": "Clerk"
+}
+
+###
+GET https://localhost:5001/api/auth
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkNsZXJrIiwibmJmIjoxNTk2OTYzMzQyLCJleHAiOjE1OTcwNDk3NDIsImlhdCI6MTU5Njk2MzM0Mn0.bzRr_ma71tu1JLDIfs0Pkj5M_Urmq_KPaIsP1IqZZXh3P4sNSjrBZt0dSRciyXvqZwUKDgNPKlpnvlgrXUUdvw
