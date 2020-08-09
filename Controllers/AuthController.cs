@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using SSIS.Models;
 using SSIS.Repositories;
+using SSIS.Services;
+using SSIS.Payload;
 
 namespace SSIS.Controllers
 {
@@ -18,54 +20,32 @@ namespace SSIS.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _authRepository;
-        private readonly IConfiguration _config;
-        public AuthController(IAuthRepository authRepository, IConfiguration config)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
-            _authRepository = authRepository;
-            _config = config;
+            _authService = authService;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] User user)
+        public IActionResult Login([FromBody] User user)
         {
-            var nameOrEmail = user.Name == null ? user.Email : user.Name;
-            var userFromRepo = await _authRepository.Login(nameOrEmail, user.Password);
-            if (userFromRepo == null)
+            var token = _authService.Login(user);
+            if (token == null)
                 return Unauthorized();
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:JWTSecret").Value);
-            System.Console.WriteLine(userFromRepo.ToString());
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]{
-                    new Claim(ClaimTypes.Email, userFromRepo.Email),
-                    new Claim(ClaimTypes.Name, userFromRepo.Name),
-                    new Claim(ClaimTypes.Role, userFromRepo.Role)
-                }),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return Ok(new { tokenString });
+            else
+                return Ok(new { token });
         }
 
-        [HttpPost("register")] //<host>/api/auth/register
-        public async Task<IActionResult> Register([FromBody] User user)
-        { //Data Transfer Object containing Name and password.
-          // validate request
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] User user)
+        {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            if (await _authRepository.UserExists(user.Name))
+            var result = _authService.Register(user).Result;
+            if (result.Success)
+                return StatusCode(201);
+            else
                 return BadRequest("Name is already taken");
-
-            var createUser = await _authRepository.Register(user, user.Password);
-            return StatusCode(201);
         }
 
         [Authorize(Roles = StoreRole.Clerk)]

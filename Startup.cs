@@ -11,6 +11,7 @@ using SSIS.Databases;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using SSIS.Repositories;
+using SSIS.Services;
 
 namespace SSIS
 {
@@ -47,6 +48,7 @@ namespace SSIS
                 };
             });
 
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
         }
 

@@ -233,3 +233,6 @@ _Pvt_Extensions
 
 # Vscode
 .vscode
+
+# Database migration
+**/Migrations
