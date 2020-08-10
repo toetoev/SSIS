@@ -1,20 +1,34 @@
 import React, { Component } from "react";
-import { Route } from "react-router";
-import { Layout } from "./components/Layout";
-import { Home } from "./components/Home";
-import { FetchData } from "./components/FetchData";
-import { Counter } from "./components/Counter";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+
+import { Admin } from "./page/admin/Admin";
+import AdminRole from "./constant/AdminRole";
+import { Department } from "./page/department/Department";
+import DeptRole from "./constant/DeptRole";
+import Login from "./page/login/Login";
+import { PrivateRoute } from "./common/PrivateRoute";
+import { Store } from "./page/store/Store";
+import StoreRole from "./constant/StoreRole";
 
 export default class App extends Component {
-	static displayName = App.name;
-
 	render() {
 		return (
-			<Layout>
-				<Route exact path="/" component={Home} />
-				<Route path="/counter" component={Counter} />
-				<Route path="/fetch-data" component={FetchData} />
-			</Layout>
+			<Router>
+				<Switch>
+					<PrivateRoute
+						path="/dept"
+						roles={[Object.values(DeptRole)]}
+						component={Department}
+					/>
+					<PrivateRoute
+						path="/store"
+						roles={[Object.values(StoreRole)]}
+						component={Store}
+					/>
+					<PrivateRoute path="/admin" roles={[AdminRole]} component={Admin} />
+					<Route path="/" component={Login} />
+				</Switch>
+			</Router>
 		);
 	}
 }
