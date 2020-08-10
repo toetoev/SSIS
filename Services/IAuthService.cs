@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using SSIS.Models;
-using SSIS.Payload;
+using SSIS.Payloads;
 
 namespace SSIS.Services
 {

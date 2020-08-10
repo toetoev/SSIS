@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SSIS.Models;
-using SSIS.Payload;
+using SSIS.Payloads;
 using SSIS.Repositories;
 
 namespace SSIS.Services

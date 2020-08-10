@@ -1,4 +1,4 @@
-namespace SSIS.Payload
+namespace SSIS.Payloads
 {
     public class ApiResponse
     {

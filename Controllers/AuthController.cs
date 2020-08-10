@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using SSIS.Models;
 using SSIS.Repositories;
 using SSIS.Services;
-using SSIS.Payload;
+using SSIS.Payloads;
 
 namespace SSIS.Controllers
 {
