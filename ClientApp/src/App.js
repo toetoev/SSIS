@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 
-import { Admin } from "./page/admin/Admin";
-import AdminRole from "./constant/AdminRole";
 import { Department } from "./page/department/Department";
 import DeptRole from "./constant/DeptRole";
 import Login from "./page/login/Login";
@@ -25,7 +23,6 @@ export default class App extends Component {
 						roles={[Object.values(StoreRole)]}
 						component={Store}
 					/>
-					<PrivateRoute path="/admin" roles={[AdminRole]} component={Admin} />
 					<Route path="/" component={Login} />
 				</Switch>
 			</Router>

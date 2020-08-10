@@ -1,19 +1,36 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import React, { useState } from "react";
 
+import axios from "axios";
+
 export default function Login() {
 	const [nameOrEmail, setNameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("");
 
 	const handleSubmit = (event) => {
-		console.log(nameOrEmail, password, role);
+		// TODO: call backend login api
+		// pass in nameOrEmail, password, role
+		// get token, redirect to home page of the role
+		axios
+			.post("https://localhost:5001/api/auth/login", {
+				name: nameOrEmail,
+				password: password,
+				role: role,
+			})
+			.then(function (response) {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		// console.log(nameOrEmail, password, role);
 		event.preventDefault();
 	};
 
 	return (
 		<div>
-			<Form onSubmit={handleSubmit}>
+			<Form>
 				<Form.Group as={Row} controlId="nameOrEmail">
 					<Form.Label column sm={2}>
 						Name / Email
@@ -76,7 +93,7 @@ export default function Login() {
 				</Form.Group>
 				<Form.Group as={Row} className="justify-content-center">
 					<Col sm={12}>
-						<Button type="submit" className="w-100">
+						<Button type="button" className="w-100" onClick={handleSubmit}>
 							Sign in
 						</Button>
 					</Col>

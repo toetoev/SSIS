@@ -13,9 +13,9 @@ POST https://localhost:5001/api/auth/login
 Content-Type: application/json
 
 {
-    "email" : "zhao435021640@gmail.com",
+    "name" : "zhao435021640@gmail.com",
     "password": "123456",
-    "role": "Clerk"
+    "role": "STORE"
 }
 
 ###
