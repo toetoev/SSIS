@@ -23,12 +23,13 @@ namespace SSIS.Services
             _config = config;
         }
 
-        public async Task<string> Login(User user)
+        public async Task<ApiResponse> Login(User user)
         {
-            var nameOrEmail = user.Name == null ? user.Email : user.Name;
-            var userFromRepo = await _authRepository.Login(nameOrEmail, user.Password);
+            if (user.Name == null)
+                return new ApiResponse { Success = false, Message = "Name or email is empty" }; ;
+            var userFromRepo = await _authRepository.Login(user.Name, user.Password, user.Role);
             if (userFromRepo == null)
-                return null;
+                return new ApiResponse { Success = false, Message = "Account does not exist" }; ;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:JWTSecret").Value);
@@ -47,7 +48,7 @@ namespace SSIS.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return tokenString;
+            return new ApiResponse { Success = true, Data = tokenString }; ;
         }
 
         public async Task<ApiResponse> Register(User user)

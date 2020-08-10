@@ -12,9 +12,19 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<User> Login(string nameOrEmail, string pasword)
+        public async Task<User> Login(string nameOrEmail, string pasword, string role)
         {
-            var user = await _dbContext.StoreStaffs.FirstOrDefaultAsync(x => (x.Name == nameOrEmail || x.Email == nameOrEmail) && x.Password == pasword); //Get user from database.
+            User user = null;
+            switch (role)
+            {
+                case "STORE":
+                    user = await _dbContext.StoreStaffs.FirstOrDefaultAsync(x => (x.Name == nameOrEmail || x.Email == nameOrEmail) && x.Password == pasword); //Get user from database.
+                    break;
+                case "DEPARTMENT":
+                    break;
+                case "ADMIN":
+                    break;
+            }
             if (user == null)
                 return null; // User does not exist.
 

@@ -29,11 +29,7 @@ namespace SSIS.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] User user)
         {
-            var token = _authService.Login(user);
-            if (token == null)
-                return Unauthorized();
-            else
-                return Ok(new { token });
+            return Ok(new { _authService.Login(user).Result });
         }
 
         [HttpPost("register")]
@@ -48,7 +44,7 @@ namespace SSIS.Controllers
                 return BadRequest("Name is already taken");
         }
 
-        [Authorize(Roles = StoreRole.Clerk)]
+        // [Authorize(Roles = StoreRole.Clerk)]
         public int Get()
         {
             // System.Console.WriteLine("get");

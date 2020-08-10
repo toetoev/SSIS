@@ -6,7 +6,7 @@ namespace SSIS.Repositories
     public interface IAuthRepository
     {
         Task<User> Register(User user, string password);
-        Task<User> Login(string nameOrEmail, string pasword);
+        Task<User> Login(string nameOrEmail, string pasword, string role);
         Task<bool> UserExists(string nameOrEmail);
     }
 }

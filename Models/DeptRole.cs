@@ -1,4 +1,10 @@
-public enum DeptRole
+namespace SSIS.Models
 {
-    EMPLOYEE, DEPTREP, DEPTHEAD
+    public static class DeptRole
+    {
+        public const string Employee = "EMPLOYEE";
+        public const string DeptRep = "DEPTREP";
+        public const string DeptHead = "DEPTHEAD";
+
+    }
 }
