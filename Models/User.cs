@@ -7,11 +7,11 @@ namespace SSIS.Models
     public class User
     {
         [Key]
-        [MaxLength(36)]
-        public string Name { get; set; }
-
         [EmailAddress]
         public string Email { get; set; }
+
+        [MaxLength(36)]
+        public string Name { get; set; }
 
         [Required]
         [MaxLength(50)]

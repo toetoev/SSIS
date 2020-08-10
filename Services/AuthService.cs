@@ -3,9 +3,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Repositories;
@@ -36,7 +38,8 @@ namespace SSIS.Services
             System.Console.WriteLine(userFromRepo.ToString());
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]{
+                Subject = new ClaimsIdentity(new Claim[]
+                {
                     new Claim(ClaimTypes.Email, userFromRepo.Email),
                     new Claim(ClaimTypes.Name, userFromRepo.Name),
                     new Claim(ClaimTypes.Role, userFromRepo.Role)

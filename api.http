@@ -21,3 +21,12 @@ Content-Type: application/json
 ###
 GET https://localhost:5001/api/auth
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkNsZXJrIiwibmJmIjoxNTk2OTYzMzQyLCJleHAiOjE1OTcwNDk3NDIsImlhdCI6MTU5Njk2MzM0Mn0.bzRr_ma71tu1JLDIfs0Pkj5M_Urmq_KPaIsP1IqZZXh3P4sNSjrBZt0dSRciyXvqZwUKDgNPKlpnvlgrXUUdvw
+
+###
+POST https://localhost:5001/api/dept
+Content-Type: application/json
+
+{
+    "collectionPointId" : "Engineering School (11:00am)",
+    "name": "Computer Science"
+}
