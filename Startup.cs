@@ -1,15 +1,15 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using SSIS.Databases;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using SSIS.Databases;
 using SSIS.Repositories;
 using SSIS.Services;
 
@@ -41,15 +41,16 @@ namespace SSIS
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
                 };
             });
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IDeptService, DeptService>();
+            services.AddScoped<IDeptStaffService, DeptStaffService>();
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();

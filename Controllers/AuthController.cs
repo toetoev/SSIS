@@ -33,11 +33,5 @@ namespace SSIS.Controllers
         }
 
         // [Authorize(Roles = StoreRole.Clerk)]
-        public int Get()
-        {
-            // System.Console.WriteLine("get");
-            // System.Console.WriteLine(_config["AppSettings:JWTSecret"]);
-            return 1;
-        }
     }
 }

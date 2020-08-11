@@ -33,3 +33,12 @@ Content-Type: application/json
     "collectionPointId" : "Management School (11:00am)",
     "name": "Computer Science"
 }
+
+### DeptStaffController Update Dept Rep
+POST https://localhost:5001/api/deptStaff
+Content-Type: application/json
+
+{
+    "email" : "meka@gmail.com"
+}
+

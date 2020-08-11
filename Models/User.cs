@@ -13,11 +13,9 @@ namespace SSIS.Models
         [MaxLength(36)]
         public string Name { get; set; }
 
-        [Required]
         [MaxLength(50)]
         public string Password { get; set; }
 
-        [Required]
         public string Role { get; set; }
     }
 }
