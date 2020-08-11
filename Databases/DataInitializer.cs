@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Models;
@@ -24,7 +25,20 @@ namespace SSIS.Databases
                 "Math",
                 "Law"
             };
-            Array.ForEach(departments, el => modelBuilder.Entity<Department>().HasData(new Department { Name = el, DeptRepId = null, CollectionPointId = null }));
+            Array.ForEach(departments, el => modelBuilder.Entity<Department>().HasData(new Department { Name = el, CollectionPointId = null }));
+
+            // ICollection<DeptStaff> deptStaffs = new List<DeptStaff>{
+            //     new DeptStaff {Name="Martini",Email="zhao435021640@gmail.com", Password="123456",Role="EMPLOYEE" }
+            // };
+
+            // foreach (var deptStaff in deptStaffs)
+            // {
+            // modelBuilder.Entity<DeptStaff>(ds =>
+            // {
+            //     ds.HasData(new { Name = "Martini", Email = "zhao435021640@gmail.com", Password = "123456", Role = "EMPLOYEE" });
+            //     ds.OwnsOne(d => d.Department).HasData(new { Email = "zhao435021640@gmail.com", Name = "Computer Science" });
+            // });
+            // }
         }
     }
 }
