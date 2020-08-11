@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Models;
 
@@ -20,18 +21,21 @@ namespace SSIS.Databases
             _dbContext.Database.EnsureCreated();
             SeedCollectionPoint();
             SeedDepartment();
-            // ICollection<DeptStaff> deptStaffs = new List<DeptStaff>{
-            //     new DeptStaff {Name="Martini",Email="zhao435021640@gmail.com", Password="123456",Role="EMPLOYEE" }
-            // };
+            SeedDeptStaff();
+        }
 
-            // foreach (var deptStaff in deptStaffs)
-            // {
-            // modelBuilder.Entity<DeptStaff>(ds =>
-            // {
-            //     ds.HasData(new { Name = "Martini", Email = "zhao435021640@gmail.com", Password = "123456", Role = "EMPLOYEE" });
-            //     ds.OwnsOne(d => d.Department).HasData(new { Email = "zhao435021640@gmail.com", Name = "Computer Science" });
-            // });
-            // }
+        private void SeedDeptStaff()
+        {
+            ICollection<Department> departments = _dbContext.Departments.ToList();
+            ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
+            {
+                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
+            };
+            foreach (var deptStaff in deptStaffs)
+            {
+                _dbContext.Add(deptStaff);
+            }
+            _dbContext.SaveChanges();
         }
 
         private void SeedDepartment()
