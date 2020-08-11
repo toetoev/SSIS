@@ -16,9 +16,9 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult UpdateCollectionPointAndDeptRep([FromBody] Department department)
+        public IActionResult UpdateCollectionPoint([FromBody] Department department)
         {
-            return Ok(_deptService.UpdateCollectionPointAndDeptRep(department).Result);
+            return Ok(_deptService.UpdateCollectionPoint(department).Result);
         }
     }
 }

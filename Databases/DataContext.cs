@@ -16,10 +16,6 @@ namespace SSIS.Databases
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StoreStaff>(entity => { entity.HasIndex(e => e.Email).IsUnique(); });
-            modelBuilder.Entity<DeptStaff>()
-                        .HasOne(e => e.Department)
-                        .WithOne(e => e.DeptRep)
-                        .HasForeignKey<Department>(e => e.DeptRepId);
             modelBuilder.Seed();
         }
 

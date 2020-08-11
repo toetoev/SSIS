@@ -17,28 +17,14 @@ namespace SSIS.Repositories
 
         public async Task<bool> CollectionPointExist(string collectionPointId)
         {
-            System.Console.WriteLine(collectionPointId);
             if (await _dbContext.CollectionPoints.AnyAsync(x => x.Location == collectionPointId))
                 return true;
             return false;
         }
 
-        public async Task<bool> DeptRepExist(Department department)
+        public async Task<Department> GetDepartment(string name)
         {
-            if (await _dbContext.DeptStaffs.AnyAsync(x => x.Email == department.DeptRepId && x.Department.Name == department.Name))
-                return true;
-            return false;
-        }
-
-        public async Task<int> UpdateDept(Department department)
-        {
-            Department departmentFromRepo = await _dbContext.Departments.FirstOrDefaultAsync(x => x.Name == department.Name);
-            if (departmentFromRepo != null)
-            {
-                departmentFromRepo.CollectionPointId = department.CollectionPointId;
-                departmentFromRepo.DeptRepId = department.DeptRepId;
-            }
-            return await _dbContext.SaveChangesAsync();
+            return await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();
         }
     }
 }
