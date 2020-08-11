@@ -92,8 +92,8 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            // _dbContext.Database.EnsureDeleted();
-            // _dbContext.Database.EnsureCreated();
+            //_dbContext.Database.EnsureDeleted();
+            //_dbContext.Database.EnsureCreated();
         }
     }
 }
