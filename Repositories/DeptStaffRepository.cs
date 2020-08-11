@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SSIS.Models;
 using SSIS.Databases;
+using Microsoft.EntityFrameworkCore;
 
 namespace SSIS.Repositories
 {
@@ -16,9 +17,10 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<DeptStaff> ()
+        public async Task<DeptStaff> FindDeptRep()
         {
-            return await _dbContext.DeptStaffs.Where(deptStaff => deptStaff.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
+            DbSet<DeptStaff> deptStaffs = _dbContext.DeptStaffs;
+            return await deptStaffs.Where(deptStaff => deptStaff.Name == "Metro Boomin").FirstOrDefaultAsync();
         }
     }
 }

@@ -25,6 +25,7 @@ namespace SSIS.Databases
                 "Law"
             };
             Array.ForEach(departments, el => modelBuilder.Entity<Department>().HasData(new Department { Name = el, CollectionPointId = null }));
+
         }
     }
 }

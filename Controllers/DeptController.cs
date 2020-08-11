@@ -20,10 +20,5 @@ namespace SSIS.Controllers
         {
             return Ok(_deptService.UpdateCollectionPoint(department).Result);
         }
-
-        public string GetDeptRepName()
-        {
-            return 
-        }
     }
 }
