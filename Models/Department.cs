@@ -17,6 +17,6 @@ namespace SSIS.Models
         [ForeignKey("CollectionPointId")]
         public virtual CollectionPoint CollectionPoint { get; set; }
 
-        public virtual ICollection<DeptStaff> DeptStaffs { get; set; }
+        public virtual Ilection<DeptStaff> DeptStaffs { get; set; }
     }
 }
