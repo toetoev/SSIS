@@ -11,12 +11,10 @@ namespace SSIS.Services
     {
         private readonly IDeptRepository _deptRepository;
 
-        private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly DataContext _dbContext;
-        public DeptService(IDeptRepository deptRepository, IDeptStaffRepository deptStaffRepository, DataContext dbContext)
+        public DeptService(IDeptRepository deptRepository, DataContext dbContext)
         {
             _deptRepository = deptRepository;
-            _deptStaffRepository = deptStaffRepository;
             _dbContext = dbContext;
         }
 
@@ -30,18 +28,5 @@ namespace SSIS.Services
             await _dbContext.SaveChangesAsync();
             return new ApiResponse { Success = true };
         }
-
-        // if (department.DeptStaffs != null && department.DeptStaffs.SingleOrDefault() != null && await _deptStaffRepository.DeptRepExist(department.DeptStaffs.SingleOrDefault()))
-        //         {
-        //             DeptStaff oldRep = departmentFromRepo.DeptStaffs.Where(ds => ds.Role == DeptRole.DeptRep).FirstOrDefault();
-        //             if (oldRep != null)
-        //                 oldRep.Role = DeptRole.Employee;
-        //             DeptStaff newRep = departmentFromRepo.DeptStaffs.Where(ds => ds.Email == department.DeptStaffs.Single().Email).FirstOrDefault();
-        //             newRep.Role = DeptRole.DeptRep;
-        //         }
-        //         else
-        //         {
-        //             System.Console.WriteLine("DeptRep does not Exist");
-        //         }
     }
 }
