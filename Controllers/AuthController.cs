@@ -14,33 +14,27 @@ using SSIS.Payloads;
 using SSIS.Repositories;
 using SSIS.Services;
 
-namespace SSIS.Controllers {
+namespace SSIS.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase {
+    public class AuthController : ControllerBase
+    {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService) {
+        public AuthController(IAuthService authService)
+        {
             _authService = authService;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] User user) {
+        public IActionResult Login([FromBody] User user)
+        {
             return Ok(new { _authService.Login(user).Result });
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] User user) {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var result = _authService.Register(user).Result;
-            if (result.Success)
-                return StatusCode(201);
-            else
-                return BadRequest("Name is already taken");
-        }
-
         // [Authorize(Roles = StoreRole.Clerk)]
-        public int Get() {
+        public int Get()
+        {
             // System.Console.WriteLine("get");
             // System.Console.WriteLine(_config["AppSettings:JWTSecret"]);
             return 1;

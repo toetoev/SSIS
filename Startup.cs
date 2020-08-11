@@ -49,9 +49,11 @@ namespace SSIS
             });
 
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDeptService, DeptService>();
+
+            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();
+            services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -53,14 +53,5 @@ namespace SSIS.Services
 
             return new ApiResponse { Success = true, Data = tokenString }; ;
         }
-
-        public async Task<ApiResponse> Register(User user)
-        {
-            if (await _authRepository.UserExists(user.Name))
-                return new ApiResponse { Success = false, Message = "Name is already taken" };
-
-            var createUser = await _authRepository.Register(user, user.Password);
-            return new ApiResponse { Success = true };
-        }
     }
 }
