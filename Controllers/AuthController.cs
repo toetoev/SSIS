@@ -29,6 +29,7 @@ namespace SSIS.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] User user)
         {
+            System.Console.WriteLine(user.ToString());
             return Ok(new { _authService.Login(user).Result });
         }
 

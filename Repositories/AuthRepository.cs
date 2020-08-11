@@ -14,9 +14,9 @@ namespace SSIS.Repositories
         }
         public async Task<User> Login(string nameOrEmail, string pasword, string role)
         {
-            if (StoreRole.isStoreStaff(role))
+            if (role.Equals("STORE"))
                 return await _dbContext.StoreStaffs.FirstOrDefaultAsync(x => (x.Name == nameOrEmail || x.Email == nameOrEmail) && x.Password == pasword);
-            else if (DeptRole.isDeptStaff(role))
+            else if (role.Equals("DEPARTMENT"))
                 return await _dbContext.DeptStaffs.FirstOrDefaultAsync(x => (x.Name == nameOrEmail || x.Email == nameOrEmail) && x.Password == pasword);
             return null;
         }
