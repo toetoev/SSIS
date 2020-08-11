@@ -16,7 +16,6 @@ namespace SSIS.Databases
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StoreStaff>(entity => { entity.HasIndex(e => e.Email).IsUnique(); });
-            modelBuilder.Seed();
         }
 
         public DbSet<StoreStaff> StoreStaffs { get; set; }
