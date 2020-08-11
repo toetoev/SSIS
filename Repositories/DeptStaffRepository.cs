@@ -20,7 +20,7 @@ namespace SSIS.Repositories
         public async Task<DeptStaff> FindDeptRep()
         {
             DbSet<DeptStaff> deptStaffs = _dbContext.DeptStaffs;
-            return await deptStaffs.Where(deptStaff => deptStaff.Name == "Metro Boomin").FirstOrDefaultAsync();
+            return await deptStaffs.Where(deptStaff => deptStaff.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
         }
     }
 }

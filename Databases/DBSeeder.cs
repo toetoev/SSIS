@@ -14,7 +14,7 @@ namespace SSIS.Databases
             ds1.Email = "metroboomin@gmail.com";
             ds1.Name = "Metro Boomin";
             ds1.Password = "123456";
-            ds1.Role = DeptRole.DeptHead;
+            ds1.Role = DeptRole.DeptRep;
             dataContext.Add(ds1);
 
             dataContext.SaveChanges();
