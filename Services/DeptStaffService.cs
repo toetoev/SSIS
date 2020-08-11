@@ -19,13 +19,13 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> UpdateDeptRep(DeptStaff deptStaff)
         {
-            DeptStaff deptStaffFromRepo = _dbContext.DeptStaffs.Where(ds => ds.Email == deptStaff.Email).FirstOrDefault();
+            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffFromRepo(deptStaff);
             if (deptStaffFromRepo != null)
             {
-                DeptStaff oldRep = _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptStaffFromRepo.Department.Name && ds.Role == DeptRole.DeptRep).FirstOrDefault();
-                if (oldRep != null)
+                DeptStaff currentDeptRep = await _deptStaffRepository.GetCurrentDeptRep(deptStaffFromRepo);
+                if (currentDeptRep != null)
                 {
-                    oldRep.Role = DeptRole.Employee;
+                    currentDeptRep.Role = DeptRole.Employee;
                 }
                 deptStaffFromRepo.Role = DeptRole.DeptRep;
             }
