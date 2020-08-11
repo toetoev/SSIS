@@ -1,104 +1,114 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { Component } from "react";
 
+import DeptRole from "../../constant/DeptRole";
+import StoreRole from "../../constant/StoreRole";
 import axios from "axios";
 
-export default function Login() {
-	const [nameOrEmail, setNameOrEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [role, setRole] = useState("");
+export default class Login extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			nameOrEmail: "",
+			password: "",
+			role: "",
+		};
+		const isAuthenticated = localStorage.getItem("ACCESS_TOKEN") !== null;
+		const currentRole = localStorage.getItem("ROLE");
+		if (isAuthenticated) {
+			if (Object.values(DeptRole).includes(currentRole)) {
+				this.props.history.push("/dept");
+			} else if (Object.values(StoreRole).includes(currentRole)) {
+				this.props.history.push("/store");
+			}
+		}
+	}
 
-	const handleSubmit = (event) => {
-		// TODO: call backend login api
-		// pass in nameOrEmail, password, role
-		// get token, redirect to home page of the role
+	handleSubmit = (event) => {
 		axios
 			.post("https://localhost:5001/api/auth/login", {
-				name: nameOrEmail,
-				password: password,
-				role: role,
+				name: this.state.nameOrEmail,
+				password: this.state.password,
+				role: this.state.role,
 			})
-			.then(function (response) {
-				console.log(response.data);
+			.then((res) => {
+				if (res.data.success) {
+					localStorage.setItem("ACCESS_TOKEN", res.data.data.accessToken);
+					localStorage.setItem("ROLE", res.data.data.role);
+					this.props.history.push("/dept");
+				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
-		// console.log(nameOrEmail, password, role);
 		event.preventDefault();
 	};
 
-	return (
-		<div>
-			<Form>
-				<Form.Group as={Row} controlId="nameOrEmail">
-					<Form.Label column sm={2}>
-						Name / Email
-					</Form.Label>
-					<Col sm={10}>
-						<Form.Control
-							type="text"
-							placeholder="Name / Email"
-							onChange={(e) => setNameOrEmail(e.target.value)}
-						/>
-					</Col>
-				</Form.Group>
+	render() {
+		return (
+			<div>
+				<Form>
+					<Form.Group as={Row} controlId="nameOrEmail">
+						<Form.Label column sm={2}>
+							Name / Email
+						</Form.Label>
+						<Col sm={10}>
+							<Form.Control
+								type="text"
+								placeholder="Name / Email"
+								onChange={(e) => this.setState({ nameOrEmail: e.target.value })}
+							/>
+						</Col>
+					</Form.Group>
 
-				<Form.Group as={Row} controlId="password">
-					<Form.Label column sm={2}>
-						Password
-					</Form.Label>
-					<Col sm={10}>
-						<Form.Control
-							type="password"
-							placeholder="Password"
-							onChange={(e) => setPassword(e.target.value)}
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row}>
-					<Form.Label as="legend" column sm={2}>
-						Role
-					</Form.Label>
-					<Col
-						sm={10}
-						className="m-auto d-flex justify-content-start"
-						onChange={(e) => setRole(e.target.value)}
-					>
-						<Form.Check
-							inline
-							type="radio"
-							label="Store"
-							value="STORE"
-							name="role"
-							id="role1"
-						/>
-						<Form.Check
-							inline
-							type="radio"
-							label="Department"
-							value="DEPARTMENT"
-							name="role"
-							id="role2"
-						/>
-						<Form.Check
-							inline
-							type="radio"
-							label="Admin"
-							value="ADMIN"
-							name="role"
-							id="role3"
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row} className="justify-content-center">
-					<Col sm={12}>
-						<Button type="button" className="w-100" onClick={handleSubmit}>
-							Sign in
-						</Button>
-					</Col>
-				</Form.Group>
-			</Form>
-		</div>
-	);
+					<Form.Group as={Row} controlId="password">
+						<Form.Label column sm={2}>
+							Password
+						</Form.Label>
+						<Col sm={10}>
+							<Form.Control
+								type="password"
+								placeholder="Password"
+								onChange={(e) => this.setState({ password: e.target.value })}
+							/>
+						</Col>
+					</Form.Group>
+					<Form.Group as={Row}>
+						<Form.Label as="legend" column sm={2}>
+							Role
+						</Form.Label>
+						<Col
+							sm={10}
+							className="m-auto d-flex justify-content-start"
+							onChange={(e) => this.setState({ role: e.target.value })}
+						>
+							<Form.Check
+								inline
+								type="radio"
+								label="Store"
+								value="STORE"
+								name="role"
+								id="role1"
+							/>
+							<Form.Check
+								inline
+								type="radio"
+								label="Department"
+								value="DEPARTMENT"
+								name="role"
+								id="role2"
+							/>
+						</Col>
+					</Form.Group>
+					<Form.Group as={Row} className="justify-content-center">
+						<Col sm={12}>
+							<Button type="button" className="w-100" onClick={this.handleSubmit}>
+								Sign in
+							</Button>
+						</Col>
+					</Form.Group>
+				</Form>
+			</div>
+		);
+	}
 }

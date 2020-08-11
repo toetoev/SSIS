@@ -13,6 +13,7 @@ export class Store extends Component {
 						<Topic />
 					</Route>
 				</Switch> */}
+				<h1>Store</h1>
 			</div>
 		);
 	}
