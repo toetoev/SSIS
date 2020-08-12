@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SSIS.Repositories
 {
-    interface IItemRepository
+    public interface IItemRepository
     {
-        Task<Item> GetAllItemsFromRepository();
+        List<Item> GetAllItemsFromRepository();
     }
 }

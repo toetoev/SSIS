@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
+using SSIS.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,22 @@ namespace SSIS.Controllers
     [Route("api/[controller]")]
     public class RequisitionController : ControllerBase
     {
+        private readonly IReqService _reqService;
+        public RequisitionController(IReqService reqService)
+        {
+            _reqService = reqService;
+        }
+
         [HttpPost("")]
         public IActionResult CreateReq([FromBody] Requisition req)
         {
-            return null;
+            return Ok(_reqService.CreateRequisition(req).Result);
         }
 
         [HttpGet("")]
-        public IActionResult RetrieveReq([FromBody] Requisition req)
+        public IActionResult RetrieveReq()
         {
-            return null;
+            return Ok(_reqService.RetreiveRequisition().Result);
         }
 
         [HttpPut("")]

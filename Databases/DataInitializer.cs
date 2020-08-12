@@ -23,6 +23,7 @@ namespace SSIS.Databases
             SeedDepartment();
             SeedDeptStaff();
             SeedSupplier();
+            SeedCategory();
             SeedItem();
         }
 
@@ -43,14 +44,32 @@ namespace SSIS.Databases
 
         private void SeedItem()
         {
-            ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
+            ICollection<Category> catergories = _dbContext.Categories.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box" }
+                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box", Category = catergories.Where(c =>c.Name == "Category 1").FirstOrDefault()},
+                new Item { Id = Guid.NewGuid(), Bin = "2", Description = "Item 2", UoM = "Dozen", Category = catergories.Where(c =>c.Name == "Category 2").FirstOrDefault()},
+                new Item { Id = Guid.NewGuid(), Bin = "3", Description = "Item 3", UoM = "Each", Category = catergories.Where(c =>c.Name == "Category 3").FirstOrDefault()},
+                new Item { Id = Guid.NewGuid(), Bin = "4", Description = "Item 4", UoM = "Packet", Category = catergories.Where(c =>c.Name == "Category 4").FirstOrDefault()}
             };
             foreach (var item in items)
             {
                 _dbContext.Add(item);
+            }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedCategory()
+        {
+            ICollection<Category> categories = new List<Category>
+            {
+                new Category{Name="Category 1"},
+                new Category{Name="Category 2"},
+                new Category{Name="Category 3"},
+            };
+            foreach (var category in categories)
+            {
+                _dbContext.Add(category);
             }
             _dbContext.SaveChanges();
         }

@@ -16,9 +16,9 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Item> GetAllItemsFromRepository()
+        public List<Item> GetAllItemsFromRepository()
         {
-            return null;
+            return _dbContext.Items.ToList();       
         }
     }
 }
