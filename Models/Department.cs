@@ -18,5 +18,6 @@ namespace SSIS.Models
         public virtual CollectionPoint CollectionPoint { get; set; }
 
         public virtual ICollection<DeptStaff> DeptStaffs { get; set; }
+        public virtual ICollection<Requisition> Requisitions { get; set; }
     }
 }
