@@ -1,9 +1,16 @@
-import React, { Component } from "./node_modules/react";
+import React, { Component } from "react";
 
-export class DeptRep extends Component {
+import Header from "../../component/Header";
+
+export default class DeptRep extends Component {
 	render() {
-		return <div></div>;
+		return (
+			<div>
+				<Header></Header>
+				<div className="container-fluid">
+					<div className="row">DeptRep</div>
+				</div>
+			</div>
+		);
 	}
 }
-
-export default DeptRep;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace SSIS.Models
@@ -17,10 +18,8 @@ namespace SSIS.Models
 
         public virtual Department Department { get; set; }
 
-        [Column("ReportTo")]
-        public string ReportToId { get; set; }
-
-        [ForeignKey("ReportToId")]
-        public virtual DeptStaff ReportTo { get; set; }
+        public virtual ICollection<Requisition> RequestedRequisitions { get; set; }
+        public virtual ICollection<Requisition> ReviewedRequisitions { get; set; }
+        public virtual ICollection<Requisition> AcknowledgedRequisitions { get; set; }
     }
 }
