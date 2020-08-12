@@ -8,7 +8,12 @@ namespace SSIS.Models
     [ToString]
     public class Department
     {
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         [Column("CollectionPointId")]

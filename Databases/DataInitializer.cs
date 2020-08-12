@@ -47,7 +47,7 @@ namespace SSIS.Databases
                 "Math",
                 "Law"
             };
-            Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = null }));
+            Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = "Science School (9:30am)" }));
             _dbContext.SaveChanges();
         }
 
