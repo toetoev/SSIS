@@ -22,12 +22,14 @@ namespace SSIS.Services
             _dbContext = dbContext;
         }
 
-        public async Task<DeptStaff> GetDeptRep()
+        public async Task<ApiResponse> UpdateDeptRep(DeptStaff deptStaff)
         {
-            DeptStaff departmentStaffFromRepo = await _deptStaffRepository.FindDeptRep();
-            if (departmentStaffFromRepo != null)
+            DeptStaff deptRepOld = await _deptStaffRepository.FindDeptRep();
+            if (deptRepOld != null)
+                deptRepOld.Role = DeptRole.Employee;
+                DeptStaff deptRepNew = await _deptStaffRepository.FindDeptStaffByName(deptStaff.Name);
                 await _dbContext.SaveChangesAsync();
-            return departmentStaffFromRepo;
+            return new ApiResponse { Success = true };
         }
     }
 }

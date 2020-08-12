@@ -15,11 +15,10 @@ namespace SSIS.Controllers
             _deptStaffService = deptStaffService;
         }
 
-        [HttpGet("")]
-        public string GetDeptRepName()
+        [HttpPost("")]
+        public IActionResult UpdateDepartmentRepresentative([FromBody] DeptStaff deptStaff)
         {
-            string x = _deptStaffService.GetDeptRep().Result.Name;
-            return x;
+            return Ok(_deptStaffService.UpdateDeptRep(deptStaff).Result);
         }
     }
 }

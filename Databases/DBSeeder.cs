@@ -17,6 +17,13 @@ namespace SSIS.Databases
             ds1.Role = DeptRole.DeptRep;
             dataContext.Add(ds1);
 
+            DeptStaff ds2 = new DeptStaff();
+            ds2.Email = "future@gmail.com";
+            ds2.Name = "Future";
+            ds2.Password = "111111";
+            ds2.Role = DeptRole.Employee;
+            dataContext.Add(ds2);
+
             dataContext.SaveChanges();
         }
     }

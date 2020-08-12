@@ -17,10 +17,16 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<DeptStaff> FindDeptStaffByName(string name)
+        {
+            return await _dbContext.DeptStaffs.Where(deptStaff => deptStaff.Name == name).FirstOrDefaultAsync();
+        }
+
         public async Task<DeptStaff> FindDeptRep()
         {
-            DbSet<DeptStaff> deptStaffs = _dbContext.DeptStaffs;
-            return await deptStaffs.Where(deptStaff => deptStaff.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
+            return await _dbContext.DeptStaffs.Where(deptStaff => deptStaff.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
         }
+
+
     }
 }

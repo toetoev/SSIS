@@ -6,5 +6,6 @@ namespace SSIS.Repositories
     public interface IDeptStaffRepository
     {
         Task<DeptStaff> FindDeptRep();
+        Task<DeptStaff> FindDeptStaffByName(string name);
     }
 }

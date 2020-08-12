@@ -9,6 +9,6 @@ namespace SSIS.Services
 {
     public interface IDeptStaffService
     {
-        Task<DeptStaff> GetDeptRep();
+        Task<ApiResponse> UpdateDeptRep(DeptStaff deptStaff);
     }
 }
