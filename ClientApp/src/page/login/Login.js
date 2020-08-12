@@ -1,6 +1,7 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import React, { useState } from "react";
 
+import Bootbox from "bootbox-react";
 import DeptRole from "../../constant/DeptRole";
 import StoreRole from "../../constant/StoreRole";
 import axios from "axios";
@@ -12,6 +13,8 @@ export default function Login() {
 	const [nameOrEmail, setNameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("");
+	const [alertMsg, setAlertMsg] = useState("");
+	const [showAlert, setShowAlert] = useState(false);
 
 	const handleSubmit = (event) => {
 		axios
@@ -21,10 +24,14 @@ export default function Login() {
 				role: role,
 			})
 			.then((res) => {
-				if (res.data.success) {
-					localStorage.setItem("ACCESS_TOKEN", res.data.data.accessToken);
-					localStorage.setItem("ROLE", res.data.data.role);
+				const result = res.data;
+				if (result.success) {
+					localStorage.setItem("ACCESS_TOKEN", result.data.accessToken);
+					localStorage.setItem("ROLE", result.data.role);
 					directToHomePageBasedOnRole();
+				} else {
+					setAlertMsg(result.message);
+					setShowAlert(true);
 				}
 			})
 			.catch(function (error) {
@@ -132,6 +139,12 @@ export default function Login() {
 					</Col>
 				</Form.Group>
 			</Form>
+			<Bootbox
+				show={showAlert}
+				type={"alert"}
+				message={alertMsg}
+				onClose={(e) => setShowAlert(false)}
+			/>
 		</div>
 	);
 }
