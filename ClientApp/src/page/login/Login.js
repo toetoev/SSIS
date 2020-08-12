@@ -13,6 +13,30 @@ export default class Login extends Component {
 			password: "",
 			role: "",
 		};
+		this.directToHomePageBasedOnRole();
+	}
+
+	handleSubmit = (event) => {
+		axios
+			.post("https://localhost:5001/api/auth/login", {
+				name: this.state.nameOrEmail,
+				password: this.state.password,
+				role: this.state.role,
+			})
+			.then((res) => {
+				if (res.data.success) {
+					localStorage.setItem("ACCESS_TOKEN", res.data.data.accessToken);
+					localStorage.setItem("ROLE", res.data.data.role);
+					this.directToHomePageBasedOnRole();
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		event.preventDefault();
+	};
+
+	directToHomePageBasedOnRole = () => {
 		const isAuthenticated = localStorage.getItem("ACCESS_TOKEN") !== null;
 		const currentRole = localStorage.getItem("ROLE");
 		if (isAuthenticated) {
@@ -46,55 +70,6 @@ export default class Login extends Component {
 				}
 			}
 		}
-	}
-
-	handleSubmit = (event) => {
-		axios
-			.post("https://localhost:5001/api/auth/login", {
-				name: this.state.nameOrEmail,
-				password: this.state.password,
-				role: this.state.role,
-			})
-			.then((res) => {
-				if (res.data.success) {
-					localStorage.setItem("ACCESS_TOKEN", res.data.data.accessToken);
-					localStorage.setItem("ROLE", res.data.data.role);
-					const currentRole = res.data.data.role;
-					if (Object.values(DeptRole).includes(currentRole)) {
-						switch (currentRole) {
-							case DeptRole.DeptHead:
-								this.props.history.push("/dept/dept-head");
-								break;
-							case DeptRole.DeptRep:
-								this.props.history.push("/dept/dept-rep");
-								break;
-							case DeptRole.Employee:
-								this.props.history.push("/dept/employee");
-								break;
-							default:
-								break;
-						}
-					} else if (Object.values(StoreRole).includes(currentRole)) {
-						switch (currentRole) {
-							case StoreRole.Manager:
-								this.props.history.push("/store/manager");
-								break;
-							case StoreRole.Supervisor:
-								this.props.history.push("/store/supervisor");
-								break;
-							case StoreRole.Clerk:
-								this.props.history.push("/store/clerk");
-								break;
-							default:
-								break;
-						}
-					}
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-		event.preventDefault();
 	};
 
 	render() {
@@ -113,7 +88,6 @@ export default class Login extends Component {
 							/>
 						</Col>
 					</Form.Group>
-
 					<Form.Group as={Row} controlId="password">
 						<Form.Label column sm={2}>
 							Password
