@@ -1,0 +1,7 @@
+dotnet ef migrations add ?
+
+dotnet ef migrations remove
+
+dotnet ef database drop
+
+dotnet ef database update ?
