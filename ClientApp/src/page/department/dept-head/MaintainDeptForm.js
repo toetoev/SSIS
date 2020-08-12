@@ -1,9 +1,5 @@
-import React, { Component } from "./node_modules/react";
+import React from "react";
 
-export class MaintainDeptForm extends Component {
-	render() {
-		return <div></div>;
-	}
+export default function MaintainDeptForm() {
+	return <div></div>;
 }
-
-export default MaintainDeptForm;
