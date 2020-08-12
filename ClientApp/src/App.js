@@ -5,7 +5,7 @@ import Department from "./page/department/Department";
 import DeptRole from "./constant/DeptRole";
 import Login from "./page/login/Login";
 import { PrivateRoute } from "./component/PrivateRoute";
-import { Store } from "./page/store/Store";
+import Store from "./page/store/Store";
 import StoreRole from "./constant/StoreRole";
 
 export default class App extends Component {
