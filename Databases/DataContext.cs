@@ -22,6 +22,8 @@ namespace SSIS.Databases
         public DbSet<DeptStaff> DeptStaffs { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<CollectionPoint> CollectionPoints { get; set; }
-
+        public DbSet<Requisition> Requisitions { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }
