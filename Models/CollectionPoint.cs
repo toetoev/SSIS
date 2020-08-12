@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SSIS.Models
@@ -6,5 +7,6 @@ namespace SSIS.Models
     {
         [Key]
         public string Location { get; set; }
+        public virtual ICollection<Department> Departments { get; set; }
     }
 }

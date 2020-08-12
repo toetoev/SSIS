@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +16,7 @@ namespace SSIS.Models
 
         [ForeignKey("CollectionPointId")]
         public virtual CollectionPoint CollectionPoint { get; set; }
-
         public virtual ICollection<DeptStaff> DeptStaffs { get; set; }
+        public virtual ICollection<Requisition> Requisitions { get; set; }
     }
 }

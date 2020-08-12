@@ -22,6 +22,8 @@ namespace SSIS.Databases
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
+            SeedSupplier();
+            SeedItem();
         }
 
         private void SeedDeptStaff()
@@ -35,6 +37,35 @@ namespace SSIS.Databases
             foreach (var deptStaff in deptStaffs)
             {
                 _dbContext.Add(deptStaff);
+            }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedItem()
+        {
+            ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
+            ICollection<Item> items = new List<Item>
+            {
+                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box", Supplier1 = suppliers.Where(s => s.Name == "Supplier One").FirstOrDefault(), Supplier2 = suppliers.Where(s => s.Name == "Supplier Two").FirstOrDefault(), Supplier3 = suppliers.Where(s => s.Name == "Supplier Three").FirstOrDefault() }
+            };
+            foreach (var item in items)
+            {
+                _dbContext.Add(item);
+            }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedSupplier()
+        {
+            ICollection<Supplier> suppliers = new List<Supplier>
+            {
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" }
+            };
+            foreach (var supplier in suppliers)
+            {
+                _dbContext.Add(supplier);
             }
             _dbContext.SaveChanges();
         }

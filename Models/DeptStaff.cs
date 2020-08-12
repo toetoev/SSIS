@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace SSIS.Models
@@ -16,5 +17,9 @@ namespace SSIS.Models
         }
 
         public virtual Department Department { get; set; }
+
+        public virtual ICollection<Requisition> RequestedRequisitions { get; set; }
+        public virtual ICollection<Requisition> ReviewedRequisitions { get; set; }
+        public virtual ICollection<Requisition> AcknowledgedRequisitions { get; set; }
     }
 }
