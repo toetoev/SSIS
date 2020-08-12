@@ -10,33 +10,16 @@ namespace SSIS.Models
     public class Item
     {
         [Key]
-        public string Id { get; set; }
-
-        [Column("Bin")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         public string Bin { get; set; }
-
-        [Column("Description")]
         public string Description { get; set; }
+        public string UoM { get; set; }
+        public int ReorderLevel { get; set; }
+        public int ReorderQty { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
+        public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
 
-        [Column("UOM")]
-        public string UOM { get; set; }
-
-        [Column("SupplierId1")]
-        public string SupplierId1 { get; set; }
-
-        [ForeignKey("SupplierId1")]
-        public virtual Supplier Supplier1 { get; set; }
-
-        [Column("SupplierId2")]
-        public string SupplierId2 { get; set; }
-
-        [ForeignKey("SupplierId2")]
-        public virtual Supplier Supplier2 { get; set; }
-
-        [Column("SupplierId3")]
-        public string SupplierId3 { get; set; }
-
-        [ForeignKey("SupplierId3")]
-        public virtual Supplier Supplier3 { get; set; }
     }
 }

@@ -31,8 +31,8 @@ namespace SSIS.Databases
             ICollection<Department> departments = _dbContext.Departments.ToList();
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
-                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
-                new DeptStaff { Name = "Chris", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "DEPTHEAD" }
+                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "Metro Boomin", Email = "metroboomin@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -41,13 +41,12 @@ namespace SSIS.Databases
             _dbContext.SaveChanges();
         }
 
-
         private void SeedItem()
         {
             ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item { Id = "1", Bin = "1", Description = "Item 1", UOM = "Box", Supplier1 = suppliers.Where(s => s.Name == "Supplier One").FirstOrDefault(), Supplier2  = suppliers.Where(s => s.Name == "Supplier Two").FirstOrDefault(), Supplier3 = suppliers.Where(s => s.Name == "Supplier Three").FirstOrDefault()}
+                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box" }
             };
             foreach (var item in items)
             {
@@ -60,9 +59,9 @@ namespace SSIS.Databases
         {
             ICollection<Supplier> suppliers = new List<Supplier>
             {
-                new Supplier { Id = "s1", Name = "Supplier One", ContactName = "", Phone="", Fax="", GST="", Address=""},
-                new Supplier { Id = "s2", Name = "Supplier Two", ContactName = "", Phone="", Fax="", GST="", Address=""},
-                new Supplier { Id = "s3", Name = "Supplier Three", ContactName = "", Phone="", Fax="", GST="", Address=""}
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" }
             };
             foreach (var supplier in suppliers)
             {

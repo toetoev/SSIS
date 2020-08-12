@@ -1,22 +1,31 @@
-import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Switch, useRouteMatch } from "react-router-dom";
 
-export class Store extends Component {
-	render() {
-		return (
-			<div>
-				{/* <Switch>
-					<Route exact path={path}>
-						<h3>Please select a topic.</h3>
-					</Route>
-					<Route path={`${path}/:topicId`}>
-						<Topic />
-					</Route>
-				</Switch> */}
-				<h1>Store</h1>
-			</div>
-		);
-	}
+import Clerk from "./clerk/Clerk";
+import Manager from "./manager/Manager";
+import { PrivateRoute } from "../../component/PrivateRoute";
+import React from "react";
+import StoreRole from "../../constant/StoreRole";
+import Supervisor from "./supervisor/Supervisor";
+
+export default function Store() {
+	let { path } = useRouteMatch();
+	return (
+		<Switch>
+			<PrivateRoute
+				path={`${path}/manager`}
+				roles={[StoreRole.Manager]}
+				component={Manager}
+			></PrivateRoute>
+			<PrivateRoute
+				path={`${path}/supervisor`}
+				roles={[StoreRole.Supervisor]}
+				component={Supervisor}
+			></PrivateRoute>
+			<PrivateRoute
+				path={`${path}/clerk`}
+				roles={[StoreRole.Clerk]}
+				component={Clerk}
+			></PrivateRoute>
+		</Switch>
+	);
 }
-
-export default Store;

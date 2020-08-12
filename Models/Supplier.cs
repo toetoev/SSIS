@@ -10,24 +10,14 @@ namespace SSIS.Models
     public class Supplier
     {
         [Key]
-        public string Id { get; set; }
-
-        [Column("Name")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         public string Name { get; set; }
-
-        [Column("ContactName")]
         public string ContactName { get; set; }
-
-        [Column("Phone")]
         public string Phone { get; set; }
-
-        [Column("Fax")]
         public string Fax { get; set; }
-
-        [Column("GST")]
         public string GST { get; set; }
-
-        [Column("Address")]
         public string Address { get; set; }
+        public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
     }
 }

@@ -1,16 +1,3 @@
-# POST https://localhost:5001/api/auth/register
-# Content-Type: application/json
-
-# {
-#     "name": "Martini",
-#     "email" : "zhao435021640@gmail.com",
-#     "password": "123456",
-#     "department" : {
-#         "name" : "Computer Science"
-#     },
-#     "role": "EMPLOYEE"
-# }
-
 ### AuthController Login
 POST https://localhost:5001/api/auth/login
 Content-Type: application/json

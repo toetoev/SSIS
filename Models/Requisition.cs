@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,45 +11,20 @@ namespace SSIS.Models
     public class Requisition
     {
         [Key]
-        public string Id { get; set; }
-
-        [Column("DepartmentId")]
-        public string DepartmentId { get; set; }
-
-        [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
-
-        [Column("RequestedBy")]
-        public string RequestedBy { get; set; }
-
-        [ForeignKey("RequestedBy")]
-        public virtual DeptStaff DeptEmployee { get; set; }
-
-        [Column("RequestedOn")]
-        public string RequestedOn { get; set; }
-
-        [Column("ReviewedBy")]
-        public string ReviewedBy { get; set; }
-
-        [ForeignKey("ReviewedBy")]
-        public virtual DeptStaff DeptHead { get; set; }
-
-        [Column("Comment")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public DateTime RequestedOn { get; set; }
+        public DateTime ReviewedOn { get; set; }
         public string Comment { get; set; }
-
-        [Column("RetrievalId")]
-        public string RetrievalId { get; set; }
-
-        [Column("AcknowledgedBy")]
-        public string AcknowledgedBy { get; set; }
-
-        [ForeignKey("AcknowledgedBy")]
-        public virtual DeptStaff DeptRep { get; set; }
-
-        [Column("Status")]
-        public string Status { get; set; }
-
-        [Column("AcknowlegedOn")]
-        public string AcknowledgedOn { get; set; }
+        public DateTime AcknowledgedOn { get; set; }
+        public RequisitionStatus Status { get; set; }
+        public virtual Department Department { get; set; }
+        public string RequestedByEmail { get; set; }
+        public virtual DeptStaff RequestedBy { get; set; }
+        public string ReviewedByEmail { get; set; }
+        public virtual DeptStaff ReviewedBy { get; set; }
+        public string AcknowledgedByEmail { get; set; }
+        public virtual DeptStaff AcknowledgedBy { get; set; }
+        public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
     }
 }
