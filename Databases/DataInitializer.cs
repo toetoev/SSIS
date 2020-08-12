@@ -46,7 +46,7 @@ namespace SSIS.Databases
             ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box", Supplier1 = suppliers.Where(s => s.Name == "Supplier One").FirstOrDefault(), Supplier2 = suppliers.Where(s => s.Name == "Supplier Two").FirstOrDefault(), Supplier3 = suppliers.Where(s => s.Name == "Supplier Three").FirstOrDefault() }
+                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box" }
             };
             foreach (var item in items)
             {

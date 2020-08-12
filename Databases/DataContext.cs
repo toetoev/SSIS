@@ -17,6 +17,7 @@ namespace SSIS.Databases
         {
             modelBuilder.Entity<StoreStaff>(entity => { entity.HasIndex(e => e.Email).IsUnique(); });
             modelBuilder.Entity<RequisitionItem>().HasKey(ri => new { ri.ItemId, ri.RequisitionId });
+            modelBuilder.Entity<SupplyTenderItem>().HasKey(sti => new { sti.ItemId, sti.SupplierId });
             modelBuilder.Entity<Requisition>()
                 .HasOne(r => r.RequestedBy)
                 .WithMany(ds => ds.RequestedRequisitions)
@@ -40,5 +41,6 @@ namespace SSIS.Databases
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<SupplyTenderItem> SupplyTenderItems { get; set; }
     }
 }

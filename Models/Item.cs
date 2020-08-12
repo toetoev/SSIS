@@ -18,10 +18,8 @@ namespace SSIS.Models
         public int ReorderLevel { get; set; }
         public int ReorderQty { get; set; }
         public virtual Category Category { get; set; }
-        public virtual Supplier Supplier1 { get; set; }
-        public virtual Supplier Supplier2 { get; set; }
-        public virtual Supplier Supplier3 { get; set; }
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
+        public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
 
     }
 }
