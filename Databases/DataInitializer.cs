@@ -29,7 +29,8 @@ namespace SSIS.Databases
             ICollection<Department> departments = _dbContext.Departments.ToList();
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
-                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
+                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "Metro Boomin", Email = "metroboomin@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
             };
             foreach (var deptStaff in deptStaffs)
             {
