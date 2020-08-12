@@ -17,9 +17,33 @@ export default class Login extends Component {
 		const currentRole = localStorage.getItem("ROLE");
 		if (isAuthenticated) {
 			if (Object.values(DeptRole).includes(currentRole)) {
-				this.props.history.push("/dept");
+				switch (currentRole) {
+					case DeptRole.DeptHead:
+						this.props.history.push("/dept/dept-head");
+						break;
+					case DeptRole.DeptRep:
+						this.props.history.push("/dept/dept-rep");
+						break;
+					case DeptRole.Employee:
+						this.props.history.push("/dept/employee");
+						break;
+					default:
+						break;
+				}
 			} else if (Object.values(StoreRole).includes(currentRole)) {
-				this.props.history.push("/store");
+				switch (currentRole) {
+					case StoreRole.Manager:
+						this.props.history.push("/store/manager");
+						break;
+					case StoreRole.Supervisor:
+						this.props.history.push("/store/supervisor");
+						break;
+					case StoreRole.Clerk:
+						this.props.history.push("/store/clerk");
+						break;
+					default:
+						break;
+				}
 			}
 		}
 	}
@@ -35,7 +59,36 @@ export default class Login extends Component {
 				if (res.data.success) {
 					localStorage.setItem("ACCESS_TOKEN", res.data.data.accessToken);
 					localStorage.setItem("ROLE", res.data.data.role);
-					this.props.history.push("/dept");
+					const currentRole = res.data.data.role;
+					if (Object.values(DeptRole).includes(currentRole)) {
+						switch (currentRole) {
+							case DeptRole.DeptHead:
+								this.props.history.push("/dept/dept-head");
+								break;
+							case DeptRole.DeptRep:
+								this.props.history.push("/dept/dept-rep");
+								break;
+							case DeptRole.Employee:
+								this.props.history.push("/dept/employee");
+								break;
+							default:
+								break;
+						}
+					} else if (Object.values(StoreRole).includes(currentRole)) {
+						switch (currentRole) {
+							case StoreRole.Manager:
+								this.props.history.push("/store/manager");
+								break;
+							case StoreRole.Supervisor:
+								this.props.history.push("/store/supervisor");
+								break;
+							case StoreRole.Clerk:
+								this.props.history.push("/store/clerk");
+								break;
+							default:
+								break;
+						}
+					}
 				}
 			})
 			.catch(function (error) {
