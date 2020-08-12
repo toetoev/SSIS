@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
-import { Navbar } from "../../component/Navbar";
+import Header from "../../component/Header";
 
-export class Employee extends Component {
+export default class Employee extends Component {
 	render() {
 		return (
 			<div>
-				<Navbar></Navbar>
+				<Header></Header>
 				<div className="container-fluid">
 					<div className="row">Employee Page</div>
 				</div>
@@ -14,5 +14,3 @@ export class Employee extends Component {
 		);
 	}
 }
-
-export default Employee;

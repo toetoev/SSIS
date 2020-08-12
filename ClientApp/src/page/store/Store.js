@@ -1,5 +1,3 @@
-import "../../css/dashboard.css";
-
 import { Switch, useRouteMatch } from "react-router-dom";
 
 import Clerk from "./clerk/Clerk";

@@ -1,4 +1,4 @@
-import { Navbar } from "../../component/Navbar";
+import Header from "../../component/Header";
 import React from "react";
 
 export default function DeptHead() {
@@ -20,7 +20,7 @@ export default function DeptHead() {
 		// 		</PrivateRoute> */}
 		// </Switch>
 		<div>
-			<Navbar></Navbar>
+			<Header></Header>
 			<div className="container-fluid">
 				<div className="row">
 					<div>DeptHead Page</div>

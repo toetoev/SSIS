@@ -1,11 +1,9 @@
-import "../../css/dashboard.css";
-
 import { Switch, useRouteMatch } from "react-router-dom";
 
 import DeptHead from "./dept-head/DeptHead";
-import { DeptRep } from "./dept-rep/DeptRep";
+import DeptRep from "./dept-rep/DeptRep";
 import DeptRole from "../../constant/DeptRole";
-import { Employee } from "./employee/Employee";
+import Employee from "./employee/Employee";
 import { PrivateRoute } from "../../component/PrivateRoute";
 import React from "react";
 
