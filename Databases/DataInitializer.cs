@@ -35,8 +35,8 @@ namespace SSIS.Databases
             ICollection<Department> departments = _dbContext.Departments.ToList();
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
-                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "DEPTHEAD" }
+                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" }
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -47,32 +47,19 @@ namespace SSIS.Databases
 
         private void SeedItem()
         {
-            ICollection<Category> catergories = _dbContext.Categories.ToList();
+            ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
+            ICollection<Category> categories = _dbContext.Categories.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item { Id = Guid.NewGuid(), Bin = "1", Description = "Item 1", UoM = "Box", Category = catergories.Where(c =>c.Name == "Category 1").FirstOrDefault()},
-                new Item { Id = Guid.NewGuid(), Bin = "2", Description = "Item 2", UoM = "Dozen", Category = catergories.Where(c =>c.Name == "Category 2").FirstOrDefault()},
-                new Item { Id = Guid.NewGuid(), Bin = "3", Description = "Item 3", UoM = "Each", Category = catergories.Where(c =>c.Name == "Category 3").FirstOrDefault()},
-                new Item { Id = Guid.NewGuid(), Bin = "4", Description = "Item 4", UoM = "Packet", Category = catergories.Where(c =>c.Name == "Category 4").FirstOrDefault()}
+                new Item
+                {
+                Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 1", UoM = "Dozen",
+                ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
+                },
             };
             foreach (var item in items)
             {
                 _dbContext.Add(item);
-            }
-            _dbContext.SaveChanges();
-        }
-
-        private void SeedCategory()
-        {
-            ICollection<Category> categories = new List<Category>
-            {
-                new Category{Name="Category 1"},
-                new Category{Name="Category 2"},
-                new Category{Name="Category 3"},
-            };
-            foreach (var category in categories)
-            {
-                _dbContext.Add(category);
             }
             _dbContext.SaveChanges();
         }
@@ -89,6 +76,33 @@ namespace SSIS.Databases
             {
                 _dbContext.Add(supplier);
             }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedCategory()
+        {
+            string[] categories = {
+                "Clip",
+                "Envelope",
+                "Eraser",
+                "Exercise",
+                "File",
+                "Pen",
+                "Puncher",
+                "Pad",
+                "Paper",
+                "Ruler",
+                "Scissors",
+                "Tape",
+                "Sharpener",
+                "Shorthand",
+                "Stapler",
+                "Tacks",
+                "Tparency",
+                "Tray"
+            };
+
+            Array.ForEach(categories, el => _dbContext.Add(new Category { Name = el }));
             _dbContext.SaveChanges();
         }
 
