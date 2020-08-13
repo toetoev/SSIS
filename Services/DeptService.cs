@@ -10,21 +10,25 @@ namespace SSIS.Services
     public class DeptService : IDeptService
     {
         private readonly IDeptRepository _deptRepository;
-        private readonly DataContext _dbContext;
-        public DeptService(IDeptRepository deptRepository, DataContext dbContext)
+        public DeptService(IDeptRepository deptRepository)
         {
             _deptRepository = deptRepository;
-            _dbContext = dbContext;
+        }
+
+        public async Task<ApiResponse> GetCollectionPoint(string deptName)
+        {
+            if (await _deptRepository.DepartmentExist(deptName))
+            {
+                return new ApiResponse { Success = true, Data = await _deptRepository.GetCollectionPoint(deptName) };
+            }
+            return new ApiResponse { Success = false };
         }
 
         public async Task<ApiResponse> UpdateCollectionPoint(Department department)
         {
-            Department departmentFromRepo = await _deptRepository.GetDepartment(department.Name);
-            if (departmentFromRepo != null)
-                if (department.CollectionPointId != null && await _deptRepository.CollectionPointExist(department.CollectionPointId))
-                    departmentFromRepo.CollectionPointId = department.CollectionPointId;
-            await _dbContext.SaveChangesAsync();
+            await _deptRepository.UpdateCollectionPoint(department);
             return new ApiResponse { Success = true };
         }
+
     }
 }
