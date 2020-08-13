@@ -4,57 +4,6 @@ import React from "react";
 
 export default function MaintainDeptForm() {
 	return (
-<<<<<<< Updated upstream
-		<div className="">
-			<h3>Maintain Department</h3>
-			<Form>
-				<fieldset>
-					<Form.Group as={Row}>
-						<Form.Label as="legend" className="" column sm={2}>
-							Collection Point :{" "}
-						</Form.Label>
-
-						<Col sm={10}>
-							<Form.Check
-								type="radio"
-								label="Stationery Store - Administration Building (9:30 AM)"
-								value="STORE"
-								className=""
-							/>
-							<Form.Check
-								type="radio"
-								label="Management School (11:00 AM)"
-								value="DEPARTMENT"
-								className=""
-							/>
-							<Form.Check
-								type="radio"
-								label="Medical School (9:30 AM)"
-								value="DEPARTMENT"
-								className=""
-							/>
-							<Form.Check
-								type="radio"
-								label="Engineering School (9:30 AM)"
-								value="DEPARTMENT"
-								className=""
-							/>
-							<Form.Check
-								type="radio"
-								label="Science School (9:30 AM)"
-								value="DEPARTMENT"
-								className=""
-							/>
-							<Form.Check
-								type="radio"
-								label="University Hospital (11:00 AM)"
-								value="DEPARTMENT"
-								className=""
-							/>
-						</Col>
-					</Form.Group>
-				</fieldset>
-=======
 		<div className="col-lg-10 mt-3">
 			<h4>Maintain Department</h4>
 			<Form className="mt-4">
@@ -101,7 +50,6 @@ export default function MaintainDeptForm() {
 						/>
 					</Col>
 				</Form.Group>
->>>>>>> Stashed changes
 				<Form.Group as={Row} controlId="nameOrEmail">
 					<Form.Label className="" column sm={3}>
 						New Representative Name :
@@ -114,16 +62,11 @@ export default function MaintainDeptForm() {
 					</Col>
 				</Form.Group>
 				<Form.Group className="justify-content-center">
-<<<<<<< Updated upstream
-					<Col sm={1}>
-						<Button type="button" className="btn btn-success floatRight">
-=======
 					<Col sm={7}>
 						<Button
 							type="button"
 							className="btn btn-success float-right"
 						>
->>>>>>> Stashed changes
 							Update
 						</Button>
 					</Col>
