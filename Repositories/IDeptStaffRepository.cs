@@ -8,5 +8,6 @@ namespace SSIS.Repositories
         Task<bool> DeptRepExist(DeptStaff deptStaff);
         Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo);
         Task<DeptStaff> GetDeptStaffFromRepo(DeptStaff deptStaff);
+        Task UpdateDeptRep(DeptStaff deptStaff);
     }
 }
