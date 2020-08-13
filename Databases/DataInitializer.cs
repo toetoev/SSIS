@@ -18,13 +18,15 @@ namespace SSIS.Databases
         public void Seed()
         {
             _dbContext.Database.EnsureDeleted();
+            System.Console.WriteLine("Start Creating Model");
             _dbContext.Database.EnsureCreated();
-            //SeedCollectionPoint();
-            //SeedDepartment();
-            //SeedDeptStaff();
-            //SeedSupplier();
-            //SeedItem();
-            //  SeedRequistion();
+            System.Console.WriteLine("Finish Creating Model");
+            SeedCollectionPoint();
+            SeedDepartment();
+            SeedDeptStaff();
+            SeedSupplier();
+            SeedItem();
+            System.Console.WriteLine("Finish Seeding");
         }
 
         private void SeedDeptStaff()
@@ -33,7 +35,7 @@ namespace SSIS.Databases
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Metro Boomin", Email = "metroboomin@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" }
+                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "DEPTHEAD" }
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -73,32 +75,14 @@ namespace SSIS.Databases
 
         private void SeedDepartment()
         {
-            //string[] departments = {
-            //    "Computer Science",
-            //    "Medical",
-            //    "Math",
-            //    "Law"
-            //};
-            //Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = "Science School (9:30am)" }));
-            //_dbContext.SaveChanges();
-
-            ICollection<CollectionPoint> collections = _dbContext.CollectionPoints.ToList();
-            ICollection<Department> depts = new List<Department>
-            {
-                new Department { Name = "Computer Science",  CollectionPoint = collections.Where(d => d.Location == "Science School (9:30am)").FirstOrDefault()},
-                new Department { Name = "Medical",  CollectionPoint = collections.Where(d => d.Location == "Medical School (9:30am) ").FirstOrDefault()},
-                new Department { Name = "IT",  CollectionPoint = collections.Where(d => d.Location == "Engineering School (11:00am)").FirstOrDefault()},
-                new Department { Name = "Medical",  CollectionPoint = collections.Where(d => d.Location == "Medical School (9:30am) ").FirstOrDefault()},
-                new Department { Name = "Law",  CollectionPoint = collections.Where(d => d.Location == "University Hospital (11:00am)").FirstOrDefault()},
-                new Department { Name = "Business",  CollectionPoint = collections.Where(d => d.Location == "Management School (11:00am)").FirstOrDefault()},
-
+            string[] departments = {
+                "Computer Science",
+                "Medical",
+                "Math",
+                "Law"
             };
-            foreach (var dept in depts)
-            {
-                _dbContext.Add(dept);
-            }
+            Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = null }));
             _dbContext.SaveChanges();
-
         }
 
         private void SeedCollectionPoint()
@@ -114,19 +98,5 @@ namespace SSIS.Databases
             Array.ForEach(collectionPointLocations, el => _dbContext.Add(new CollectionPoint { Location = el }));
             _dbContext.SaveChanges();
         }
-        //private void SeedRequistion()
-        //{
-        //    //RequisitionItem reqItem = new RequisitionItem() { Actual = 1 };
-        //    //RequisitionItem reqItem2 = new RequisitionItem() { Actual = 2 };
-        //    _dbContext.Add(
-        //        new Requisition { 
-        //            RequisitionItems = new List<RequisitionItem>() 
-        //                                {   new RequisitionItem() { Actual = 1 ,Item = new Item(){s},
-        //                                    new RequisitionItem() { Actual = 2 ,Item = null}
-        //                                 }
-
-        //        });
-        //    _dbContext.SaveChanges();
-        //}
     }
 }

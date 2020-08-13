@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SSIS.Databases;
@@ -6,17 +7,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+=======
+using System.Threading.Tasks;
+using SSIS.Databases;
+using SSIS.Models;
+>>>>>>> master
 
 namespace SSIS.Repositories
 {
     public class RequisitionRepository : IRequisitionRepository
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     {
         private readonly DataContext _dbContext;
         public RequisitionRepository(DataContext dbContext)
         {
             _dbContext = dbContext;
         }
+<<<<<<< HEAD
 
 
         //public async Task<Requisition> GetCurrentDeptRep(Requisition requisitionFromRepo)
@@ -53,3 +63,11 @@ namespace SSIS.Repositories
 
     }
 }
+=======
+        public async Task<Requisition> CreateRequisition(Requisition requisition)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
+>>>>>>> master

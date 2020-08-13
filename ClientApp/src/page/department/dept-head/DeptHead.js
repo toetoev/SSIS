@@ -1,29 +1,23 @@
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+
 import Header from "../../component/Header";
+import MaintainDeptForm from "./MaintainDeptForm";
 import React from "react";
+import Sidebar from "../../component/Sidebar";
 
 export default function DeptHead() {
-	// let { path, url } = useRouteMatch();
-
+	let { path } = useRouteMatch();
 	return (
-		// <Switch>
-		// 	<Route path={`${path}/dept-head`} roles={[DeptRole.DeptHead]}>
-		// 		<Sidebar>Maintain Dept</Sidebar>
-		// 		<MaintainDeptForm></MaintainDeptForm>
-		// 	</Route>
-		// 	{/* <PrivateRoute path={`${path}/dept-rep`} roles={[DeptRole.DeptRep]}>
-		// 			<Sidebar></Sidebar>
-		// 			<MaintainDeptForm></MaintainDeptForm>
-		// 		</PrivateRoute>
-		// 		<PrivateRoute path={`${path}/employee`} roles={[DeptRole.Employee]}>
-		// 			<Sidebar></Sidebar>
-		// 			<MaintainDeptForm></MaintainDeptForm>
-		// 		</PrivateRoute> */}
-		// </Switch>
 		<div>
 			<Header></Header>
 			<div className="container-fluid">
 				<div className="row">
-					<div>DeptHead Page</div>
+					<Switch>
+						<Route path={`${path}`}>
+							<Sidebar>Maintain Dept</Sidebar>
+							<MaintainDeptForm></MaintainDeptForm>
+						</Route>
+					</Switch>
 				</div>
 			</div>
 		</div>
