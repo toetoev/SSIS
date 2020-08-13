@@ -18,12 +18,15 @@ namespace SSIS.Databases
         public void Seed()
         {
             _dbContext.Database.EnsureDeleted();
+            System.Console.WriteLine("Start Creating Model");
             _dbContext.Database.EnsureCreated();
+            System.Console.WriteLine("Finish Creating Model");
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
             SeedSupplier();
             SeedItem();
+            System.Console.WriteLine("Finish Seeding");
         }
 
         private void SeedDeptStaff()
