@@ -5,6 +5,6 @@ namespace SSIS.Repositories
 {
     public interface IRequisitionRepository
     {
-        Task<Requisition> CreateRequisition(Requisition requisition);
+        Task<int> CreateRequisition(Requisition requisition);
     }
 }

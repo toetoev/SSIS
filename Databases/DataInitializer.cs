@@ -56,6 +56,11 @@ namespace SSIS.Databases
                 Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 1", UoM = "Dozen",
                 ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
                 },
+                new Item
+                {
+                Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 2", UoM = "Dozen",
+                ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
+                }
             };
             foreach (var item in items)
             {

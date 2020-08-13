@@ -50,14 +50,14 @@ Content-Type: application/json
 
 ### RequisitionController Create Requisition
 POST https://localhost:5001/api/requisition
-# Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3MzAwNDg2LCJleHAiOjE1OTczODY4ODYsImlhdCI6MTU5NzMwMDQ4Nn0.8xW1B9UWzuQfTA8n3ul60yvhhdt9aLCoVA1R2sN3h9M0xnmzpioo_fIYe2JtwR0-9WTOyR_5wbxae0cIK7sObA
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3MzAwNDg2LCJleHAiOjE1OTczODY4ODYsImlhdCI6MTU5NzMwMDQ4Nn0.8xW1B9UWzuQfTA8n3ul60yvhhdt9aLCoVA1R2sN3h9M0xnmzpioo_fIYe2JtwR0-9WTOyR_5wbxae0cIK7sObA
 Content-Type: application/json
 
 [{
-    "itemId" :"97cae15a-4e71-43d1-b80c-6881ef5d88ec",
+    "itemId" :"1637B5B4-C989-4DB5-A407-95B75DB8F317",
     "need":1
 },
 {
-    "itemId" :"824b0b7d-327f-408b-8b42-fe41520f4f2b",
+    "itemId" :"02B0B7FF-CEC7-43B7-A092-C4CA1F4E57F6",
     "need":2
 }]

@@ -1,4 +1,8 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
 using SSIS.Models;
 
@@ -11,9 +15,10 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<Requisition> CreateRequisition(Requisition requisition)
+        public async Task<int> CreateRequisition(Requisition requisition)
         {
-            throw new System.NotImplementedException();
+            _dbContext.Add(requisition);
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
