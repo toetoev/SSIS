@@ -4,13 +4,18 @@ Content-Type: application/json
 
 {
     "name" : "zhao435021640@gmail.com",
-    "password": "123456",
+    "password": "1",
     "role": "DEPARTMENT"
 }
 
 ### AuthController Get Test
 GET https://localhost:5001/api/auth
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkNsZXJrIiwibmJmIjoxNTk2OTYzMzQyLCJleHAiOjE1OTcwNDk3NDIsImlhdCI6MTU5Njk2MzM0Mn0.bzRr_ma71tu1JLDIfs0Pkj5M_Urmq_KPaIsP1IqZZXh3P4sNSjrBZt0dSRciyXvqZwUKDgNPKlpnvlgrXUUdvw
+
+
+
+
+
 
 ### DeptController Get Collection Point
 GET https://localhost:5001/api/dept/Computer%20Science
@@ -24,6 +29,13 @@ Content-Type: application/json
     "name": "Computer Science"
 }
 
+
+
+
+
+### DeptStaffController Get DeptStaff By Role
+GET https://localhost:5001/api/deptStaff?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE&roles=DEPTHEAD
+
 ### DeptStaffController Update Dept Rep
 POST https://localhost:5001/api/deptStaff
 Content-Type: application/json
@@ -31,6 +43,10 @@ Content-Type: application/json
 {
     "email" : "zhao435021640@gmail.com"
 }
+
+
+
+
 
 ### RequisitionController Create Requisition
 POST https://localhost:5001/api/requisition

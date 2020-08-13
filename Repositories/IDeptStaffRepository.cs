@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SSIS.Models;
 
@@ -9,5 +10,6 @@ namespace SSIS.Repositories
         Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo);
         Task<DeptStaff> GetDeptStaffByEmail(DeptStaff deptStaff);
         Task UpdateDeptRep(DeptStaff deptStaff);
+        Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles);
     }
 }
