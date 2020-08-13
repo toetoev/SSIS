@@ -17,9 +17,12 @@ namespace SSIS.Models
         public string UoM { get; set; }
         public int ReorderLevel { get; set; }
         public int ReorderQty { get; set; }
+        public int Stock { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
         public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
+        public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
 
     }
 }

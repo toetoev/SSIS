@@ -21,5 +21,7 @@ namespace SSIS.Models
         public virtual ICollection<Requisition> RequestedRequisitions { get; set; }
         public virtual ICollection<Requisition> ReviewedRequisitions { get; set; }
         public virtual ICollection<Requisition> AcknowledgedRequisitions { get; set; }
+        public virtual ICollection<Delegation> DelegatedToDelegations { get; set; }
+        public virtual ICollection<Delegation> DelegatedByDelegations { get; set; }
     }
 }
