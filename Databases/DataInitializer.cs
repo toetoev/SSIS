@@ -35,8 +35,8 @@ namespace SSIS.Databases
             ICollection<Department> departments = _dbContext.Departments.ToList();
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
-                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "123456", Role = "DEPTHEAD" }
+                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" }
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -51,8 +51,11 @@ namespace SSIS.Databases
             ICollection<Category> categories = _dbContext.Categories.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item { Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 1", UoM = "Dozen",
-                    ReorderLevel=50,ReorderQty=30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()},
+                new Item
+                {
+                Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 1", UoM = "Dozen",
+                ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
+                },
             };
             foreach (var item in items)
             {
@@ -76,33 +79,32 @@ namespace SSIS.Databases
             _dbContext.SaveChanges();
         }
 
-        private void SeedCategory() {
-            string[] categories =
-            {"Clip",
-             "Envelope",
-             "Eraser",
-             "Exercise",
-             "File",
-             "Pen",
-             "Puncher",
-             "Pad",
-             "Paper",
-             "Pen",
-             "Ruler",
-             "Scissors",
-             "Tape",
-             "Sharpener",
-             "Shorthand",
-             "Stapler",
-             "Tacks",
-             "Tparency",
-             "Tray" };
+        private void SeedCategory()
+        {
+            string[] categories = {
+                "Clip",
+                "Envelope",
+                "Eraser",
+                "Exercise",
+                "File",
+                "Pen",
+                "Puncher",
+                "Pad",
+                "Paper",
+                "Ruler",
+                "Scissors",
+                "Tape",
+                "Sharpener",
+                "Shorthand",
+                "Stapler",
+                "Tacks",
+                "Tparency",
+                "Tray"
+            };
 
             Array.ForEach(categories, el => _dbContext.Add(new Category { Name = el }));
             _dbContext.SaveChanges();
         }
-
-
 
         private void SeedDepartment()
         {
