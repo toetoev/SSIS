@@ -1,4 +1,5 @@
-﻿using SSIS.Databases;
+﻿using Microsoft.EntityFrameworkCore;
+using SSIS.Databases;
 using SSIS.Models;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,14 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
-
-        public List<Item> GetAllItemsFromRepository()
+        public async Task<List<Item>> GetAllItemsFromRepository()
         {
-            return _dbContext.Items.ToList();       
+            return await _dbContext.Items.ToListAsync();
+        }
+
+        public async Task<Item> GetItemById(Item item)
+        {
+            return await _dbContext.Items.Where(i => i.Id == item.Id).FirstOrDefaultAsync();
         }
     }
 }

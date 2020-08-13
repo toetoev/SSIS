@@ -9,7 +9,6 @@ namespace SSIS.Services
 {
     public interface IReqService
     {
-        Task<ApiResponse> CreateRequisition(Requisition req);
-        Task<ApiResponse> RetreiveRequisition();
+        Task<ApiResponse> CreateReq(List<RequisitionItem> rList, DeptStaff ds);
     }
 }

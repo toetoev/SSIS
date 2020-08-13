@@ -14,33 +14,38 @@ namespace SSIS.Services
         private readonly IDeptRepository _deptRepository;
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IReqRepository _reqRepository;
+        private readonly IItemRepository _itemRepository;
 
-        private readonly DataContext _dbContext;
-
-        public ReqService(DataContext dbContext, IDeptRepository deptRepository, IDeptStaffRepository deptStaffRepository, IReqRepository reqRepository)
+        public ReqService(IDeptRepository deptRepository,
+                          IDeptStaffRepository deptStaffRepository,
+                          IReqRepository reqRepository,
+                          IItemRepository itemRepository)
         {
-            _dbContext = dbContext;
             _deptRepository = deptRepository;
             _deptStaffRepository = deptStaffRepository;
             _reqRepository = reqRepository;
+            _itemRepository = itemRepository;
         }
 
-        public async Task<ApiResponse> RetreiveRequisition()
+        public async Task<ApiResponse> CreateReq(List<RequisitionItem> rList, DeptStaff ds)
         {
-            return new ApiResponse { Success = true, Data = await _reqRepository.GetAllReqsFromRepository()};
-        }
+            DeptStaff requestedBy = await _deptStaffRepository.GetDeptStaffFromRepo(ds);
+            Requisition requisition = new Requisition { Id = Guid.NewGuid(),
+                                                        RequestedOn = DateTime.Now,
+                                                        Status = RequisitionStatus.APPLIED,
+                                                        RequestedBy = requestedBy,
+                                                        Department = requestedBy.Department,
+                                                        };
 
-        public async Task<ApiResponse> CreateRequisition(Requisition req)
-        {
-            Requisition newReq = new Requisition { Id = Guid.NewGuid(),
-                                                   RequestedOn = DateTime.Now,
-                                                   Comment = req.Comment,
-                                                   Status = RequisitionStatus.APPLIED,
-                                                   Department = await _deptRepository.GetDepartment(req.Department.Name),
-                                                   RequestedBy = await _deptStaffRepository.GetDeptStaffFromRepo(req.RequestedBy) };
-            await _dbContext.AddAsync(newReq);
-            await _dbContext.SaveChangesAsync();
-            return new ApiResponse { Success = true };
+            foreach (var r in rList)
+            {
+               r.RequisitionId = requisition.Id;
+            }
+
+            requisition.RequisitionItems = rList;
+            if (await _reqRepository.CreateRequisition(requisition) != null)
+                return new ApiResponse { Success = true };
+            return new ApiResponse { Success = false, Message = "Create Requisition List Failed" };
         }
     }
 }

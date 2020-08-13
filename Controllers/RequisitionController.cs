@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SSIS.Controllers
@@ -19,27 +21,30 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult CreateReq([FromBody] Requisition req)
+        [Authorize(Roles = DeptRole.Employee)]
+        public IActionResult CreateReq([FromBody] List<RequisitionItem> rList)
         {
-            return Ok(_reqService.CreateRequisition(req).Result);
+            DeptStaff requestedBy = new DeptStaff { Email = User.FindFirst(ClaimTypes.Email).Value};
+            return Ok(_reqService.CreateReq(rList, requestedBy).Result);
+            // return Ok(_authService.Login(user).Result);
         }
 
-        [HttpGet("")]
-        public IActionResult RetrieveReq()
-        {
-            return Ok(_reqService.RetreiveRequisition().Result);
-        }
+        //[HttpGet("")]
+        //public IActionResult RetrieveReq()
+        //{
+        //    return Ok(_reqService.RetreiveRequisition().Result);
+        //}
 
-        [HttpPut("")]
-        public IActionResult UpdateRep([FromBody] Requisition req)
-        {
-            return null;
-        }
+        //[HttpPut("")]
+        //public IActionResult UpdateRep([FromBody] Requisition req)
+        //{
+        //    return null;
+        //}
 
-        [HttpDelete("")]
-        public IActionResult DeleteReq([FromBody] Requisition req)
-        {
-            return null;
-        }
+        //[HttpDelete("")]
+        //public IActionResult DeleteReq([FromBody] Requisition req)
+        //{
+        //    return null;
+        //}
     }
 }

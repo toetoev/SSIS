@@ -15,9 +15,12 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<List<Requisition>> GetAllReqsFromRepository()
+        public async Task<Requisition> CreateRequisition(Requisition requisition)
         {
-            return await _dbContext.Requisitions.ToListAsync();
+            await _dbContext.AddAsync(requisition);
+            await _dbContext.SaveChangesAsync();
+            return requisition;
         }
     }
 }
+

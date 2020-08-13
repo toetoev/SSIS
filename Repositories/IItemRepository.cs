@@ -8,6 +8,7 @@ namespace SSIS.Repositories
 {
     public interface IItemRepository
     {
-        List<Item> GetAllItemsFromRepository();
+        Task<Item> GetItemById(Item item);
+        Task<List<Item>> GetAllItemsFromRepository();
     }
 }
