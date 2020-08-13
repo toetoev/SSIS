@@ -1,3 +1,5 @@
+import "./Login.css";
+
 import { Button, Col, Form, Row } from "react-bootstrap";
 import React, { useState } from "react";
 
@@ -78,38 +80,37 @@ export default function Login() {
 	directToHomePageBasedOnRole();
 
 	return (
-		<div>
+		<div className="login-box-body login-box">
+			<p className="login-box-msg">Sign in - Logic University</p>
 			<Form>
 				<Form.Group as={Row} controlId="nameOrEmail">
-					<Form.Label column sm={2}>
-						Name / Email
-					</Form.Label>
-					<Col sm={10}>
+					<Col sm={12}>
+						<Form.Label className="formLabel">Name / Email : </Form.Label>
 						<Form.Control
 							type="text"
-							placeholder="Name / Email"
+							placeholder="Enter name or email"
 							onChange={(e) => setNameOrEmail(e.target.value)}
 						/>
 					</Col>
 				</Form.Group>
 				<Form.Group as={Row} controlId="password">
-					<Form.Label column sm={2}>
-						Password
-					</Form.Label>
-					<Col sm={10}>
+					<Col sm={12}>
+						<Form.Label className="formLabel">Password : </Form.Label>
 						<Form.Control
 							type="password"
-							placeholder="Password"
+							placeholder="Enter password"
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 					</Col>
 				</Form.Group>
 				<Form.Group as={Row}>
-					<Form.Label as="legend" column sm={2}>
-						Role
-					</Form.Label>
+					<Col>
+						<Form.Label as="legend" className="formLabel">
+							Role :{" "}
+						</Form.Label>
+					</Col>
 					<Col
-						sm={10}
+						sm={12}
 						className="m-auto d-flex justify-content-start"
 						onChange={(e) => setRole(e.target.value)}
 					>
@@ -120,6 +121,7 @@ export default function Login() {
 							value="STORE"
 							name="role"
 							id="role1"
+							className="radioLabel"
 						/>
 						<Form.Check
 							inline
@@ -128,12 +130,17 @@ export default function Login() {
 							value="DEPARTMENT"
 							name="role"
 							id="role2"
+							className="radioLabel"
 						/>
 					</Col>
 				</Form.Group>
 				<Form.Group as={Row} className="justify-content-center">
 					<Col sm={12}>
-						<Button type="button" className="w-100" onClick={handleSubmit}>
+						<Button
+							type="button"
+							className="btn btn-dark btn-block btn-flat"
+							onClick={handleSubmit}
+						>
 							Sign in
 						</Button>
 					</Col>
