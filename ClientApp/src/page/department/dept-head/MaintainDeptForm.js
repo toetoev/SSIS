@@ -4,6 +4,7 @@ import React from "react";
 
 export default function MaintainDeptForm() {
 	return (
+<<<<<<< Updated upstream
 		<div className="">
 			<h3>Maintain Department</h3>
 			<Form>
@@ -53,6 +54,7 @@ export default function MaintainDeptForm() {
 						</Col>
 					</Form.Group>
 				</fieldset>
+=======
 		<div className="col-lg-10 mt-3">
 			<h4>Maintain Department</h4>
 			<Form className="mt-4">
@@ -112,6 +114,7 @@ export default function MaintainDeptForm() {
 					</Col>
 				</Form.Group>
 				<Form.Group className="justify-content-center">
+<<<<<<< Updated upstream
 					<Col sm={1}>
 						<Button type="button" className="btn btn-success floatRight">
 =======
@@ -120,6 +123,7 @@ export default function MaintainDeptForm() {
 							type="button"
 							className="btn btn-success float-right"
 						>
+>>>>>>> Stashed changes
 							Update
 						</Button>
 					</Col>
