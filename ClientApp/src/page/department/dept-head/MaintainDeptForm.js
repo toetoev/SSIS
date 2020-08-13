@@ -1,18 +1,17 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
+
 import React from "react";
 
 export default function MaintainDeptForm() {
 	return (
-<<<<<<< Updated upstream
-		<div>
-
-=======
 		<div className="">
 			<h3>Maintain Department</h3>
 			<Form>
 				<fieldset>
 					<Form.Group as={Row}>
-						<Form.Label as="legend" className="" column sm={2}>Collection Point : </Form.Label>
+						<Form.Label as="legend" className="" column sm={2}>
+							Collection Point :{" "}
+						</Form.Label>
 
 						<Col sm={10}>
 							<Form.Check
@@ -55,7 +54,9 @@ export default function MaintainDeptForm() {
 					</Form.Group>
 				</fieldset>
 				<Form.Group as={Row} controlId="nameOrEmail">
-					<Form.Label className="" column sm={2}>New Representative Name : </Form.Label>
+					<Form.Label className="" column sm={2}>
+						New Representative Name :{" "}
+					</Form.Label>
 					<Col sm={10}>
 						<Form.Control as="select">
 							<option>1</option>
@@ -68,13 +69,12 @@ export default function MaintainDeptForm() {
 				</Form.Group>
 				<Form.Group className="justify-content-center">
 					<Col sm={1}>
-						<Button type="button" className="btn btn-success floatRight" onClick={handleSubmit}>
+						<Button type="button" className="btn btn-success floatRight">
 							Update
-                        </Button>
+						</Button>
 					</Col>
 				</Form.Group>
 			</Form>
->>>>>>> Stashed changes
 		</div>
 	);
 }
