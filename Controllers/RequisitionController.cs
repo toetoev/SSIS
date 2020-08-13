@@ -1,19 +1,12 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SSIS.Models;
+using SSIS.Services;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.AccessControl;
+using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SSIS.Models;
-using SSIS.Payloads;
-using SSIS.Repositories;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -21,25 +14,37 @@ namespace SSIS.Controllers
     [Route("api/[controller]")]
     public class RequisitionController : ControllerBase
     {
-        private readonly IRequisitionService _requisitionService;
-        public RequisitionController(IRequisitionService requisitionService)
+        private readonly IReqService _reqService;
+        public RequisitionController(IReqService reqService)
         {
-            _requisitionService = requisitionService;
+            _reqService = reqService;
         }
-
-        // TODO: Example of get current user
-        // User.FindFirst(ClaimTypes.Email).Value
-        // TODO: Example of print out item list from body
-        // requisitionItems.ForEach(ri => System.Console.WriteLine(ri.ToString()));
 
         [HttpPost("")]
         [Authorize(Roles = DeptRole.Employee)]
-        public IActionResult CreateRequisition([FromBody] List<RequisitionItem> requisitionItems)
+        public IActionResult CreateReq([FromBody] List<RequisitionItem> rList)
         {
-            return Ok(_requisitionService.CreateRequisition(requisitionItems).Result);
+            DeptStaff requestedBy = new DeptStaff { Email = User.FindFirst(ClaimTypes.Email).Value};
+            return Ok(_reqService.CreateReq(rList, requestedBy).Result);
             // return Ok(_authService.Login(user).Result);
         }
 
-        // [Authorize(Roles = StoreRole.Clerk)]
+        //[HttpGet("")]
+        //public IActionResult RetrieveReq()
+        //{
+        //    return Ok(_reqService.RetreiveRequisition().Result);
+        //}
+
+        //[HttpPut("")]
+        //public IActionResult UpdateRep([FromBody] Requisition req)
+        //{
+        //    return null;
+        //}
+
+        //[HttpDelete("")]
+        //public IActionResult DeleteReq([FromBody] Requisition req)
+        //{
+        //    return null;
+        //}
     }
 }
