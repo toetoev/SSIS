@@ -16,12 +16,19 @@ namespace SSIS.Databases
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StoreStaff>(entity => { entity.HasIndex(e => e.Email).IsUnique(); });
+           
+            // composite key  item id & requisition id
             modelBuilder.Entity<RequisitionItem>().HasKey(ri => new { ri.ItemId, ri.RequisitionId });
+
+            // composite key  item id & requisition id
             modelBuilder.Entity<SupplyTenderItem>().HasKey(sti => new { sti.ItemId, sti.SupplierId });
+
+            //use many row from 1 table
             modelBuilder.Entity<Requisition>()
                 .HasOne(r => r.RequestedBy)
                 .WithMany(ds => ds.RequestedRequisitions)
                 .HasForeignKey(r => r.RequestedByEmail);
+
             modelBuilder.Entity<Requisition>()
                 .HasOne(r => r.ReviewedBy)
                 .WithMany(ds => ds.ReviewedRequisitions)

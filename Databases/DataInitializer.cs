@@ -19,11 +19,12 @@ namespace SSIS.Databases
         {
             _dbContext.Database.EnsureDeleted();
             _dbContext.Database.EnsureCreated();
-            SeedCollectionPoint();
-            SeedDepartment();
-            SeedDeptStaff();
-            SeedSupplier();
-            SeedItem();
+            //SeedCollectionPoint();
+            //SeedDepartment();
+            //SeedDeptStaff();
+            //SeedSupplier();
+            //SeedItem();
+            //  SeedRequistion();
         }
 
         private void SeedDeptStaff()
@@ -72,14 +73,32 @@ namespace SSIS.Databases
 
         private void SeedDepartment()
         {
-            string[] departments = {
-                "Computer Science",
-                "Medical",
-                "Math",
-                "Law"
+            //string[] departments = {
+            //    "Computer Science",
+            //    "Medical",
+            //    "Math",
+            //    "Law"
+            //};
+            //Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = "Science School (9:30am)" }));
+            //_dbContext.SaveChanges();
+
+            ICollection<CollectionPoint> collections = _dbContext.CollectionPoints.ToList();
+            ICollection<Department> depts = new List<Department>
+            {
+                new Department { Name = "Computer Science",  CollectionPoint = collections.Where(d => d.Location == "Science School (9:30am)").FirstOrDefault()},
+                new Department { Name = "Medical",  CollectionPoint = collections.Where(d => d.Location == "Medical School (9:30am) ").FirstOrDefault()},
+                new Department { Name = "IT",  CollectionPoint = collections.Where(d => d.Location == "Engineering School (11:00am)").FirstOrDefault()},
+                new Department { Name = "Medical",  CollectionPoint = collections.Where(d => d.Location == "Medical School (9:30am) ").FirstOrDefault()},
+                new Department { Name = "Law",  CollectionPoint = collections.Where(d => d.Location == "University Hospital (11:00am)").FirstOrDefault()},
+                new Department { Name = "Business",  CollectionPoint = collections.Where(d => d.Location == "Management School (11:00am)").FirstOrDefault()},
+
             };
-            Array.ForEach(departments, el => _dbContext.Add(new Department { Name = el, CollectionPointId = "Science School (9:30am)" }));
+            foreach (var dept in depts)
+            {
+                _dbContext.Add(dept);
+            }
             _dbContext.SaveChanges();
+
         }
 
         private void SeedCollectionPoint()
@@ -95,5 +114,19 @@ namespace SSIS.Databases
             Array.ForEach(collectionPointLocations, el => _dbContext.Add(new CollectionPoint { Location = el }));
             _dbContext.SaveChanges();
         }
+        //private void SeedRequistion()
+        //{
+        //    //RequisitionItem reqItem = new RequisitionItem() { Actual = 1 };
+        //    //RequisitionItem reqItem2 = new RequisitionItem() { Actual = 2 };
+        //    _dbContext.Add(
+        //        new Requisition { 
+        //            RequisitionItems = new List<RequisitionItem>() 
+        //                                {   new RequisitionItem() { Actual = 1 ,Item = new Item(){s},
+        //                                    new RequisitionItem() { Actual = 2 ,Item = null}
+        //                                 }
+
+        //        });
+        //    _dbContext.SaveChanges();
+        //}
     }
 }
