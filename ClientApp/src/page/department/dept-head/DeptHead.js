@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import Header from "../../component/Header";
 import MaintainDeptForm from "./MaintainDeptForm";
 import React from "react";
-import ReviewRequisitions from "./ReviewRequisitions";
+import ReviewRequisition from "./ReviewRequisition";
 import Sidebar from "../../component/Sidebar";
 
 export default function DeptHead() {
@@ -18,9 +18,9 @@ export default function DeptHead() {
 							<Sidebar>Maintain Departments</Sidebar>
 							<MaintainDeptForm></MaintainDeptForm>
 						</Route>
-						<Route path={`${path}/requisitions`}>
+						<Route path={`${path}/requisition`}>
 							<Sidebar>Review Requisitions</Sidebar>
-							<ReviewRequisitions></ReviewRequisitions>
+							<ReviewRequisition></ReviewRequisition>
 						</Route>
 					</Switch>
 				</div>

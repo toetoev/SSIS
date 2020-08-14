@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import React from "react";
 import Table from "react-bootstrap/Table";
 
-export default function ReviewRequisitions() {
+export default function ReviewRequisition() {
 	return (
 		<div className="">
 			<h3>Review Requisitions</h3>
