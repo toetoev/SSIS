@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
+using SSIS.Payloads;
 using SSIS.Services;
 
 namespace SSIS.Controllers
@@ -19,6 +21,15 @@ namespace SSIS.Controllers
         {
             _requisitionService = requisitionService;
         }
+
+        [HttpGet("")]
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep + "," + DeptRole.Employee)]
+        public IActionResult GetRequsition ()
+        {
+            DeptStaff requestedBy = new DeptStaff { Email = User.FindFirst(ClaimTypes.Email).Value };
+            return Ok(_requisitionService.GetRequisitionsByRole(requestedBy).Result);
+        }
+
 
         [HttpPost("")]
         [Authorize(Roles = DeptRole.Employee)]
