@@ -35,7 +35,7 @@ Content-Type: application/json
 
 
 ### DeptStaffController Get DeptStaff By Role
-GET https://localhost:5001/api/deptStaff?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE&roles=DEPTHEAD
+GET https://localhost:5001/api/deptStaff?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE
 
 ### DeptStaffController Update Dept Rep
 POST https://localhost:5001/api/deptStaff
