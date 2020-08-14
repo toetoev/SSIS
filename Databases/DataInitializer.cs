@@ -24,6 +24,7 @@ namespace SSIS.Databases
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
+            SeedStoreStaff();
             SeedSupplier();
             SeedCategory();
             SeedItem();
@@ -41,6 +42,21 @@ namespace SSIS.Databases
             foreach (var deptStaff in deptStaffs)
             {
                 _dbContext.Add(deptStaff);
+            }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedStoreStaff()
+        {
+            ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
+            {
+                new StoreStaff { Name = "Win", Email = "win@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "Kai", Email = "kai@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "Zana", Email = "zana@gmail.com", Password = "1", Role = "MANAGER" }
+            };
+            foreach (var storeStaff in storeStaffs)
+            {
+                _dbContext.Add(storeStaff);
             }
             _dbContext.SaveChanges();
         }
