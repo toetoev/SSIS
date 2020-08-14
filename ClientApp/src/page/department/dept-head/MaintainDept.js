@@ -1,7 +1,7 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
-export default function MaintainDeptForm() {
+export default function MaintainDept() {
 	const [collectionPoint, setCollectionPoint] = useState("");
 	const [deptRep, setDeptRep] = useState("");
 
