@@ -9,6 +9,5 @@ namespace SSIS.Repositories
         Task<bool> DepartmentExist(string deptName);
         Task<Department> GetDepartment(string name);
         Task<int> UpdateCollectionPoint(Department department);
-        Task<string> GetCollectionPoint(string deptName);
     }
 }

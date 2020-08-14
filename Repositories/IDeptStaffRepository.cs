@@ -11,5 +11,6 @@ namespace SSIS.Repositories
         Task<DeptStaff> GetDeptStaffByEmail(DeptStaff deptStaff);
         Task UpdateDeptRep(DeptStaff deptStaff);
         Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles);
+        Task<string> GetCollectionPointByStaff(string deptStaff);
     }
 }

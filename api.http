@@ -18,7 +18,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80M
 
 
 ### DeptController Get Collection Point
-GET https://localhost:5001/api/dept/Computer%20Science
+GET https://localhost:5001/api/dept
+Authorization:  Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3Mzg0ODQzLCJleHAiOjE1OTc0NzEyNDMsImlhdCI6MTU5NzM4NDg0M30.ATQEC7MNftEZNgEnC6dNTFJvJiDwxlFmIybXPKP_XvTmE-UJXftYiebdr0-3bnN2hOqjrXNkzLSCCBVGQRmMTg
 
 ### DeptController Update Collection Point
 POST https://localhost:5001/api/dept
