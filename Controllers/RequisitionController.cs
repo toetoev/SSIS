@@ -33,10 +33,9 @@ namespace SSIS.Controllers
         // requisitionItems.ForEach(ri => System.Console.WriteLine(ri.ToString()));
 
         [HttpPost("")]
-        [Authorize(Roles = DeptRole.Employee)]
-        public IActionResult CreateRequisition([FromBody] List<RequisitionItem> requisitionItems)
+        public IActionResult CreateRequisition([FromBody] List<RequisitionItem> requisition)
         {
-            return Ok(_requisitionService.CreateRequisition(requisitionItems).Result);
+            return Ok(_requisitionService.CreateRequisition(requisition).Result);
             // return Ok(_authService.Login(user).Result);
         }
 

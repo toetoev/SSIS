@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ﻿using SSIS.Databases;
 using SSIS.Models;
 using SSIS.Payloads;
@@ -7,64 +7,85 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-=======
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Repositories;
->>>>>>> master
+
 
 namespace SSIS.Services
 {
     public class RequisitionService : IRequisitionService
     {
         private readonly IRequisitionRepository _requisitionRepository;
-<<<<<<< HEAD
-        private readonly DataContext _dbContext;
-        public RequisitionService(IRequisitionRepository requisitionRepository, DataContext dbContext)
+        private readonly IDeptStaffRepository _deptStaffRepository;
+
+
+        public RequisitionService(IRequisitionRepository requisitionRepository, IDeptStaffRepository deptStaffRepository)
         {
             _requisitionRepository = requisitionRepository;
-            _dbContext = dbContext;
+            _deptStaffRepository = deptStaffRepository;
+
         }
 
-        public Task<ApiResponse> CreateRequisitionRep(Requisition requisition)
-        {
-           
-        }
-
-        //public async Task<ApiResponse> UpdateRequisition(Requisition requisition)
+        //public async Task<ApiResponse> CreateRequisition(Requisition requisitionFromRepo)
         //{
-        //    Requisition requisitionFromRepo = await _requisitionRepository.GetRequisitionFromRepo(requisition);
-        //    if (requisitionFromRepo != null)
-        //    {
-        //        //Requisition currentDeptRep = await _requisitionRepository.GetCurrentDeptRep(requisitionFromRepo);
-        //        //if (currentDeptRep != null)
-        //        //{
-        //        //    currentDeptRep.Role = DeptRole.Employee;
-        //        //}
-        //        //requisitionFromRepo.Role = DeptRole.DeptRep;
-        //        requisitionFromRepo.RequisitionItems.Clear();
-        //        requisitionFromRepo.RequisitionItems = requisition.RequisitionItems;
+        //    //DeptStaff deptStaff = new DeptStaff();
 
+        //    //deptStaff.Email = "meka@gmail.com";
+
+        //    //Requisition requisition = new Requisition
+        //    //{
+        //    //    Id = Guid.NewGuid(),
+        //    //    RequestedOn = DateTime.Now,
+        //    //    Comment = "EmployeeComment",
+        //    //    Status = RequisitionStatus.APPLIED,
+        //    //    RequestedBy = await _deptStaffRepository.GetDeptStaffFromRepo(deptStaff)
+
+        //    //};
+        //    requisitionFromRepo.Id = Guid.NewGuid();
+        //    requisitionFromRepo.RequestedBy = await _deptStaffRepository.GetDeptStaffFromRepo(requisitionFromRepo.RequestedBy);
+        //    foreach (var i in requisitionFromRepo.RequisitionItems)
+        //    {
+        //        i.RequisitionId = requisitionFromRepo.Id;
         //    }
-        //    await _dbContext.SaveChangesAsync();
-        //    return new ApiResponse { Success = true };
+
+        //    //requisition.RequisitionItems = requisitionItems;
+
+        //    if (await _requisitionRepository.CreateRequisition(requisitionFromRepo) != null)
+        //        return new ApiResponse { Success = true };
+        //    return new ApiResponse { Success = false, Message = "Create Requisition List Failed" };
         //}
-    }
-}
-=======
-        public RequisitionService(IRequisitionRepository requisitionRepository)
-        {
-            _requisitionRepository = requisitionRepository;
-        }
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems)
         {
-            Requisition requisition = new Requisition { };
+            DeptStaff deptStaff = new DeptStaff();
+
+            deptStaff.Email = "meka@gmail.com";
+
+            Requisition requisition = new Requisition
+            {
+                Id = Guid.NewGuid(),
+                RequestedOn = DateTime.Now,
+                Comment = "EmployeeComment",
+                Status = RequisitionStatus.APPLIED,
+                RequestedBy = await _deptStaffRepository.GetDeptStaffFromRepo(deptStaff)
+
+            };
+
+            foreach (var i in requisitionItems)
+            {
+                i.RequisitionId = requisition.Id;
+            }
+
+            requisition.RequisitionItems = requisitionItems;
+
             if (await _requisitionRepository.CreateRequisition(requisition) != null)
                 return new ApiResponse { Success = true };
             return new ApiResponse { Success = false, Message = "Create Requisition List Failed" };
         }
     }
 }
->>>>>>> master
+
+
