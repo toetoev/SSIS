@@ -15,7 +15,6 @@ namespace SSIS.Models
         public string Name { get; set; }
 
         [MaxLength(50)]
-        [JsonIgnore]
         public string Password { get; set; }
 
         public string Role { get; set; }

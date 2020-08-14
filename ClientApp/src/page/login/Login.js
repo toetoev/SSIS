@@ -1,9 +1,8 @@
 import "./Login.css";
 
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Form, Input, Radio } from "antd";
 import React, { useState } from "react";
 
-import Bootbox from "bootbox-react";
 import DeptRole from "../../constant/DeptRole";
 import StoreRole from "../../constant/StoreRole";
 import axios from "axios";
@@ -15,10 +14,8 @@ export default function Login() {
 	const [nameOrEmail, setNameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("");
-	const [alertMsg, setAlertMsg] = useState("");
-	const [showAlert, setShowAlert] = useState(false);
 
-	const handleSubmit = (event) => {
+	const handleSubmit = () => {
 		axios
 			.post("https://localhost:5001/api/auth/login", {
 				name: nameOrEmail,
@@ -27,19 +24,18 @@ export default function Login() {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					localStorage.setItem("ACCESS_TOKEN", result.data.accessToken);
 					localStorage.setItem("ROLE", result.data.role);
 					directToHomePageBasedOnRole();
 				} else {
-					setAlertMsg(result.message);
-					setShowAlert(true);
+					// TODO: show error msg using popup modal
 				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
-		event.preventDefault();
 	};
 
 	const directToHomePageBasedOnRole = () => {
@@ -82,76 +78,53 @@ export default function Login() {
 	return (
 		<div className="login-box-body login-box">
 			<p className="login-box-msg">Sign in - Logic University</p>
-			<Form>
-				<Form.Group as={Row} controlId="nameOrEmail">
-					<Col sm={12}>
-						<Form.Label className="formLabel">Name / Email : </Form.Label>
-						<Form.Control
-							type="text"
-							placeholder="Enter name or email"
-							onChange={(e) => setNameOrEmail(e.target.value)}
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row} controlId="password">
-					<Col sm={12}>
-						<Form.Label className="formLabel">Password : </Form.Label>
-						<Form.Control
-							type="password"
-							placeholder="Enter password"
-							onChange={(e) => setPassword(e.target.value)}
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row}>
-					<Col>
-						<Form.Label as="legend" className="formLabel">
-							Role :{" "}
-						</Form.Label>
-					</Col>
-					<Col
-						sm={12}
-						className="m-auto d-flex justify-content-start"
-						onChange={(e) => setRole(e.target.value)}
-					>
-						<Form.Check
-							inline
-							type="radio"
-							label="Store"
-							value="STORE"
-							name="role"
-							id="role1"
-							className="radioLabel"
-						/>
-						<Form.Check
-							inline
-							type="radio"
-							label="Department"
-							value="DEPARTMENT"
-							name="role"
-							id="role2"
-							className="radioLabel"
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row} className="justify-content-center">
-					<Col sm={12}>
-						<Button
-							type="button"
-							className="btn btn-dark btn-block btn-flat"
-							onClick={handleSubmit}
-						>
-							Sign in
-						</Button>
-					</Col>
-				</Form.Group>
+			// TODO: change form layout
+			<Form onFinish={handleSubmit}>
+				<Form.Item
+					label="Name / Email: "
+					name="nameOrEmail"
+					rules={[
+						{
+							required: true,
+							message: "Please input your name or email!",
+						},
+					]}
+				>
+					<Input onChange={(e) => setNameOrEmail(e.target.value)} />
+				</Form.Item>
+				<Form.Item
+					label="Password: "
+					name="password"
+					rules={[
+						{
+							required: true,
+							message: "Please input your password!",
+						},
+					]}
+				>
+					<Input.Password onChange={(e) => setPassword(e.target.value)} />
+				</Form.Item>
+				<Form.Item
+					label="Role: "
+					name="role"
+					rules={[
+						{
+							required: true,
+							message: "Please choose one role!",
+						},
+					]}
+				>
+					<Radio.Group onChange={(e) => setRole(e.target.value)} value={setRole}>
+						<Radio value={"STORE"}>Store</Radio>
+						<Radio value={"DEPARTMENT"}>Department</Radio>
+					</Radio.Group>
+				</Form.Item>
+				<Form.Item>
+					<Button type="primary" htmlType="submit">
+						Sign in
+					</Button>
+				</Form.Item>
 			</Form>
-			<Bootbox
-				show={showAlert}
-				type={"alert"}
-				message={alertMsg}
-				onClose={(e) => setShowAlert(false)}
-			/>
 		</div>
 	);
 }
