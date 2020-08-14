@@ -1,8 +1,19 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 
-import React from "react";
+export default function MaintainDept() {
+	const [collectionPoint, setCollectionPoint] = useState("");
+	const [deptRep, setDeptRep] = useState("");
 
-export default function MaintainDeptForm() {
+	useEffect(() => {
+		// fetch initial value for collectionPoint and deptRep
+	}, []);
+
+	const handleSubmit = (event) => {
+		// call api to update collectionPoint and deptRep
+		event.preventDefault();
+	};
+
 	return (
 		<div className="">
 			<h3>Maintain Department</h3>

@@ -59,6 +59,7 @@ namespace SSIS
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,7 +99,7 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-          //  dataInitializer.Seed();
+            //dataInitializer.Seed();
         }
     }
 }
