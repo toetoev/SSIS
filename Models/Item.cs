@@ -9,6 +9,21 @@ namespace SSIS.Models
 {
     public class Item
     {
+        public Item(string bin, string description, string uoM, int reorderLevel, int reorderQty, Category category)
+        {
+            Id = Guid.NewGuid();
+            Bin = bin;
+            Description = description;
+            UoM = uoM;
+            ReorderLevel = reorderLevel;
+            ReorderQty = reorderQty;
+            Category = category;
+        }
+        public Item()
+        {
+
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -23,6 +38,5 @@ namespace SSIS.Models
         public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
         public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
-
     }
 }

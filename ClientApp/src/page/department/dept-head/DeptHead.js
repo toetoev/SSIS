@@ -1,10 +1,11 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import Header from "../../component/Header";
-import MaintainDeptForm from "./MaintainDeptForm";
+import MaintainAuthDelegation from "./MaintainAuthDelegation";
+import MaintainDept from "./MaintainDept";
 import React from "react";
+import ReviewRequisition from "./ReviewRequisition";
 import Sidebar from "../../component/Sidebar";
-import MaintainAuthDelegation from "./MaintainAuthDelegation"
 
 export default function DeptHead() {
 	let { path } = useRouteMatch();
@@ -16,11 +17,15 @@ export default function DeptHead() {
 					<Switch>
 						<Route exact path={`${path}`}>
 							<Sidebar>Maintain Dept</Sidebar>
-							<MaintainDeptForm></MaintainDeptForm>
+							<MaintainDept></MaintainDept>
 						</Route>
 						<Route path={`${path}/delegation`}>
 							<Sidebar>Delegation</Sidebar>
 							<MaintainAuthDelegation></MaintainAuthDelegation>
+						</Route>
+						<Route path={`${path}/requisition`}>
+							<Sidebar>Review Requisitions</Sidebar>
+							<ReviewRequisition></ReviewRequisition>
 						</Route>
 					</Switch>
 				</div>
