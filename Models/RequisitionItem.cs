@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SSIS.Models
 {
+    [ToString]
     public class RequisitionItem
     {
         [Key]

@@ -15,6 +15,12 @@ namespace SSIS.Controllers
             _deptService = deptService;
         }
 
+        [HttpGet("{deptName}")]
+        public IActionResult GetCollectionPoint([FromRoute] string deptName)
+        {
+            return Ok(_deptService.GetCollectionPoint(deptName).Result);
+        }
+
         [HttpPost("")]
         public IActionResult UpdateCollectionPoint([FromBody] Department department)
         {
