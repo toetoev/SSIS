@@ -1,7 +1,8 @@
-import { Button, Navbar } from "react-bootstrap";
+import { Button, Navbar, Nav } from "react-bootstrap";
 
 import React from "react";
 import { useHistory } from "react-router-dom";
+import SignoutBtn from "../icon/SignoutBtn";
 
 export default function Header() {
 	let history = useHistory();
@@ -14,7 +15,7 @@ export default function Header() {
 
 	return (
 		<div>
-			<Navbar bg="primary" variant="dark" sticky="top">
+			<Navbar bg="dark" variant="dark" sticky="top">
 				<Navbar.Brand href="/">
 					<img
 						alt=""
@@ -26,9 +27,7 @@ export default function Header() {
 					Hello
 				</Navbar.Brand>
 				<Navbar.Collapse className="justify-content-end">
-					<Button type="button" onClick={logout}>
-						Sign Out
-					</Button>
+					<a onClick={logout}><SignoutBtn></SignoutBtn></a>
 				</Navbar.Collapse>
 			</Navbar>
 		</div>
