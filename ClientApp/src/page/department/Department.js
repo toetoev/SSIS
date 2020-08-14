@@ -1,3 +1,5 @@
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+
 import { Switch, useRouteMatch } from "react-router-dom";
 
 import DeptHead from "./dept-head/DeptHead";

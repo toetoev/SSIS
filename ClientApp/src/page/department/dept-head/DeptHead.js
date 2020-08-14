@@ -9,23 +9,26 @@ import Sidebar from "../../component/Sidebar";
 
 export default function DeptHead() {
 	let { path } = useRouteMatch();
+	const sideBarItem = [
+		{ to: `${path}`, title: "Maintain Department" },
+		{ to: `${path}/requisition`, title: "Review Requisition" },
+		{ to: `${path}/delegation`, title: "Delegation" },
+	];
 	return (
 		<div>
 			<Header></Header>
 			<div className="container-fluid">
 				<div className="row">
 					<Switch>
+						<Sidebar items={sideBarItem}></Sidebar>
 						<Route exact path={`${path}`}>
-							<Sidebar>Maintain Dept</Sidebar>
 							<MaintainDept></MaintainDept>
 						</Route>
-						<Route path={`${path}/delegation`}>
-							<Sidebar>Delegation</Sidebar>
-							<MaintainAuthDelegation></MaintainAuthDelegation>
-						</Route>
 						<Route path={`${path}/requisition`}>
-							<Sidebar>Review Requisitions</Sidebar>
 							<ReviewRequisition></ReviewRequisition>
+						</Route>
+						<Route path={`${path}/delegation`}>
+							<MaintainAuthDelegation></MaintainAuthDelegation>
 						</Route>
 					</Switch>
 				</div>
