@@ -1,5 +1,16 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function Clerk() {
-	return <div></div>;
+import Header from "../../component/Header";
+
+export default class Clerk extends Component {
+	render() {
+		return (
+			<div>
+				<Header></Header>
+				<div className="container-fluid">
+					<div className="row">Clerk Page</div>
+				</div>
+			</div>
+		);
+	}
 }

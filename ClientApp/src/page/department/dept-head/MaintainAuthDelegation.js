@@ -1,108 +1,140 @@
-import { Button } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
+import { Button, DatePicker, Form, Input, Modal, Select, Table } from "antd";
+
 import React from "react";
-import Table from "react-bootstrap/Table";
+
+const { TextArea } = Input;
+
+const { Option } = Select;
+
+const layout = {
+	labelCol: { span: 4 },
+	wrapperCol: { span: 16 },
+};
+
+const dataSource = [
+	{
+		key: "1",
+		startDate: "17 August",
+		endDate: "20 August",
+		delegate: "Meka",
+		reason: "Sick Leave",
+		action: "Delete",
+	},
+];
+const columns = [
+	{
+		title: "Start Date",
+		dataIndex: "startDate",
+		key: "startDate",
+	},
+	{
+		title: "End Date",
+		dataIndex: "endDate",
+		key: "endDate",
+	},
+	{
+		title: "Delegate",
+		dataIndex: "delegate",
+		key: "delegate",
+	},
+	{
+		title: "Reason",
+		dataIndex: "reason",
+		key: "reason",
+	},
+	{
+		title: "Action",
+		dataIndex: "action",
+		key: "action",
+		render: () => (
+			<span>
+				<Button type="primary">
+					<a>Edit</a>
+				</Button>
+				<span className="ant-divider" />
+				<Button type="danger">
+					<a>Delete</a>
+				</Button>
+			</span>
+		),
+	},
+];
 
 export default function MaintainAuthDelegation() {
 	return (
 		<div className="">
 			<h3>Authority Delegation</h3>
 			<br />
-
-			{Add()}
-			<Table striped bordered hover>
-				<thead>
-					<tr>
-						<th>Start Date</th>
-						<th>End Date</th>
-						<th>Delegate</th>
-						<th>Reason</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>1 Aug 2020</td>
-						<td>3 Aug 2020</td>
-						<td>Martini Zhao</td>
-						<td>Sick Leave</td>
-						<td>
-							{Edit()}
-							{Delete()}
-						</td>
-					</tr>
-				</tbody>
-			</Table>
+			<Add />
+			<Table columns={columns} dataSource={dataSource} />
 		</div>
 	);
 }
 
-function Add() {
-	const [modalShow, setModalShow] = React.useState(false);
+class Add extends React.Component {
+	state = { visible: false };
+	showModal = () => {
+		this.setState({
+			visible: true,
+		});
+	};
+	handleOk = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	};
+	handleCancel = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	};
+	render() {
+		return (
+			<div>
+				<Button type="primary" onClick={this.showModal}>
+					Add
+				</Button>
 
-	return (
-		<>
-			<Button variant="primary" onClick={() => setModalShow(true)}>
-				Add
-			</Button>
-
-			<DelegationModal show={modalShow} onHide={() => setModalShow(false)} />
-		</>
-	);
+				<Modal
+					title="Delegation Options"
+					visible={this.state.visible}
+					onOk={this.handleOk}
+					onCancel={this.handleCancel}
+				>
+					<Form {...layout} onSubmit={this.handleSubmit}>
+						<Form.Item label="Start Date">
+							<DatePicker onChange={onChange} />
+						</Form.Item>
+						<Form.Item label="End Date">
+							<DatePicker onChange={onChange} />
+						</Form.Item>
+						<Form.Item label="Delegate">
+							<Select
+								defaultValue="Martini Zhao"
+								style={{ width: 120 }}
+								onChange={handleChange}
+							>
+								<Option value="jack">Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yiminghe">Yiminghe</Option>
+							</Select>
+						</Form.Item>
+						<Form.Item label="Reason">
+							<TextArea rows={4}></TextArea>
+						</Form.Item>
+					</Form>
+				</Modal>
+			</div>
+		);
+	}
 }
 
-function Edit() {
-	return (
-		<>
-			<Button variant="primary">Edit</Button>
-		</>
-	);
+function onChange(date, dateString) {
+	console.log(date, dateString);
 }
 
-function Delete() {
-	return (
-		<>
-			<Button variant="primary">Delete</Button>
-		</>
-	);
-}
-
-function DelegationModal(props) {
-	return (
-		<Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-			<Modal.Header closeButton>
-				<Modal.Title id="contained-modal-title-vcenter">Delegation Details</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<div className="">
-					<form>
-						<Form.Group controlId="exampleForm.ControlTextarea1">
-							<Form.Label>Start Date:</Form.Label>
-							<Form.Control type="date" style={{ width: "100%" }} />
-							<Form.Label>End Date:</Form.Label>
-							<Form.Control type="date" style={{ width: "100%" }} />
-							<Form.Label>Delegate:</Form.Label>
-							<Form.Control as="select">
-								<option>Martini Zhao</option>
-								<option>Meka Weka</option>
-								<option>Win Zin</option>
-								<option>Zana Mama</option>
-								<option>ToeToeWoe</option>
-							</Form.Control>
-							<Form.Label>Reason:</Form.Label>
-							<Form.Control as="textarea" rows="3">
-								Specify the Delegation Reason
-							</Form.Control>
-						</Form.Group>
-						<Button variant="outline-success">Save</Button>{" "}
-						<Button variant="outline-danger">Clear</Button>{" "}
-					</form>
-				</div>
-			</Modal.Body>
-			{/* <Modal.Footer>
-		  <Button onClick={props.onHide}>Close</Button>
-		</Modal.Footer> */}
-		</Modal>
-	);
+function handleChange(value) {
+	console.log(`selected ${value}`);
 }
