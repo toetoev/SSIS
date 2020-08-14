@@ -81,7 +81,7 @@ export default function MaintainDeptForm() {
 						<Button
 							type="button"
 							className="btn btn-success floatRight"
-							onClick={handleSubmit}
+							// onClick={handleSubmit}
 						>
 							Update
 						</Button>

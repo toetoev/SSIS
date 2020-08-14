@@ -8,13 +8,13 @@ export default function Sidebar() {
 					<li className="nav-item">
 						<a className="nav-link">
 							<i className="fas fa-user-plus mr-1"></i>
-							Register
+							Maintain Department
 						</a>
 					</li>
 					<li className="nav-item">
 						<a className="nav-link active">
 							<i className="far fa-address-book mr-2"></i>
-							Manage Employees
+							Review Requisitions
 						</a>
 					</li>
 				</ul>
