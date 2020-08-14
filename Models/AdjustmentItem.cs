@@ -14,7 +14,6 @@ namespace SSIS.Models
         public int AdjustedQty { get; set; }
         public string Reason { get; set; }
 
-        [JsonIgnore]
         public virtual Item Item { get; set; }
 
         [JsonIgnore]
