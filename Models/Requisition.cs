@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SSIS.Models
@@ -25,6 +26,7 @@ namespace SSIS.Models
         public virtual DeptStaff ReviewedBy { get; set; }
         public string AcknowledgedByEmail { get; set; }
         public virtual DeptStaff AcknowledgedBy { get; set; }
+        [JsonIgnore]
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
     }
 }
