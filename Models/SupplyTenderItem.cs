@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -14,7 +15,11 @@ namespace SSIS.Models
 
         [Range(1, 3)]
         public int Priority { get; set; }
+
+        [JsonIgnore]
         public virtual Item Item { get; set; }
+
+        [JsonIgnore]
         public virtual Supplier Supplier { get; set; }
     }
 }

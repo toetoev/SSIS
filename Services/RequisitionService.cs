@@ -11,17 +11,14 @@ namespace SSIS.Services
 {
     public class RequisitionService : IRequisitionService
     {
-        private readonly IDeptRepository _deptRepository;
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IRequisitionRepository _requisitionRepository;
         private readonly IItemRepository _itemRepository;
 
-        public RequisitionService(IDeptRepository deptRepository,
-            IDeptStaffRepository deptStaffRepository,
+        public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
             IItemRepository itemRepository)
         {
-            _deptRepository = deptRepository;
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
@@ -57,6 +54,11 @@ namespace SSIS.Services
             }
             else
                 return new ApiResponse { Success = false, Message = "Some items do not exist" };
+        }
+
+        public async Task<ApiResponse> GetRequisitionsByRole(string role)
+        {
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByRole(role) };
         }
     }
 }
