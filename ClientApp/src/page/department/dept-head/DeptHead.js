@@ -1,3 +1,4 @@
+import { Container, Row } from "react-bootstrap";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import Header from "../../component/Header";
@@ -9,7 +10,7 @@ import Sidebar from "../../component/Sidebar";
 
 export default function DeptHead() {
 	let { path } = useRouteMatch();
-	const sideBarItem = [
+	const items = [
 		{ to: `${path}`, title: "Maintain Department" },
 		{ to: `${path}/requisition`, title: "Review Requisition" },
 		{ to: `${path}/delegation`, title: "Delegation" },
@@ -17,10 +18,10 @@ export default function DeptHead() {
 	return (
 		<div>
 			<Header></Header>
-			<div className="container-fluid">
-				<div className="row">
+			<Container fluid>
+				<Row>
+					<Sidebar items={items}></Sidebar>
 					<Switch>
-						<Sidebar items={sideBarItem}></Sidebar>
 						<Route exact path={`${path}`}>
 							<MaintainDept></MaintainDept>
 						</Route>
@@ -31,8 +32,8 @@ export default function DeptHead() {
 							<MaintainAuthDelegation></MaintainAuthDelegation>
 						</Route>
 					</Switch>
-				</div>
-			</div>
+				</Row>
+			</Container>
 		</div>
 	);
 }
