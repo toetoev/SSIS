@@ -15,7 +15,6 @@ namespace SSIS.Models
         public int Need { get; set; }
         public int Actual { get; set; }
 
-        [JsonIgnore]
         public virtual Item Item { get; set; }
 
         [JsonIgnore]

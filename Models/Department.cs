@@ -16,6 +16,7 @@ namespace SSIS.Models
         public string CollectionPointId { get; set; }
 
         [ForeignKey("CollectionPointId")]
+        [JsonIgnore]
         public virtual CollectionPoint CollectionPoint { get; set; }
 
         [JsonIgnore]

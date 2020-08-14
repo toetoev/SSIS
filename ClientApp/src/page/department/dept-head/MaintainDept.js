@@ -1,12 +1,29 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
+import axios from "axios";
+
 export default function MaintainDept() {
 	const [collectionPoint, setCollectionPoint] = useState("");
 	const [deptRep, setDeptRep] = useState("");
 
 	useEffect(() => {
 		// fetch initial value for collectionPoint and deptRep
+		axios
+			.get("https://localhost:5001/api/dept", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					console.log(result.data);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
 	}, []);
 
 	const handleSubmit = (event) => {
