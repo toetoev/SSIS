@@ -1,25 +1,22 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import React, { Component } from "react";
 
-import Header from "../../component/Header";
-import MaintainRequisitionForm from "./MaintainRequisitionForm";
-import React from "react";
-import Sidebar from "../../component/Sidebar";
+import { Layout } from "antd";
+import Logout from "../../component/Logout";
 
-export default function Employee() {
-	let { path } = useRouteMatch();
-	return (
-		<div>
-			<Header></Header>
-			<div className="container-fluid">
-				<div className="row">
-					<Switch>
-						<Route path={`${path}`}>
-							<Sidebar>Maintain Dept</Sidebar>
-							<MaintainRequisitionForm></MaintainRequisitionForm>
-						</Route>
-					</Switch>
-				</div>
-			</div>
-		</div>
-	);
+const { Header, Sider, Content } = Layout;
+
+export default class Employee extends Component {
+	render() {
+		return (
+			<Layout>
+				<Header className="header">
+					<Logout></Logout>
+				</Header>
+				<Layout>
+					<Sider>Sider</Sider>
+					<Content>Employee</Content>
+				</Layout>
+			</Layout>
+		);
+	}
 }

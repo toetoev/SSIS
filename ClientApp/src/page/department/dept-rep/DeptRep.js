@@ -1,26 +1,22 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import React, { Component } from "react";
 
-import Header from "../../component/Header";
-import AcknowledgeRequisition from "./AcknowledgeRequisition";
-import React from "react";
-import Sidebar from "../../component/Sidebar";
+import { Layout } from "antd";
+import Logout from "../../component/Logout";
 
+const { Header, Sider, Content } = Layout;
 
-export default function DeptRep() {
-	let { path } = useRouteMatch();
-	return (
-		<div>
-			<Header></Header>
-			<div className="container-fluid">
-				<div className="row">
-					<Switch>
-						<Route path={`${path}`}>
-							<Sidebar>Maintain Dept</Sidebar>
-							<AcknowledgeRequisition></AcknowledgeRequisition>
-						</Route>
-					</Switch>
-				</div>
-			</div>
-		</div>
-	);
+export default class DeptRep extends Component {
+	render() {
+		return (
+			<Layout>
+				<Header className="header">
+					<Logout></Logout>
+				</Header>
+				<Layout>
+					<Sider>Sider</Sider>
+					<Content>DeptRep</Content>
+				</Layout>
+			</Layout>
+		);
+	}
 }

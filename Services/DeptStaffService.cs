@@ -10,26 +10,17 @@ namespace SSIS.Services
     public class DeptStaffService : IDeptStaffService
     {
         private readonly IDeptStaffRepository _deptStaffRepository;
-        private readonly DataContext _dbContext;
-        public DeptStaffService(IDeptStaffRepository deptStaffRepository, DataContext dbContext)
+        public DeptStaffService(IDeptStaffRepository deptStaffRepository)
         {
             _deptStaffRepository = deptStaffRepository;
-            _dbContext = dbContext;
         }
-
+        public async Task<ApiResponse> GetDeptStaffByDeptAndRole(string deptName, string[] roles)
+        {
+            return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetDeptStaffByDeptAndRole(deptName, roles) };
+        }
         public async Task<ApiResponse> UpdateDeptRep(DeptStaff deptStaff)
         {
-            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffFromRepo(deptStaff);
-            if (deptStaffFromRepo != null)
-            {
-                DeptStaff currentDeptRep = await _deptStaffRepository.GetCurrentDeptRep(deptStaffFromRepo);
-                if (currentDeptRep != null)
-                {
-                    currentDeptRep.Role = DeptRole.Employee;
-                }
-                deptStaffFromRepo.Role = DeptRole.DeptRep;
-            }
-            await _dbContext.SaveChangesAsync();
+            await _deptStaffRepository.UpdateDeptRep(deptStaff);
             return new ApiResponse { Success = true };
         }
     }

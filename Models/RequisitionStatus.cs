@@ -1,3 +1,4 @@
+using System;
 namespace SSIS.Models
 {
     public enum RequisitionStatus
