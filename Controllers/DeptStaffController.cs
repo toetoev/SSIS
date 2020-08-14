@@ -19,6 +19,7 @@ namespace SSIS.Controllers
 
         // /?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE
         [HttpGet("")]
+        // TODO: authorized by dh
         public IActionResult GetDeptStaffByRole([FromQuery] string deptName, [FromQuery] string[] roles)
         {
             foreach (var role in roles)
@@ -31,6 +32,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
+        // TODO: authorized by dh
         public IActionResult UpdateDeptRep([FromBody] DeptStaff deptStaff)
         {
             return Ok(_deptStaffService.UpdateDeptRep(deptStaff).Result);

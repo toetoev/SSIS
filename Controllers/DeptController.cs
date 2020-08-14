@@ -26,6 +26,8 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
+        // [Authorize]
+        // TODO: authorize by dh
         public IActionResult UpdateCollectionPoint([FromBody] Department department)
         {
             return Ok(_deptService.UpdateCollectionPoint(department).Result);
