@@ -24,6 +24,7 @@ namespace SSIS.Databases
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
+            SeedStoreStaff();
             SeedSupplier();
             SeedCategory();
             SeedItem();
@@ -45,28 +46,128 @@ namespace SSIS.Databases
             _dbContext.SaveChanges();
         }
 
+        private void SeedStoreStaff()
+        {
+            ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
+            {
+                new StoreStaff { Name = "Win", Email = "win@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "Kai", Email = "kai@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "Zana", Email = "zana@gmail.com", Password = "1", Role = "MANAGER" }
+            };
+            foreach (var storeStaff in storeStaffs)
+            {
+                _dbContext.Add(storeStaff);
+            }
+            _dbContext.SaveChanges();
+        }
+
         private void SeedItem()
         {
-            ICollection<Supplier> suppliers = _dbContext.Suppliers.ToList();
-            ICollection<Category> categories = _dbContext.Categories.ToList();
             ICollection<Item> items = new List<Item>
             {
-                new Item
-                {
-                Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 1", UoM = "Dozen",
-                ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
-                },
-                new Item
-                {
-                Id = Guid.NewGuid(), Bin = "A1", Description = "Clips Double 2", UoM = "Dozen",
-                ReorderLevel = 50, ReorderQty = 30, Category = categories.Where(c => c.Name == "Clip").FirstOrDefault()
-                }
+                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, GetCategoryByName("Clip")),
+                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, GetCategoryByName("Clip")),
+                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, GetCategoryByName("Clip")),
+                new Item("C4", "Clips Paper Large", "Box", 50, 30, GetCategoryByName("Clip")),
+                new Item("C5", "Clips Paper Medium ", "Box", 50, 30, GetCategoryByName("Clip")),
+                new Item("C6", "Clips Paper Small", "Box", 50, 30, GetCategoryByName("Clip")),
+                new Item("E1", "Envelope Brown (3\"x6\")", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E2", "Envelope Brown (3\"x6\") w/ Window", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E3", "Envelope Brown (5\"x7\")", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E4", "Envelope Brown (5\"x7\") w/ Window", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E5", "Envelope White (3\"x6\")", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E6", "Envelope White (3\"x6\") w/ Window", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E7", "Envelope White (5\"x7\")", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E8", "Envelope White (5\"x7\") w/ Window", "Each", 600, 400, GetCategoryByName("Envelope")),
+                new Item("E20", "Eraser (hard)", "Each", 50, 20, GetCategoryByName("Eraser")),
+                new Item("E21", "Eraser (soft)", "Each", 50, 20, GetCategoryByName("Eraser")),
+                new Item("E30", "Exercise Book (100 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E31", "Exercise Book (120 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E32", "Exercise Book A4 Hardcover (100 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E33", "Exercise Book A4 Hardcover (120 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E34", "Exercise Book A4 Hardcover (200 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E35", "Exercise Book Hardcover (100 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("E36", "Exercise Book Hardcover (120 pg)", "Each", 100, 50, GetCategoryByName("Exercise")),
+                new Item("F20", "File Separator", "Set", 100, 50, GetCategoryByName("File")),
+                new Item("F21", "File-Blue Plain", "Each", 200, 100, GetCategoryByName("File")),
+                new Item("F22", "File-Blue with Logo", "Each", 200, 100, GetCategoryByName("File")),
+                new Item("F23", "File-Brown w/o Logo", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F24", "File-Brown with Logo", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F31", "Folder Plastic Blue", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F32", "Folder Plastic Clear", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F33", "Folder Plastic Green", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F34", "Folder Plastic Pink", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("F35", "Folder Plastic Yellow", "Each", 200, 150, GetCategoryByName("File")),
+                new Item("H11", "Highlighter Blue", "Box", 100, 80, GetCategoryByName("Pen")),
+                new Item("H12", "Highlighter Green", "Box", 100, 80, GetCategoryByName("Pen")),
+                new Item("H13", "Highlighter Pink", "Box", 100, 80, GetCategoryByName("Pen")),
+                new Item("H14", "Highlighter Yellow", "Box", 100, 80, GetCategoryByName("Pen")),
+                new Item("H31", "Hole Puncher 2 holes", "Each", 50, 20, GetCategoryByName("Puncher")),
+                new Item("H32", "Hole Puncher 3 holes", "Each", 50, 20, GetCategoryByName("Puncher")),
+                new Item("H33", "Hole Puncher Adjustable", "Each", 50, 20, GetCategoryByName("Puncher")),
+                new Item("P10", "Pad Postit Memo 1\"x2\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P11", "Pad Postit Memo 1/2\"x1\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P12", "Pad Postit Memo 1/2\"x2\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P13", "Pad Postit Memo 2\"x3\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P14", "Pad Postit Memo 2\"x4\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P15", "Pad Postit Memo 2\"x4\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P16", "Pad Postit Memo 3/4\"x2\"", "Packet", 100, 60, GetCategoryByName("Pad")),
+                new Item("P20", "Paper Photostat A3", "Box", 500, 500, GetCategoryByName("Paper")),
+                new Item("P21", "Paper Photostat A4", "Box", 500, 500, GetCategoryByName("Paper")),
+                new Item("P30", "Pen Ballpoint Black", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P31", "Pen Ballpoint Blue", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P32", "Pen Ballpoint Red", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P33", "Pen Felt Tip Black", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P34", "Pen Felt Tip Blue", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P35", "Pen Felt Tip Red", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P36", "Pen Transparency Permanent", "Packet", 100, 50, GetCategoryByName("Pen")),
+                new Item("P37", "Pen Transparency Soluble", "Packet", 100, 50, GetCategoryByName("Pen")),
+                new Item("P38", "Pen Whiteboard Marker Black", "Box", 100, 50, GetCategoryByName("Pen")),
+                new Item("P39", "Pen Whiteboard Marker Blue", "Box", 100, 50, GetCategoryByName("Pen")),
+                new Item("P40", "Pen Whiteboard Marker Green", "Box", 100, 50, GetCategoryByName("Pen")),
+                new Item("P41", "Pen Whiteboard Marker Red", "Box", 100, 50, GetCategoryByName("Pen")),
+                new Item("P42", "Pencil 2B", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P43", "Pencil 2B with Eraser End", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P44", "Pencil 4H ", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P45", "Pencil B", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("P46", "Pencil B with Eraser End", "Dozen", 100, 50, GetCategoryByName("Pen")),
+                new Item("R2", "Ruler 12\"", "Dozen", 50, 20, GetCategoryByName("Ruler")),
+                new Item("R1", "Ruler 6\"", "Dozen", 50, 20, GetCategoryByName("Ruler")),
+                new Item("S100", "Scissors", "Each", 50, 20, GetCategoryByName("Scissors")),
+                new Item("S40", "Scotch Tape", "Each", 50, 20, GetCategoryByName("Tape")),
+                new Item("S41", "Scotch Tape Dispenser", "Each", 50, 20, GetCategoryByName("Tape")),
+                new Item("S101", "Sharpener", "Each", 50, 20, GetCategoryByName("Sharpener")),
+                new Item("S101", "Sharpener", "Each", 50, 20, GetCategoryByName("Sharpener")),
+                new Item("S101", "Sharpener", "Each", 50, 20, GetCategoryByName("Sharpener")),
+                new Item("S101", "Sharpener", "Each", 50, 20, GetCategoryByName("Sharpener")),
+                new Item("S10", "Shorthand Book (100 pg)", "Each", 100, 80, GetCategoryByName("Shorthand")),
+                new Item("S11", "Shorthand Book (120 pg)", "Each", 100, 80, GetCategoryByName("Shorthand")),
+                new Item("S12", "Shorthand Book (80 pg)", "Each", 100, 80, GetCategoryByName("Shorthand")),
+                new Item("S20", "Stapler No. 28", "Each", 50, 20, GetCategoryByName("Stapler")),
+                new Item("S21", "Stapler No. 36", "Each", 50, 20, GetCategoryByName("Stapler")),
+                new Item("S22", "Stapler No. 28", "Box", 50, 20, GetCategoryByName("Stapler")),
+                new Item("S23", "Stapler No. 36", "Box", 50, 20, GetCategoryByName("Stapler")),
+                new Item("T1", "Thumb Tacks Large", "Box", 10, 10, GetCategoryByName("Tacks")),
+                new Item("T2", "Thumb Tacks Medium", "Box", 10, 10, GetCategoryByName("Tacks")),
+                new Item("T3", "Thumb Tacks Small", "Box", 10, 10, GetCategoryByName("Tacks")),
+                new Item("T20", "Transparency Blue", "Box", 100, 200, GetCategoryByName("Tparency")),
+                new Item("T21", "Transparency Clear", "Box", 500, 400, GetCategoryByName("Tparency")),
+                new Item("T22", "Transparency Green", "Box", 100, 200, GetCategoryByName("Tparency")),
+                new Item("T23", "Transparency Red", "Box", 100, 200, GetCategoryByName("Tparency")),
+                new Item("T24", "Transparency Reverse Blue", "Box", 100, 200, GetCategoryByName("Tparency")),
+                new Item("T25", "Transparency Cover 3M", "Box", 500, 400, GetCategoryByName("Tparency")),
+                new Item("T100", "Trays In/Out", "Set", 20, 10, GetCategoryByName("Tray")),
             };
             foreach (var item in items)
             {
                 _dbContext.Add(item);
             }
             _dbContext.SaveChanges();
+        }
+
+        private Category GetCategoryByName(string category)
+        {
+            return _dbContext.Categories.Where(c => c.Name == category).Single();
         }
 
         private void SeedSupplier()

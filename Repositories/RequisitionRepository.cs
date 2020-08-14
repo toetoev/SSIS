@@ -21,11 +21,11 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByRole(DeptStaff deptStaff)
+        public async Task<List<Requisition>> GetRequisitionsByRole(string role)
         {
             List<Requisition> requisitions = new List<Requisition>();
 
-            switch (deptStaff.Role)
+            switch (role)
             {
                 case DeptRole.Employee:
                     requisitions = await _dbContext.Requisitions.ToListAsync();
@@ -34,10 +34,9 @@ namespace SSIS.Repositories
                     requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.APPLIED || r.Status != RequisitionStatus.REJECTED).ToListAsync();
                     break;
                 case DeptRole.DeptHead:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Status == RequisitionStatus.APPLIED || r.Status == RequisitionStatus.REJECTED || r.Status == RequisitionStatus.APPROVED).ToListAsync();
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.PROCESSING_RETRIEVAL).ToListAsync();
                     break;
                 default:
-                    // code block
                     break;
             }
             return requisitions;

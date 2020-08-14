@@ -16,8 +16,8 @@ namespace SSIS.Services
         private readonly IItemRepository _itemRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
-                                  IRequisitionRepository requisitionRepository,
-                                  IItemRepository itemRepository)
+            IRequisitionRepository requisitionRepository,
+            IItemRepository itemRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
@@ -56,19 +56,9 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Some items do not exist" };
         }
 
-        public List<Requisition> GetRequisitionsByRole(DeptStaff deptStaff)
+        public async Task<ApiResponse> GetRequisitionsByRole(string role)
         {
-            // Employee: his own department, all requisition
-
-            // DR: his department, not applied, not rejected
-
-            // DH: his dept, applied, approved, rejected
-
-            DeptStaff requestedBy = await _deptStaffRepository.GetDeptStaffByEmail(deptStaff);
-
-            List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRole(requestedBy);
-
-            return requisitions;
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByRole(role) };
         }
     }
 }

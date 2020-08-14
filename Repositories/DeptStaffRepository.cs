@@ -46,5 +46,11 @@ namespace SSIS.Repositories
             }
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<string> GetCollectionPointByStaff(string deptStaff)
+        {
+            DeptStaff deptStaffFromRepo = await _dbContext.DeptStaffs.Where(ds => ds.Email == deptStaff).SingleAsync();
+            return deptStaffFromRepo.Department.CollectionPointId;
+        }
     }
 }

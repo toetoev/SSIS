@@ -19,6 +19,8 @@ namespace SSIS.Models
         public string Comment { get; set; }
         public DateTime AcknowledgedOn { get; set; }
         public RequisitionStatus Status { get; set; }
+
+        [JsonIgnore]
         public virtual Department Department { get; set; }
         public string RequestedByEmail { get; set; }
         public virtual DeptStaff RequestedBy { get; set; }

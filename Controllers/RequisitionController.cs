@@ -23,13 +23,12 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep + "," + DeptRole.Employee)]
-        public IActionResult GetRequsition ()
+        [Authorize(Roles = DeptRole.All)]
+        public IActionResult GetRequisition()
         {
-            DeptStaff requestedBy = new DeptStaff { Email = User.FindFirst(ClaimTypes.Email).Value };
-            return Ok(_requisitionService.GetRequisitionsByRole(requestedBy).Result);
+            string role = User.FindFirst(ClaimTypes.Role).Value;
+            return Ok(_requisitionService.GetRequisitionsByRole(role).Result);
         }
-
 
         [HttpPost("")]
         [Authorize(Roles = DeptRole.Employee)]

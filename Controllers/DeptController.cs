@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
@@ -15,10 +17,12 @@ namespace SSIS.Controllers
             _deptService = deptService;
         }
 
-        [HttpGet("{deptName}")]
-        public IActionResult GetCollectionPoint([FromRoute] string deptName)
+        [HttpGet("")]
+        [Authorize(Roles = DeptRole.All)]
+        public IActionResult GetCollectionPoint()
         {
-            return Ok(_deptService.GetCollectionPoint(deptName).Result);
+            string currentUser = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_deptService.GetCollectionPointByStaff(currentUser).Result);
         }
 
         [HttpPost("")]

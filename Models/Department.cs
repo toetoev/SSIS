@@ -20,6 +20,8 @@ namespace SSIS.Models
 
         [JsonIgnore]
         public virtual ICollection<DeptStaff> DeptStaffs { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Requisition> Requisitions { get; set; }
     }
 }
