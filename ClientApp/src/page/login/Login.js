@@ -78,7 +78,7 @@ export default function Login() {
 	return (
 		<div className="login-box-body login-box">
 			<p className="login-box-msg">Sign in - Logic University</p>
-			// TODO: change form layout
+			{/* TODO: change form layout */}
 			<Form onFinish={handleSubmit}>
 				<Form.Item
 					label="Name / Email: "

@@ -1,20 +1,16 @@
-import { Col, Nav } from "react-bootstrap";
-
 import { Link } from "react-router-dom";
+import { Menu } from "antd";
 import React from "react";
+import { UserOutlined } from "@ant-design/icons";
 
 export default function Sidebar({ items }) {
 	return (
-		<Col md={2}>
-			<Nav className="flex-column">
-				<Nav.Item>
-					{items.map((item) => (
-						<li className="nav-item" key={item.title}>
-							<Link to={item.to}>{item.title}</Link>
-						</li>
-					))}
-				</Nav.Item>
-			</Nav>
-		</Col>
+		<Menu theme="dark" mode="inline" defaultSelectedKeys={["0"]}>
+			{items.map((item, index) => (
+				<Menu.Item key={index} icon={<UserOutlined />}>
+					<Link to={item.to}>{item.title}</Link>
+				</Menu.Item>
+			))}
+		</Menu>
 	);
 }

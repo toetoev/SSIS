@@ -1,16 +1,22 @@
 import React, { Component } from "react";
 
-import Header from "../../component/Header";
+import { Layout } from "antd";
+import Logout from "../../component/Logout";
+
+const { Header, Sider, Content } = Layout;
 
 export default class DeptRep extends Component {
 	render() {
 		return (
-			<div>
-				<Header></Header>
-				<div className="container-fluid">
-					<div className="row">DeptRep</div>
-				</div>
-			</div>
+			<Layout>
+				<Header className="header">
+					<Logout></Logout>
+				</Header>
+				<Layout>
+					<Sider>Sider</Sider>
+					<Content>DeptRep</Content>
+				</Layout>
+			</Layout>
 		);
 	}
 }
