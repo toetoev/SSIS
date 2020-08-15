@@ -37,7 +37,12 @@ namespace SSIS.Databases
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" }
+                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "Kai Huei", Email = "kaihueiboss@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+
+                new DeptStaff { Name = "ABC", Email = "abc@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "DEF", Email = "def@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "GHI", Email = "ghi@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
