@@ -1,7 +1,7 @@
 import { Button, Input, Space, Table, Row, Col } from "antd";
 import React, { useState } from "react";
 
-export default function ViewStockAdjustment() {
+export default function AdjustmentVoucher() {
 	const dataSource = [
 		{
 			key: "1",
