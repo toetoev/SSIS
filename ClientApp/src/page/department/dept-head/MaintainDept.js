@@ -45,6 +45,7 @@ export default function MaintainDept() {
 	}, []);
 
 	return (
+		// TODO: change the layout
 		<Space direction="vertical" style={{ minWidth: 500 }}>
 			<h3>Maintain Department</h3>
 			<Form {...layout} onSubmit={handleSubmit}>

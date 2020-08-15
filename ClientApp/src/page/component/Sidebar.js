@@ -12,6 +12,7 @@ export default function Sidebar({ items }) {
 			defaultSelectedKeys={["0"]}
 		>
 			{items.map((item, index) => (
+				// TODO: accept icon input to customize
 				<Menu.Item key={index} icon={<UserOutlined />}>
 					<Link to={item.to}>{item.title}</Link>
 				</Menu.Item>
