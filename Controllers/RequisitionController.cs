@@ -22,9 +22,16 @@ namespace SSIS.Controllers
             _requisitionService = requisitionService;
         }
 
+        [HttpGet("{status}")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult GetRequisitionByStatus([FromRoute] RequisitionStatus status)
+        {
+            return Ok(_requisitionService.GetRequisitionsByStatus(status).Result);
+        }
+
         [HttpGet("")]
         [Authorize(Roles = DeptRole.All)]
-        public IActionResult GetRequisition()
+        public IActionResult GetRequisitionsByDeptStaff()
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.GetRequisitionsByDeptStaff(email).Result);
@@ -38,11 +45,5 @@ namespace SSIS.Controllers
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
         }
 
-        [HttpGet("{status}")]
-        [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetRequisitionByStatus([FromRoute]RequisitionStatus status)
-        {
-            return Ok(_requisitionService.GetRequisitionsByStatus(status).Result);
-        }
     }
 }

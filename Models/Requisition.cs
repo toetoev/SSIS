@@ -28,7 +28,6 @@ namespace SSIS.Models
         public virtual DeptStaff ReviewedBy { get; set; }
         public string AcknowledgedByEmail { get; set; }
         public virtual DeptStaff AcknowledgedBy { get; set; }
-        [JsonIgnore]
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
     }
 }

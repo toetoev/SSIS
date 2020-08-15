@@ -29,8 +29,7 @@ namespace SSIS.Repositories
         public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string email)
         {
             List<Requisition> requisitions = new List<Requisition>();
-            DeptStaff deptStaff = await _dbContext.DeptStaffs.Where(ds => ds.Email == email).FirstOrDefaultAsync();
-
+            DeptStaff deptStaff = await _dbContext.DeptStaffs.Where(ds => ds.Email == email).SingleAsync();
             switch (deptStaff.Role)
             {
                 case DeptRole.Employee:
