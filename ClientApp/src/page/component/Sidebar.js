@@ -1,24 +1,21 @@
+import { Link } from "react-router-dom";
+import { Menu } from "antd";
 import React from "react";
+import { UserOutlined } from "@ant-design/icons";
 
-export default function Sidebar() {
+export default function Sidebar({ items }) {
 	return (
-		<nav className="col-md-3 col-lg-2 d-md-block sidebar collapse">
-			<div className="sidebar-sticky pt-3">
-				<ul className="nav flex-column">
-					<li className="nav-item">
-						<a className="nav-link">
-							<i className="fas fa-user-plus mr-1"></i>
-							Maintain Department
-						</a>
-					</li>
-					<li className="nav-item">
-						<a className="nav-link active">
-							<i className="far fa-address-book mr-2"></i>
-							Review Requisitions
-						</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
+		<Menu
+			style={{ height: "100%", borderRight: 0 }}
+			theme="dark"
+			mode="inline"
+			defaultSelectedKeys={["0"]}
+		>
+			{items.map((item, index) => (
+				<Menu.Item key={index} icon={<UserOutlined />}>
+					<Link to={item.to}>{item.title}</Link>
+				</Menu.Item>
+			))}
+		</Menu>
 	);
 }

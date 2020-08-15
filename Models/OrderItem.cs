@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -13,7 +14,10 @@ namespace SSIS.Models
         public int OrderedQty { get; set; }
         public int DeliveredQty { get; set; }
         public string Remarks { get; set; }
+
         public virtual Item Item { get; set; }
+
+        [JsonIgnore]
         public virtual Order Order { get; set; }
     }
 }

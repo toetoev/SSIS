@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -12,7 +13,10 @@ namespace SSIS.Models
         public Guid AdjustmentId { get; set; }
         public int AdjustedQty { get; set; }
         public string Reason { get; set; }
+
         public virtual Item Item { get; set; }
+
+        [JsonIgnore]
         public virtual Adjustment Adjustment { get; set; }
     }
 }

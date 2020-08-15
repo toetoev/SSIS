@@ -9,6 +9,7 @@ namespace SSIS.Services
 {
     public interface IRequisitionService
     {
-        Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, DeptStaff deptStaff);
+        Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email);
+        Task<ApiResponse> GetRequisitionsByDeptStaff(string email);
     }
 }

@@ -1,35 +1,53 @@
+import "../../../css/dashboard.css";
+
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import Header from "../../component/Header";
-import MaintainAuthDelegation from "./MaintainAuthDelegation";
-import MaintainDept from "./MaintainDept";
+import { Layout } from "antd";
+import Logout from "../../component/Logout";
+import MaintainDelegation from "./MaintainDelegation";
 import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
 import Sidebar from "../../component/Sidebar";
 
+const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
+	const items = [
+		{ to: `${path}`, title: "Maintain Department" },
+		{ to: `${path}/requisition`, title: "Review Requisition" },
+		{ to: `${path}/delegation`, title: "Delegation" },
+	];
 	return (
-		<div>
-			<Header></Header>
-			<div className="container-fluid">
-				<div className="row">
+		<Layout style={{ minHeight: "100vh" }}>
+			<Header className="header">
+				<Logout></Logout>
+			</Header>
+			<Layout>
+				<Sider width={200} className="site-layout-background">
+					<Sidebar items={items}></Sidebar>
+				</Sider>
+				<Content
+					className="site-layout-background"
+					style={{
+						padding: 24,
+						margin: 0,
+						minHeight: 280,
+					}}
+				>
 					<Switch>
 						<Route exact path={`${path}`}>
-							<Sidebar>Maintain Dept</Sidebar>
-							<MaintainDept></MaintainDept>
-						</Route>
-						<Route path={`${path}/delegation`}>
-							<Sidebar>Delegation</Sidebar>
-							<MaintainAuthDelegation></MaintainAuthDelegation>
+							MaintainDept
+							{/* <MaintainDept></MaintainDept> */}
 						</Route>
 						<Route path={`${path}/requisition`}>
-							<Sidebar>Review Requisitions</Sidebar>
 							<ReviewRequisition></ReviewRequisition>
 						</Route>
+						<Route path={`${path}/delegation`}>
+							<MaintainDelegation></MaintainDelegation>
+						</Route>
 					</Switch>
-				</div>
-			</div>
-		</div>
+				</Content>
+			</Layout>
+		</Layout>
 	);
 }
