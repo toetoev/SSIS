@@ -24,10 +24,10 @@ export default function SubmitRequisition() {
 			title: "Action",
 			key: "action",
 			render: () => (
-				<div>
-					<a className="btn btn-warning mr-3">Edit</a>
-					<a className="btn btn-danger mr-3">Delete</a>
-				</div>
+				<Space>
+					<Button type="primary">Edit</Button>
+					<Button type="danger">Delete</Button>
+				</Space>
 			),
 		},
 	];

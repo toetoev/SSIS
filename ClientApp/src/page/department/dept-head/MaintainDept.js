@@ -1,35 +1,34 @@
-import { Button, DatePicker, Form, Input, Modal, Radio, Row, Select, Space, Table } from "antd";
-import React, { useState } from "react";
-
+import { Button, Form, Radio, Select, Space } from "antd";
 import axios from "axios";
+import { default as React, default as React, useEffect, useState } from "react";
 
 export default function MaintainDept() {
-	// const [collectionPoint, setCollectionPoint] = useState("");
-	// const [deptRep, setDeptRep] = useState("");
+	const [collectionPoint, setCollectionPoint] = useState("");
+	const [deptRep, setDeptRep] = useState("");
 
-	// useEffect(() => {
-	// 	// fetch initial value for collectionPoint and deptRep
-	// 	axios
-	// 		.get("https://localhost:5001/api/dept", {
-	// 			headers: {
-	// 				Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-	// 			},
-	// 		})
-	// 		.then((res) => {
-	// 			const result = res.data;
-	// 			if (result.success) {
-	// 				console.log(result.data);
-	// 			}
-	// 		})
-	// 		.catch(function (error) {
-	// 			console.log(error);
-	// 		});
-	// }, []);
+	useEffect(() => {
+		// fetch initial value for collectionPoint and deptRep
+		axios
+			.get("https://localhost:5001/api/dept", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					console.log(result.data);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
-	// const handleSubmit = (event) => {
-	// 	// call api to update collectionPoint and deptRep
-	// 	event.preventDefault();
-	// };
+	const handleSubmit = (event) => {
+		// call api to update collectionPoint and deptRep
+		event.preventDefault();
+	};
 
 	return (
 		<Space direction="vertical" style={{ minWidth: 500 }}>
