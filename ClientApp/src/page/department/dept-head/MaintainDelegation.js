@@ -50,11 +50,13 @@ export default function MaintainDelegation() {
 		},
 	];
 	return (
-		<>
+		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Authority Delegation</h3>
-			<Add />
+			<Row justify="end">
+				<Add />
+			</Row>
 			<Table columns={columns} dataSource={dataSource} />
-		</>
+		</Space>
 	);
 }
 
@@ -80,41 +82,39 @@ const Add = () => {
 	const handleSubmit = () => {};
 
 	return (
-		<Row justify="end">
-			<Space direction="vertical">
-				<Button type="primary" onClick={showModal}>
-					Add
-				</Button>
-				<Modal
-					title="Delegation Options"
-					visible={visible}
-					onOk={handleOk}
-					onCancel={handleCancel}
-				>
-					<Form layout="vertical" onSubmit={handleSubmit}>
-						<Form.Item label="Start Date">
-							<DatePicker onChange={onChange} style={{ width: "100%" }} />
-						</Form.Item>
-						<Form.Item label="End Date">
-							<DatePicker onChange={onChange} style={{ width: "100%" }} />
-						</Form.Item>
-						<Form.Item label="Delegate">
-							<Select
-								defaultValue="Martini Zhao"
-								style={{ width: "100%" }}
-								onChange={handleChange}
-							>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yiminghe">Yiminghe</Option>
-							</Select>
-						</Form.Item>
-						<Form.Item label="Comment">
-							<TextArea rows={4}></TextArea>
-						</Form.Item>
-					</Form>
-				</Modal>
-			</Space>
-		</Row>
+		<>
+			<Button type="primary" onClick={showModal}>
+				Add
+			</Button>
+			<Modal
+				title="Delegation Options"
+				visible={visible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+			>
+				<Form layout="vertical" onSubmit={handleSubmit}>
+					<Form.Item label="Start Date">
+						<DatePicker onChange={onChange} style={{ width: "100%" }} />
+					</Form.Item>
+					<Form.Item label="End Date">
+						<DatePicker onChange={onChange} style={{ width: "100%" }} />
+					</Form.Item>
+					<Form.Item label="Delegate">
+						<Select
+							defaultValue="Martini Zhao"
+							style={{ width: "100%" }}
+							onChange={handleChange}
+						>
+							<Option value="jack">Jack</Option>
+							<Option value="lucy">Lucy</Option>
+							<Option value="Yiminghe">Yiminghe</Option>
+						</Select>
+					</Form.Item>
+					<Form.Item label="Comment">
+						<TextArea rows={4}></TextArea>
+					</Form.Item>
+				</Form>
+			</Modal>
+		</>
 	);
 };

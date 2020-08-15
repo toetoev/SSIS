@@ -3,6 +3,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import React from "react";
+import RequisitionHistory from "./RequisitionHistory";
 import Sidebar from "../../component/Sidebar";
 import SubmitRequisition from "./SubmitRequisition";
 
@@ -21,7 +22,14 @@ export default function Employee() {
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/requisition-history`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"
@@ -35,7 +43,9 @@ export default function Employee() {
 						<Route exact path={`${path}`}>
 							<SubmitRequisition></SubmitRequisition>
 						</Route>
-						<Route path={`${path}/requisition-history`}>Requisition History</Route>
+						<Route path={`${path}/requisition-history`}>
+							<RequisitionHistory></RequisitionHistory>
+						</Route>
 					</Switch>
 				</Content>
 			</Layout>

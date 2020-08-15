@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Space, Table } from "antd";
+import { Button, Form, Modal, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function ReviewRequisition() {
@@ -71,7 +71,6 @@ const ViewRequisition = () => {
 	];
 	const [visible, setVisible] = useState(false);
 	const [status, setStatus] = useState("REJECTED");
-	const { TextArea } = Input;
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -111,7 +110,7 @@ const ViewRequisition = () => {
 					<Form.Item label="Requested date:">
 						<span className="ant-form-text"></span>
 					</Form.Item>
-					<Table dataSource={itemData} columns={reqColumns} />
+					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
 					{status == "APPROVED" ? (
 						<>
 							<Form.Item label="Approved by:">

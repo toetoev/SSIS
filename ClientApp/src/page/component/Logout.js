@@ -5,13 +5,11 @@ import { useHistory } from "react-router-dom";
 
 export default function Logout() {
 	let history = useHistory();
-
 	const logout = () => {
 		localStorage.removeItem("ACCESS_TOKEN");
 		localStorage.removeItem("ROLE");
 		history.push("/");
 	};
-
 	return (
 		<Row justify="end" align="middle">
 			<Col>
