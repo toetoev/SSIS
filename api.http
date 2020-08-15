@@ -1,4 +1,4 @@
-### AuthController Login
+### AuthController Login Employee
 POST https://localhost:5001/api/auth/login
 Content-Type: application/json
 
@@ -6,6 +6,16 @@ Content-Type: application/json
     "name" : "zhao435021640@gmail.com",
     "password": "1",
     "role": "DEPARTMENT"
+}
+
+### AuthController Login Clerk
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+    "name" : "win",
+    "password": "1",
+    "role": "STORE"
 }
 
 ### AuthController Get Test
@@ -69,3 +79,4 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80M
 
 ### RequisitionController Get Requisition By Status
 GET https://localhost:5001/api/requisition/APPLIED
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w
