@@ -15,7 +15,7 @@ namespace SSIS.Repositories
 
         public async Task<int> CreateRetrieval(Retrieval retrieval)
         {
-            await _dbContext.Retrievals.AddAsync(retrieval);
+            _dbContext.Retrievals.Add(retrieval);
             return await _dbContext.SaveChangesAsync();
         }
     }
