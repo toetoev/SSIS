@@ -60,7 +60,7 @@ const columns = [
 	},
 ];
 
-export default function MaintainAuthDelegation() {
+export default function MaintainDelegation() {
 	return (
 		<div className="">
 			<h3>Authority Delegation</h3>

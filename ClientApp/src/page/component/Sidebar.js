@@ -5,7 +5,12 @@ import { UserOutlined } from "@ant-design/icons";
 
 export default function Sidebar({ items }) {
 	return (
-		<Menu theme="dark" mode="inline" defaultSelectedKeys={["0"]}>
+		<Menu
+			style={{ height: "100%", borderRight: 0 }}
+			theme="dark"
+			mode="inline"
+			defaultSelectedKeys={["0"]}
+		>
 			{items.map((item, index) => (
 				<Menu.Item key={index} icon={<UserOutlined />}>
 					<Link to={item.to}>{item.title}</Link>
