@@ -66,7 +66,7 @@ export default function ReviewRequisition() {
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
-				scroll={{ y: 240 }}
+				scroll={{ y: 500 }}
 			/>
 		</div>
 	);
