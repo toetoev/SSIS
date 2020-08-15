@@ -110,7 +110,7 @@ const ViewRequisition = () => {
 					<Form.Item label="Requested date:">
 						<span className="ant-form-text"></span>
 					</Form.Item>
-					<Table dataSource={itemData} columns={reqColumns} />
+					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
 					{status == "APPROVED" ? (
 						<>
 							<Form.Item label="Approved by:">
