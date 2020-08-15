@@ -54,7 +54,6 @@ namespace SSIS.Services
             }
             else
                 return new ApiResponse { Success = false, Message = "Some items do not exist" };
-            throw new NotImplementedException();
         }
 
         public async Task<ApiResponse> GetRequisitionsByDeptStaff(string email)

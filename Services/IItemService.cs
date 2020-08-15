@@ -12,7 +12,5 @@ namespace SSIS.Services
 
         Task<ApiResponse> GetItemById(Item item);
 
-
-    }
-    
+    } 
 }
