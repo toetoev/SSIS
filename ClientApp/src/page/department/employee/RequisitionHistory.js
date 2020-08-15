@@ -106,9 +106,6 @@ const ViewAcknowledgement = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
-		setVisible(false);
-	};
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
@@ -118,12 +115,7 @@ const ViewAcknowledgement = () => {
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Modal
-				title="View Requisition"
-				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
-			>
+			<Modal title="View Requisition" visible={visible} onCancel={handleCancel} footer={null}>
 				<Form>
 					<Form.Item label="Collection Date:">
 						<span className="ant-form-text"></span>
