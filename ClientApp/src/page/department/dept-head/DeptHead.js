@@ -5,6 +5,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import MaintainDelegation from "./MaintainDelegation";
+import MaintainDept from "./MaintainDept";
 import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
 import Sidebar from "../../component/Sidebar";
@@ -36,8 +37,7 @@ export default function DeptHead() {
 				>
 					<Switch>
 						<Route exact path={`${path}`}>
-							MaintainDept
-							{/* <MaintainDept></MaintainDept> */}
+							<MaintainDept></MaintainDept>
 						</Route>
 						<Route path={`${path}/requisition`}>
 							<ReviewRequisition></ReviewRequisition>
