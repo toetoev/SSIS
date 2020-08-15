@@ -16,6 +16,6 @@ namespace SSIS.Models
 
         [ForeignKey("CreatedByEmail")]
         public virtual StoreStaff CreatedBy { get; set; }
-        public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
+        public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
     }
 }
