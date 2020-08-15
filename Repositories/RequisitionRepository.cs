@@ -21,9 +21,10 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status){
+        public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status)
+        {
             return await _dbContext.Requisitions.Where(r => r.Status == status).ToListAsync();
-            }
+        }
 
         public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string email)
         {
@@ -45,6 +46,11 @@ namespace SSIS.Repositories
                     break;
             }
             return requisitions;
+        }
+
+        public async Task<Requisition> GetRequisitionsById(Guid requisitionId)
+        {
+            return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).SingleOrDefaultAsync();
         }
     }
 }
