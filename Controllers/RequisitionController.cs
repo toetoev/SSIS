@@ -23,11 +23,10 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("{status}")]
-        public IActionResult GetRequisitionsByStatus([FromRoute] string status)
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult GetRequisitionByStatus([FromRoute] RequisitionStatus status)
         {
-            System.Console.WriteLine(status);
-            System.Console.WriteLine("1111111111111");
-            return Ok();
+            return Ok(_requisitionService.GetRequisitionsByStatus(status).Result);
         }
 
         [HttpGet("")]
@@ -45,5 +44,6 @@ namespace SSIS.Controllers
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
         }
+
     }
 }
