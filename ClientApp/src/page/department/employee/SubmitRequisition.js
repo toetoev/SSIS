@@ -32,31 +32,7 @@ export default function SubmitRequisition() {
 				),
 			},
 		],
-		visible: false,
 	});
-
-	let showModal = () => {
-		setState({
-			...state,
-			visible: true,
-		});
-	};
-
-	let handleOk = (e) => {
-		console.log(e);
-		setState({
-			...state,
-			visible: false,
-		});
-	};
-
-	let handleCancel = (e) => {
-		console.log(e);
-		setState({
-			...state,
-			visible: false,
-		});
-	};
 
 	let data = [
 		{
@@ -75,26 +51,58 @@ export default function SubmitRequisition() {
 
 	return (
 		<div className="col-lg-10 mt-3">
-			<h4>Submit Requisition</h4>
-			<div className="mt-4 mb-4">
-				<Button className="btn btn-primary mr-4">Stapler</Button>
-				<Button className="btn btn-primary mr-4">Tray</Button>
-				<Button className="btn btn-primary">Clip</Button>
+			<h3>Submit Requisition</h3>
+			<Row justify="space-between">
+				<Col>
+					<Button className="btn btn-primary mr-4">Stapler</Button>
+					<Button className="btn btn-primary mr-4">Tray</Button>
+					<Button className="btn btn-primary">Clip</Button>
+				</Col>
+				<Add />
+			</Row>
+			<Table columns={columns} dataSource={data} striped bordered hover />
+		</div>
+	);
+}
+class Add extends React.Component {
+	state = { visible: false };
+	showModal = () => {
+		this.setState({
+			visible: true,
+		});
+	};
 
-				<Button className="btn btn-success float-right" onClick={showModal}>
+	handleOk = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	};
+
+	handleCancel = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	};
+
+	render() {
+		return (
+			<Col>
+				<Button className="btn btn-success float-right" onClick={this.showModal}>
 					Add
 				</Button>
 
 				<Modal
 					title="Stationery Catalogue"
-					visible={state.visible}
-					onOk={handleOk}
-					onCancel={handleCancel}
+					visible={this.state.visible}
+					onOk={this.handleOk}
+					onCancel={this.handleCancel}
 					footer={[
-						<Button key="back" onClick={handleCancel}>
+						<Button key="back" onClick={this.handleCancel}>
 							Cancel
 						</Button>,
-						<Button key="submit" type="primary" onClick={handleOk}>
+						<Button key="submit" type="primary" onClick={this.handleOk}>
 							Submit
 						</Button>,
 					]}
@@ -121,8 +129,7 @@ export default function SubmitRequisition() {
 						</Row>
 					</Form>
 				</Modal>
-			</div>
-			<Table columns={columns} dataSource={data} striped bordered hover />
-		</div>
-	);
+			</Col>
+		);
+	}
 }
