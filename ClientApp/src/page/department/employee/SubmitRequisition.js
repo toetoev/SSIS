@@ -1,40 +1,38 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Table } from "antd";
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function SubmitRequisition() {
-	const [state, setState] = useState({
-		columns: [
-			{
-				title: "No",
-				dataIndex: "no",
-			},
-			{
-				title: "Product Id",
-				dataIndex: "id",
-				sorter: (a, b) => a.amount - b.amount,
-			},
-			{
-				title: "Product Name",
-				dataIndex: "name",
-			},
-			{
-				title: "Product Price",
-				dataIndex: "price",
-			},
-			{
-				title: "Action",
-				key: "action",
-				render: () => (
-					<div>
-						<a className="btn btn-warning mr-3">Edit</a>
-						<a className="btn btn-danger mr-3">Delete</a>
-					</div>
-				),
-			},
-		],
-	});
+	const columns = [
+		{
+			title: "No",
+			dataIndex: "no",
+		},
+		{
+			title: "Product Id",
+			dataIndex: "id",
+			sorter: (a, b) => a.amount - b.amount,
+		},
+		{
+			title: "Product Name",
+			dataIndex: "name",
+		},
+		{
+			title: "Product Price",
+			dataIndex: "price",
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: () => (
+				<div>
+					<a className="btn btn-warning mr-3">Edit</a>
+					<a className="btn btn-danger mr-3">Delete</a>
+				</div>
+			),
+		},
+	];
 
-	let data = [
+	const dataSource = [
 		{
 			no: "0",
 			id: "A001",
@@ -43,93 +41,77 @@ export default function SubmitRequisition() {
 		},
 	];
 
-	const columns = state.columns.map((col, index) => ({
-		...col,
-	}));
-
-	const { Option } = Select;
-
 	return (
-		<div className="col-lg-10 mt-3">
+		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
 			<Row justify="space-between">
 				<Col>
-					<Button className="btn btn-primary mr-4">Stapler</Button>
-					<Button className="btn btn-primary mr-4">Tray</Button>
-					<Button className="btn btn-primary">Clip</Button>
+					<Space>
+						<Button type="primary">Stapler</Button>
+						<Button type="primary">Tray</Button>
+						<Button type="primary">Clip</Button>
+					</Space>
 				</Col>
 				<Add />
 			</Row>
-			<Table columns={columns} dataSource={data} striped bordered hover />
-		</div>
+			<Table columns={columns} dataSource={dataSource} />
+		</Space>
 	);
 }
-class Add extends React.Component {
-	state = { visible: false };
-	showModal = () => {
-		this.setState({
-			visible: true,
-		});
+const Add = () => {
+	const { Option } = Select;
+	const [visible, setVisible] = useState(false);
+	const showModal = () => {
+		setVisible(true);
 	};
 
-	handleOk = (e) => {
-		console.log(e);
-		this.setState({
-			visible: false,
-		});
+	const handleOk = (e) => {
+		setVisible(false);
 	};
 
-	handleCancel = (e) => {
-		console.log(e);
-		this.setState({
-			visible: false,
-		});
+	const handleCancel = (e) => {
+		setVisible(false);
 	};
+	const handleChange = () => {
+		console.log("handle change");
+	};
+	const handleSubmit = () => {};
+	return (
+		<>
+			<Button type="primary" onClick={showModal}>
+				Add
+			</Button>
+			<Modal
+				title="Stationery Catalogue"
+				visible={visible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				footer={[
+					<Button key="cancel" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleOk}>
+						Submit
+					</Button>,
+				]}
+			>
+				<Form layout="vertical" onSubmit={handleSubmit}>
+					<Form.Item label="Item Description : ">
+						<Select
+							style={{ width: "100%" }}
+							defaultValue="blue"
+							onChange={handleChange}
+						>
+							<Option value="blue">Highlighter Blue</Option>
+							<Option value="red">Highlighter Red</Option>
+						</Select>
+					</Form.Item>
 
-	render() {
-		return (
-			<Col>
-				<Button className="btn btn-success float-right" onClick={this.showModal}>
-					Add
-				</Button>
-
-				<Modal
-					title="Stationery Catalogue"
-					visible={this.state.visible}
-					onOk={this.handleOk}
-					onCancel={this.handleCancel}
-					footer={[
-						<Button key="back" onClick={this.handleCancel}>
-							Cancel
-						</Button>,
-						<Button key="submit" type="primary" onClick={this.handleOk}>
-							Submit
-						</Button>,
-					]}
-				>
-					<Form>
-						<Row>
-							<Col span={8}>
-								<Form.Item label="Item Description : "></Form.Item>
-							</Col>
-							<Col span={8}>
-								<Select style={{ width: "100%" }} defaultValue="blue">
-									<Option value="blue">Highlighter Blue</Option>
-									<Option value="red">Highlighter Red</Option>
-								</Select>
-							</Col>
-						</Row>
-						<Row>
-							<Col span={8}>
-								<Form.Item label="Quantity : "></Form.Item>
-							</Col>
-							<Col span={8}>
-								<Input type="number" placeholder="0" />
-							</Col>
-						</Row>
-					</Form>
-				</Modal>
-			</Col>
-		);
-	}
-}
+					<Form.Item label="Quantity : ">
+						<Input type="number" placeholder="0" />
+					</Form.Item>
+				</Form>
+			</Modal>
+		</>
+	);
+};
