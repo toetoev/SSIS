@@ -39,14 +39,8 @@ export default function ViewStockAdjustment() {
 			key: "action",
 			render: () => (
 				<Space>
-					<Button>
-						<a>View</a>
-					</Button>
 					<Button type="primary">
-						<a>Edit</a>
-					</Button>
-					<Button type="danger">
-						<a>Delete</a>
+						<a>View</a>
 					</Button>
 				</Space>
 			),
