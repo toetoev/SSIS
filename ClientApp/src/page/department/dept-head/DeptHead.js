@@ -7,6 +7,7 @@ import Logout from "../../component/Logout";
 import MaintainDelegation from "./MaintainDelegation";
 import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
+import MaintainDept from "./MaintainDept";
 import Sidebar from "../../component/Sidebar";
 
 const { Header, Sider, Content } = Layout;
@@ -37,7 +38,7 @@ export default function DeptHead() {
 					<Switch>
 						<Route exact path={`${path}`}>
 							MaintainDept
-							{/* <MaintainDept></MaintainDept> */}
+							<MaintainDept></MaintainDept>
 						</Route>
 						<Route path={`${path}/requisition`}>
 							<ReviewRequisition></ReviewRequisition>

@@ -2,7 +2,6 @@ import React, { useState, setState } from "react";
 import ReactDOM from 'react-dom';
 
 import { Button, Form, Row, Col, Select, Table, Modal, Input } from "antd";
-import SearchBar from "../../icon/SearchBar";
 
 export default function MaintainRequisitionForm() {
     const [state, setState] = useState({
