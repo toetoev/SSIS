@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "antd";
+import { Button, Input, Modal, Table } from "antd";
 
 import React from "react";
 
@@ -57,6 +57,8 @@ const reqColumns = [
 	},
 ];
 
+const { TextArea } = Input;
+
 export default function ReviewRequisition() {
 	return (
 		<div className="">
@@ -66,14 +68,14 @@ export default function ReviewRequisition() {
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
-				scroll={{ y: 500 }}
+				scroll={{ y: 240 }}
 			/>
 		</div>
 	);
 }
 
 class ViewRequisition extends React.Component {
-	state = { visible: false };
+	state = { visible: false, status: "REJECTED" };
 	showModal = () => {
 		this.setState({
 			visible: true,
@@ -91,6 +93,26 @@ class ViewRequisition extends React.Component {
 			visible: false,
 		});
 	};
+
+	renderElement() {
+		if (this.state.status == "APPROVED")
+			return (
+				<div>
+					<p>Approved by: </p>
+					<p>Approved date: </p>
+				</div>
+			);
+		else if (this.state.status == "REJECTED")
+			return (
+				<div>
+					<p>Rejected by: </p>
+					<p>Rejected date: </p>
+					<p>Rejected reason: </p>
+					<TextArea rows={4} />
+				</div>
+			);
+	}
+
 	render() {
 		return (
 			<div>
@@ -102,12 +124,23 @@ class ViewRequisition extends React.Component {
 					visible={this.state.visible}
 					onOk={this.handleOk}
 					onCancel={this.handleCancel}
+					footer={
+						this.state.status == "APPLIED"
+							? [
+									<Button key="reject" type="danger" onClick={this.handleCancel}>
+										Reject
+									</Button>,
+									<Button key="approve" type="primary" onClick={this.handleOk}>
+										Approve
+									</Button>,
+							  ]
+							: null
+					}
 				>
 					<p>Requested by: </p>
-					<p>Requested on: </p>
+					<p>Requested date: </p>
 					<Table dataSource={itemData} columns={reqColumns} />
-					<Button type="primary">Approve</Button>
-					<Button type="danger">Reject</Button>
+					{this.renderElement()}
 				</Modal>
 			</div>
 		);
