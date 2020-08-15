@@ -1,127 +1,176 @@
-import { Button, Checkbox, Col, Form, Input, Row, Select, Table } from "antd";
+import { Button, Checkbox, Form, Modal, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function AcknowledgeRequisition() {
-	const [state, setState] = useState({
-		columns: [
-			{
-				title: "No",
-				dataIndex: "no",
-			},
-			{
-				title: "Catalogue Item Code",
-				dataIndex: "id",
-			},
-			{
-				title: "Description",
-				dataIndex: "description",
-			},
-			{
-				title: "Requested Quantity",
-				dataIndex: "requested",
-			},
-			{
-				title: "Received Quantity",
-				dataIndex: "received",
-			},
-			{
-				title: "Unfulfilled Quantity",
-				dataIndex: "unfulfilled",
-			},
-		],
-	});
+	const dataSource = [];
+	for (let i = 0; i < 100; i++) {
+		dataSource.push({
+			key: i,
+			requestedDate: `Edward King ${i}`,
+			reviewedBy: "Colin",
+			reviewedDate: "26/02/1998",
+			AcknowledgedBy: "",
+			AcknowledgedDate: "",
+			status: "PENDING_COLLECTION",
+		});
+	}
 
-	let data = [
+	const columns = [
 		{
-			no: "0",
-			id: "A001",
-			description: "Clips Double 2",
-			requested: "30",
-			received: "10",
-			unfulfilled: "20",
+			title: "Requested Date",
+			dataIndex: "requestedDate",
+			key: "requestedDate",
+		},
+		{
+			title: "Reviewed By",
+			dataIndex: "reviewedBy",
+			key: "reviewedBy",
+		},
+		{
+			title: "Reviewed Date",
+			dataIndex: "reviewedDate",
+			key: "reviewedDate",
+		},
+		{
+			title: "Acknowledged By",
+			dataIndex: "acknowledgedBy",
+			key: "acknowledgedBy",
+		},
+		{
+			title: "Acknowledged Date",
+			dataIndex: "acknowledgedDate",
+			key: "acknowledgedDate",
+		},
+		{
+			title: "Status",
+			dataIndex: "status",
+			key: "status",
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: ViewAcknowledgement,
 		},
 	];
 
-	const columns = state.columns.map((col, index) => ({
-		...col,
-	}));
-
-	const { Option } = Select;
-
 	return (
-		<div className="col-lg-10 mt-3">
-			<h4>Requisition History for Department of Registrar</h4>
-			<Form className="mt-5">
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Requested Date : "></Form.Item>
-					</Col>
-					<Col span={8}>
-						<Input />
-					</Col>
-				</Row>
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Approved By : "></Form.Item>
-					</Col>
-					<Col span={8}>
-						<Input />
-					</Col>
-				</Row>
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Approved Date :"></Form.Item>
-					</Col>
-					<Col span={8}>
-						<Input />
-					</Col>
-				</Row>
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Collection Date : "></Form.Item>
-					</Col>
-					<Col span={8}>
-						<Input />
-					</Col>
-				</Row>
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Collection Point : "></Form.Item>
-					</Col>
-					<Col span={8}>
-						<Input />
-					</Col>
-				</Row>
-				<Row>
-					<Col span={4}>
-						<Form.Item label="Requested Items :"></Form.Item>
-					</Col>
-				</Row>
-				<Table
-					columns={columns}
-					dataSource={data}
-					pagination={false}
-					striped
-					bordered
-					hover
-				/>
-				<Row className="mt-3">Do you want to re-order the unfulfilled items?</Row>
-				<Row className="mt-3">
-					<Checkbox.Group>
-						<Checkbox value={1}>Yes</Checkbox>
-						<Checkbox value={2}>No</Checkbox>
-					</Checkbox.Group>
-				</Row>
-				<Row className="mt-3">Do acknowledge when you receive the stationeries?</Row>
-				<Row className="mt-4 mb-4">
-					<Button type="button" className="btn btn-danger mr-3">
-						Cancel
-					</Button>
-					<Button type="button" className="btn btn-success">
-						Acknowledge
-					</Button>
-				</Row>
-			</Form>
-		</div>
+		<Space direction="vertical">
+			<h3>Requisition History</h3>
+			<Table
+				dataSource={dataSource}
+				columns={columns}
+				pagination={{ pageSize: 50 }}
+				scroll={{ y: 500 }}
+			/>
+		</Space>
 	);
 }
+
+const ViewAcknowledgement = () => {
+	const requisitionData = [];
+	for (let i = 0; i < 5; i++) {
+		requisitionData.push({
+			key: i,
+			itemDescription: `Pencil ${i}B`,
+			requestedQty: `${i + 10}`,
+			receivedQty: `${i + 10}`,
+			unfulfilledQty: "0",
+		});
+	}
+
+	const requisitionColumns = [
+		{
+			title: "Item Description",
+			dataIndex: "itemDescription",
+			key: "itemDescription",
+		},
+		{
+			title: "Requested Quantity",
+			dataIndex: "requestedQty",
+			key: "requestedQty",
+		},
+		{
+			title: "Received Quantity",
+			dataIndex: "receivedQty",
+			key: "receivedQty",
+		},
+		{
+			title: "Unfulfilled Quantity",
+			dataIndex: "unfulfilledQty",
+			key: "unfulfilledQty",
+		},
+	];
+
+	const [visible, setVisible] = useState(false);
+	const [status, setStatus] = useState("PENDING_COLLECTION");
+	const showModal = () => {
+		setVisible(true);
+	};
+	const handleOk = (e) => {
+		setVisible(false);
+	};
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
+
+	return (
+		<div>
+			<Button type="primary" onClick={showModal}>
+				View
+			</Button>
+			<Modal
+				title="View Requisition"
+				visible={visible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				footer={
+					status == "PENDING_COLLECTION"
+						? [
+								<Button key="cancel" type="danger" onClick={handleCancel}>
+									Cancel
+								</Button>,
+								<Button key="acknowledge" type="primary" onClick={handleOk}>
+									Acknowledge
+								</Button>,
+						  ]
+						: null
+				}
+			>
+				<Form>
+					<Form.Item label="Collection Date:">
+						<span className="ant-form-text"></span>
+					</Form.Item>
+					<Form.Item label="Collection Point:">
+						<span className="ant-form-text"></span>
+					</Form.Item>
+					<Form.Item label="Requested Items:">
+						<span className="ant-form-text"></span>
+					</Form.Item>
+					<Table dataSource={requisitionData} columns={requisitionColumns} />
+					{status == "PENDING_COLLECTION" ? (
+						<>
+							<Form.Item
+								label="Do you want to re-order the unfulfilled items?"
+								name="checkbox-group"
+							>
+								<Checkbox value="A" style={{ lineHeight: "32px" }}>
+									Yes
+								</Checkbox>
+							</Form.Item>
+						</>
+					) : null}
+					{status == "DELIVERED" ? (
+						<>
+							<Form.Item label="Delivered by:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+							<Form.Item label="Delivered date:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+						</>
+					) : null}
+				</Form>
+			</Modal>
+		</div>
+	);
+};
