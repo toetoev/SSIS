@@ -24,9 +24,9 @@ namespace SSIS.Services
             _itemRepository = itemRepository;
         }
 
-        public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, DeptStaff deptStaff)
+        public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
         {
-            DeptStaff requestedBy = await _deptStaffRepository.GetDeptStaffByEmail(deptStaff);
+            DeptStaff requestedBy = await _deptStaffRepository.GetDeptStaffByEmail(email);
             Requisition requisition = new Requisition
             {
                 Id = Guid.NewGuid(),
@@ -56,9 +56,9 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Some items do not exist" };
         }
 
-        public async Task<ApiResponse> GetRequisitionsByRole(string role)
+        public async Task<ApiResponse> GetRequisitionsByDeptStaff(string email)
         {
-            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByRole(role) };
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByDeptStaff(email) };
         }
     }
 }

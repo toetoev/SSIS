@@ -26,16 +26,16 @@ namespace SSIS.Controllers
         [Authorize(Roles = DeptRole.All)]
         public IActionResult GetRequisition()
         {
-            string role = User.FindFirst(ClaimTypes.Role).Value;
-            return Ok(_requisitionService.GetRequisitionsByRole(role).Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.GetRequisitionsByDeptStaff(email).Result);
         }
 
         [HttpPost("")]
         [Authorize(Roles = DeptRole.Employee)]
         public IActionResult CreateRequisition([FromBody] List<RequisitionItem> requisitionItems)
         {
-            DeptStaff requestedBy = new DeptStaff { Email = User.FindFirst(ClaimTypes.Email).Value };
-            return Ok(_requisitionService.CreateRequisition(requisitionItems, requestedBy).Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
         }
     }
 }
