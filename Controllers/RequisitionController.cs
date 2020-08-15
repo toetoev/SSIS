@@ -22,9 +22,17 @@ namespace SSIS.Controllers
             _requisitionService = requisitionService;
         }
 
+        [HttpGet("{status}")]
+        public IActionResult GetRequisitionsByStatus([FromRoute] string status)
+        {
+            System.Console.WriteLine(status);
+            System.Console.WriteLine("1111111111111");
+            return Ok();
+        }
+
         [HttpGet("")]
         [Authorize(Roles = DeptRole.All)]
-        public IActionResult GetRequisition()
+        public IActionResult GetRequisitionsByDeptStaff()
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.GetRequisitionsByDeptStaff(email).Result);

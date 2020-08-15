@@ -51,18 +51,21 @@ Content-Type: application/json
 
 ### RequisitionController Create Requisition
 POST https://localhost:5001/api/requisition
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3MzkwMDIxLCJleHAiOjE1OTc0NzY0MjEsImlhdCI6MTU5NzM5MDAyMX0.mDivqM9Bk7VMp3InOaX-4Ac_kc46mC9KVgbCsgjS50ilzV0ETgenidmlhrUtRLli_wfraDp8sHhuIyFTtDdeyQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NDc0NTE1LCJleHAiOjE1OTc1NjA5MTUsImlhdCI6MTU5NzQ3NDUxNX0.fdBcISHitmw6KXrYuY4VRghp0CPekwOXDc9Kf9n8GiusGwjdPyXVJq3Wo8liFp8rjGPa1u9q4ae7kxAapE18Pg
 Content-Type: application/json
 
 [{
-    "itemId" :"A9C6443C-7D4B-4CBC-AA6E-01ECDB418AE0",
+    "itemId" :"89C36910-05F3-4C02-A797-01C8EB7460AB",
     "need":1
 },
 {
-    "itemId" :"20C1F1DD-4CEF-4149-BA3F-20FFFFFE10CB",
+    "itemId" :"17847B64-20C3-4A23-BFEF-02B3E5FD36FF",
     "need":2
 }]
 
 ### RequisitionController Get Requisition By Role
 GET https://localhost:5001/api/requisition
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3Mzg3NzI1LCJleHAiOjE1OTc0NzQxMjUsImlhdCI6MTU5NzM4NzcyNX0.X_ZLtA9nhNQtA5iWBbNI1iKThrHlGmXRZjC7h9iF7NhA74PckADMB5AcqSQAVc-2pTkW3jDy-UqZTDitdUWXXA
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NDc0NTE1LCJleHAiOjE1OTc1NjA5MTUsImlhdCI6MTU5NzQ3NDUxNX0.fdBcISHitmw6KXrYuY4VRghp0CPekwOXDc9Kf9n8GiusGwjdPyXVJq3Wo8liFp8rjGPa1u9q4ae7kxAapE18Pg
+
+### RequisitionController Get Requisition By Status
+GET https://localhost:5001/api/requisition/APPLIED
