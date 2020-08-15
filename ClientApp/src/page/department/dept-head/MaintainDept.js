@@ -1,110 +1,102 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import { Button, DatePicker, Form, Input, Modal, Radio, Row, Select, Space, Table } from "antd";
+import React, { useState } from "react";
 
 import axios from "axios";
 
 export default function MaintainDept() {
-	const [collectionPoint, setCollectionPoint] = useState("");
-	const [deptRep, setDeptRep] = useState("");
+	// const [collectionPoint, setCollectionPoint] = useState("");
+	// const [deptRep, setDeptRep] = useState("");
 
-	useEffect(() => {
-		// fetch initial value for collectionPoint and deptRep
-		axios
-			.get("https://localhost:5001/api/dept", {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					console.log(result.data);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
+	// useEffect(() => {
+	// 	// fetch initial value for collectionPoint and deptRep
+	// 	axios
+	// 		.get("https://localhost:5001/api/dept", {
+	// 			headers: {
+	// 				Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+	// 			},
+	// 		})
+	// 		.then((res) => {
+	// 			const result = res.data;
+	// 			if (result.success) {
+	// 				console.log(result.data);
+	// 			}
+	// 		})
+	// 		.catch(function (error) {
+	// 			console.log(error);
+	// 		});
+	// }, []);
 
-	const handleSubmit = (event) => {
-		// call api to update collectionPoint and deptRep
-		event.preventDefault();
-	};
+	// const handleSubmit = (event) => {
+	// 	// call api to update collectionPoint and deptRep
+	// 	event.preventDefault();
+	// };
 
 	return (
-		<div className="">
+		<Space direction="vertical" style={{ minWidth: 500 }}>
 			<h3>Maintain Department</h3>
-			<Form>
-				<Form.Group as={Row}>
-					<Form.Label as="legend" className="" column sm={2}>
-						Collection Point :{" "}
-					</Form.Label>
-
-					<Col sm={10}>
-						<Form.Check
-							type="radio"
-							label="Stationery Store - Administration Building (9:30 AM)"
-							value="STORE"
-							className=""
-						/>
-						<Form.Check
-							type="radio"
-							label="Management School (11:00 AM)"
-							value="DEPARTMENT"
-							className=""
-						/>
-						<Form.Check
-							type="radio"
-							label="Medical School (9:30 AM)"
-							value="DEPARTMENT"
-							className=""
-						/>
-						<Form.Check
-							type="radio"
-							label="Engineering School (9:30 AM)"
-							value="DEPARTMENT"
-							className=""
-						/>
-						<Form.Check
-							type="radio"
-							label="Science School (9:30 AM)"
-							value="DEPARTMENT"
-							className=""
-						/>
-						<Form.Check
-							type="radio"
-							label="University Hospital (11:00 AM)"
-							value="DEPARTMENT"
-							className=""
-						/>
-					</Col>
-				</Form.Group>
-				<Form.Group as={Row} controlId="nameOrEmail">
-					<Form.Label className="" column sm={2}>
-						New Representative Name :{" "}
-					</Form.Label>
-					<Col sm={10}>
-						<Form.Control as="select">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</Form.Control>
-					</Col>
-				</Form.Group>
-				<Form.Group className="justify-content-center">
-					<Col sm={1}>
-						<Button
-							type="button"
-							className="btn btn-success floatRight"
-							// onClick={handleSubmit}
-						>
-							Update
-						</Button>
-					</Col>
-				</Form.Group>
-			</Form>
-		</div>
+			<MaintainDepartmentForm />
+		</Space>
 	);
 }
+const MaintainDepartmentForm = () => {
+	const radioStyle = {
+		display: "block",
+		height: "30px",
+		lineHeight: "30px",
+	};
+	const layout = {
+		labelCol: { span: 3 },
+	};
+	const tailLayout = {
+		wrapperCol: { offset: 7 },
+	};
+
+	const { Option } = Select;
+	const handleChange = () => {
+		console.log("handle change");
+	};
+	const handleSubmit = () => {};
+
+	return (
+		<Form {...layout} onSubmit={handleSubmit}>
+			<Form.Item name="radio-group" label="Collection Point:" labelAlign="left">
+				<Radio.Group>
+					<Radio style={radioStyle} value="DEPARTMENT1">
+						Stationery Store - Administration Building (9:30 AM)
+					</Radio>
+					<Radio style={radioStyle} value="DEPARTMENT2">
+						Management School (11:00 AM)
+					</Radio>
+					<Radio style={radioStyle} value="DEPARTMENT3">
+						Medical School (9:30 AM)
+					</Radio>
+					<Radio style={radioStyle} value="DEPARTMENT4">
+						Engineering School (9:30 AM)
+					</Radio>
+					<Radio style={radioStyle} value="DEPARTMENT5">
+						Science School (9:30 AM)
+					</Radio>
+					<Radio style={radioStyle} value="DEPARTMENT6">
+						University Hospital (11:00 AM)
+					</Radio>
+				</Radio.Group>
+			</Form.Item>
+			<Form.Item label="New Representative:" labelAlign="left">
+				<Select
+					defaultValue="Martini Zhao"
+					onChange={handleChange}
+					style={{ width: "24%" }}
+				>
+					<Option value="jack">Jack</Option>
+					<Option value="lucy">Lucy</Option>
+					<Option value="Yiminghe">Yiminghe</Option>
+				</Select>
+			</Form.Item>
+			<Form.Item {...tailLayout}>
+				<Button type="primary" htmlType="submit">
+					Update
+				</Button>
+			</Form.Item>
+		</Form>
+	);
+};
