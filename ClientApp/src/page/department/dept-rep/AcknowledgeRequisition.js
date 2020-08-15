@@ -146,7 +146,11 @@ const ViewAcknowledgement = () => {
 					<Form.Item label="Requested Items:">
 						<span className="ant-form-text"></span>
 					</Form.Item>
-					<Table dataSource={requisitionData} columns={requisitionColumns} />
+					<Table
+						dataSource={requisitionData}
+						columns={requisitionColumns}
+						scroll={{ y: 100 }}
+					/>
 					{status == "PENDING_COLLECTION" ? (
 						<>
 							<Form.Item
