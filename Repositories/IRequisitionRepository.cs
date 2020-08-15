@@ -8,5 +8,7 @@ namespace SSIS.Repositories
     {
         Task<int> CreateRequisition(Requisition requisition);
         Task<List<Requisition>> GetRequisitionsByDeptStaff(string email);
+
+        Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
     }
 }
