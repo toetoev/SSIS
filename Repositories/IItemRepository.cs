@@ -11,5 +11,7 @@ namespace SSIS.Repositories
                 Task<Item> GetItemById(Item item);
                 Task<List<Item>> GetAll();
                 Task<bool> ItemExist(Guid itemId);
+
+                Task<List<Item>> GetItemsByCategory(string name);
         }
 }

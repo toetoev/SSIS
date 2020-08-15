@@ -61,5 +61,9 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByDeptStaff(email) };
         }
+
+         public async Task<ApiResponse> GetRequisitionsByStatus(RequisitionStatus status){
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status)};
+        }
     }
 }

@@ -26,6 +26,11 @@ namespace SSIS.Repositories
             return await _dbContext.Items.Where(i => i.Id == item.Id).FirstOrDefaultAsync();
         }
 
+        public async Task<List<Item>> GetItemsByCategory(string name)
+        {
+            return await _dbContext.Items.Where(i => i.CategoryName == name).ToListAsync();
+        }
+
         public async Task<bool> ItemExist(Guid itemId)
         {
             return await _dbContext.Items.AnyAsync(i => i.Id == itemId);
