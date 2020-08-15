@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Select, Table } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 
 import React from "react";
 
@@ -17,7 +17,7 @@ const dataSource = [
 		startDate: "17 August",
 		endDate: "20 August",
 		delegate: "Meka",
-		reason: "Sick Leave",
+		comment: "Sick Leave",
 		action: "Delete",
 	},
 ];
@@ -38,24 +38,23 @@ const columns = [
 		key: "delegate",
 	},
 	{
-		title: "Reason",
-		dataIndex: "reason",
-		key: "reason",
+		title: "Comment",
+		dataIndex: "comment",
+		key: "comment",
 	},
 	{
 		title: "Action",
 		dataIndex: "action",
 		key: "action",
 		render: () => (
-			<span>
+			<Space>
 				<Button type="primary">
 					<a>Edit</a>
 				</Button>
-				<span className="ant-divider" />
 				<Button type="danger">
 					<a>Delete</a>
 				</Button>
-			</span>
+			</Space>
 		),
 	},
 ];
@@ -92,41 +91,42 @@ class Add extends React.Component {
 	};
 	render() {
 		return (
-			<div>
-				<Button type="primary" onClick={this.showModal}>
-					Add
-				</Button>
-
-				<Modal
-					title="Delegation Options"
-					visible={this.state.visible}
-					onOk={this.handleOk}
-					onCancel={this.handleCancel}
-				>
-					<Form {...layout} onSubmit={this.handleSubmit}>
-						<Form.Item label="Start Date">
-							<DatePicker onChange={onChange} />
-						</Form.Item>
-						<Form.Item label="End Date">
-							<DatePicker onChange={onChange} />
-						</Form.Item>
-						<Form.Item label="Delegate">
-							<Select
-								defaultValue="Martini Zhao"
-								style={{ width: 120 }}
-								onChange={handleChange}
-							>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yiminghe">Yiminghe</Option>
-							</Select>
-						</Form.Item>
-						<Form.Item label="Reason">
-							<TextArea rows={4}></TextArea>
-						</Form.Item>
-					</Form>
-				</Modal>
-			</div>
+			<Row justify="end">
+				<Space direction="vertical">
+					<Button type="primary" onClick={this.showModal}>
+						Add
+					</Button>
+					<Modal
+						title="Delegation Options"
+						visible={this.state.visible}
+						onOk={this.handleOk}
+						onCancel={this.handleCancel}
+					>
+						<Form {...layout} onSubmit={this.handleSubmit}>
+							<Form.Item label="Start Date">
+								<DatePicker onChange={onChange} />
+							</Form.Item>
+							<Form.Item label="End Date">
+								<DatePicker onChange={onChange} />
+							</Form.Item>
+							<Form.Item label="Delegate">
+								<Select
+									defaultValue="Martini Zhao"
+									style={{ width: 120 }}
+									onChange={handleChange}
+								>
+									<Option value="jack">Jack</Option>
+									<Option value="lucy">Lucy</Option>
+									<Option value="Yiminghe">Yiminghe</Option>
+								</Select>
+							</Form.Item>
+							<Form.Item label="Comment">
+								<TextArea rows={4}></TextArea>
+							</Form.Item>
+						</Form>
+					</Modal>
+				</Space>
+			</Row>
 		);
 	}
 }
