@@ -11,6 +11,7 @@ namespace SSIS.Repositories
         Task<List<Requisition>> GetRequisitionsByDeptStaff(string email);
 
         Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
-        Task<Requisition> GetRequisitionsById(Guid requisitionId);
+        Task<Requisition> GetRequisitionById(Guid requisitionId);
+        Task<int> UpdateRequisition();
     }
 }

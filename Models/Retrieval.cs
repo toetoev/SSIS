@@ -20,6 +20,8 @@ namespace SSIS.Models
         public virtual StoreStaff CreatedBy { get; set; }
         public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
 
+        public Guid RequisitionId { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Requisition> Requisitions { get; set; }
     }

@@ -30,6 +30,8 @@ namespace SSIS.Models
         public virtual DeptStaff AcknowledgedBy { get; set; }
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
 
+        public Guid RetrievalId { get; set; }
+
         [JsonIgnore]
         public virtual Retrieval Retrieval { get; set; }
     }
