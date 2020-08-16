@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Manager() {
+export default function RequisitionHistory() {
 	return <div></div>;
 }

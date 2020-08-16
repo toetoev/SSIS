@@ -18,7 +18,11 @@ export default function DeptRep() {
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"

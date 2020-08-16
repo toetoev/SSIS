@@ -5,9 +5,9 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import MaintainDelegation from "./MaintainDelegation";
+import MaintainDept from "./MaintainDept";
 import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
-import MaintainDept from "./MaintainDept";
 import Sidebar from "../../component/Sidebar";
 
 const { Header, Sider, Content } = Layout;
@@ -25,7 +25,17 @@ export default function DeptHead() {
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/requisition`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/delegation`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"
@@ -37,7 +47,6 @@ export default function DeptHead() {
 				>
 					<Switch>
 						<Route exact path={`${path}`}>
-							MaintainDept
 							<MaintainDept></MaintainDept>
 						</Route>
 						<Route path={`${path}/requisition`}>
