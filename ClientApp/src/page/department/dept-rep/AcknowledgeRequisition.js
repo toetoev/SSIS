@@ -2,6 +2,7 @@ import { Button, Checkbox, Form, Modal, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function AcknowledgeRequisition() {
+	// TODO: call RequisitionController Get Requisition By Role (DeptRep will return all history of pending collection status)
 	const dataSource = [];
 	for (let i = 0; i < 100; i++) {
 		dataSource.push({
@@ -124,7 +125,7 @@ const ViewAcknowledgement = () => {
 				onOk={handleOk}
 				onCancel={handleCancel}
 				footer={
-					status == "PENDING_COLLECTION"
+					status === "PENDING_COLLECTION"
 						? [
 								<Button key="cancel" type="danger" onClick={handleCancel}>
 									Cancel
@@ -151,7 +152,7 @@ const ViewAcknowledgement = () => {
 						columns={requisitionColumns}
 						scroll={{ y: 100 }}
 					/>
-					{status == "PENDING_COLLECTION" ? (
+					{status === "PENDING_COLLECTION" ? (
 						<>
 							<Form.Item
 								label="Do you want to re-order the unfulfilled items?"
@@ -163,7 +164,7 @@ const ViewAcknowledgement = () => {
 							</Form.Item>
 						</>
 					) : null}
-					{status == "DELIVERED" ? (
+					{status === "DELIVERED" ? (
 						<>
 							<Form.Item label="Delivered by:">
 								<span className="ant-form-text"></span>

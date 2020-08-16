@@ -20,12 +20,16 @@ namespace SSIS.Models
 
         [JsonIgnore]
         public virtual ICollection<Retrieval> Retrievals { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Adjustment> SubmittedAdjustments { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Adjustment> IssuedAdjustments { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Order> OrderedOrders { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Order> ReceivedOrders { get; set; }
 
