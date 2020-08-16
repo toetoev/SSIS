@@ -27,7 +27,6 @@ namespace SSIS.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonIgnore]
         public Guid Id { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }
