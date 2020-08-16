@@ -18,7 +18,7 @@ namespace SSIS.Repositories
         }
         public async Task<List<Item>> GetAll()
         {
-            return await _dbContext.Items.ToListAsync();
+            return await _dbContext.Items.OrderBy(i => i.Description).ToListAsync();
         }
 
         public async Task<Item> GetItemById(Guid itemId)
