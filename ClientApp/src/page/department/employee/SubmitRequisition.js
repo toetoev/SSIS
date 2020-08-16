@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function SubmitRequisition() {
+	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{
 			title: "Product Description",
@@ -11,7 +12,7 @@ export default function SubmitRequisition() {
 		},
 		{
 			title: "Unit of Measure",
-			dataIndex: "uom",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Quantity",
@@ -28,8 +29,6 @@ export default function SubmitRequisition() {
 		},
 	];
 
-	const dataSource = [];
-
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
@@ -43,7 +42,7 @@ export default function SubmitRequisition() {
 				</Col>
 				<Row>
 					<Space>
-						<Add />
+						<Add handleSubmit={setDataSource} />
 						<Submit />
 					</Space>
 				</Row>
@@ -53,16 +52,27 @@ export default function SubmitRequisition() {
 	);
 }
 
-const Add = () => {
-	const [itemDescription, setItemDescription] = useState([]);
+const Add = ({ handleSubmit }) => {
+	const [itemSelected, setItemSelected] = useState({});
 	const [quantity, setQuantity] = useState();
 	const [visible, setVisible] = useState(false);
+	const [itemOptions, setItemOptions] = useState([]);
+	const [itemDetails, setItemDetails] = useState([]);
 
 	const showModal = () => {
 		setVisible(true);
 	};
 
 	const handleOk = (e) => {
+		console.log(itemSelected);
+		handleSubmit([
+			{
+				key: itemSelected.id,
+				description: itemSelected.description,
+				uoM: itemSelected.uoM,
+				quantity: quantity,
+			},
+		]);
 		setVisible(false);
 	};
 
@@ -71,8 +81,11 @@ const Add = () => {
 	};
 
 	const onValuesChange = (val) => {
-		if (val.quantity) setQuantity(val.quantity);
-		if (val.itemDescription) setItemDescription(val.itemDescription);
+		console.log(val);
+		console.log(itemDetails);
+		console.log(itemDetails.find((val) => val.id === val.itemId));
+		// if (val.quantity) setQuantity(val.quantity);
+		// if (val.itemId) setItemSelected(itemDetails.filter((val) => val.id === val.itemId)[0]);
 	};
 	const onFinish = () => {
 		// axios.post("https://localhost:5001/api/requisition");
@@ -84,7 +97,8 @@ const Add = () => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					setItemDescription(
+					setItemDetails(result.data);
+					setItemOptions(
 						result.data.reduce((options, item) => {
 							return [...options, { label: item.description, value: item.id }];
 						}, [])
@@ -116,8 +130,8 @@ const Add = () => {
 				]}
 			>
 				<Form layout="vertical" onFinish={onFinish} onValuesChange={onValuesChange}>
-					<Form.Item name="itemDescription" label="Item Description : ">
-						<Select options={itemDescription} style={{ width: "100%" }}></Select>
+					<Form.Item name="itemId" label="Item Description : ">
+						<Select options={itemOptions} style={{ width: "100%" }}></Select>
 					</Form.Item>
 					<Form.Item name="quantity" label="Quantity : ">
 						<Input type="number" placeholder="0" />
