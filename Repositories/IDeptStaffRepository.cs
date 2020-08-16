@@ -9,7 +9,7 @@ namespace SSIS.Repositories
         Task<bool> DeptRepExist(DeptStaff deptStaff);
         Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo);
         Task<DeptStaff> GetDeptStaffByEmail(string email);
-        Task UpdateDeptRep(DeptStaff deptStaff);
+        Task UpdateDeptStaff();
         Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles);
         Task<string> GetCollectionPointByStaff(string deptStaff);
     }

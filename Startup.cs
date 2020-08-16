@@ -56,7 +56,7 @@ namespace SSIS
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
             services.AddScoped<IRequisitionService, RequisitionService>();
-            services.AddScoped<IItemService,ItemService>();
+            services.AddScoped<IItemService, ItemService>();
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();
