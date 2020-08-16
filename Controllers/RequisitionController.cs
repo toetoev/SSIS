@@ -44,6 +44,5 @@ namespace SSIS.Controllers
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
         }
-
     }
 }
