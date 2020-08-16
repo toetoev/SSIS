@@ -1,4 +1,4 @@
-### AuthController Login
+### AuthController Login Employee
 POST https://localhost:5001/api/auth/login
 Content-Type: application/json
 
@@ -6,6 +6,26 @@ Content-Type: application/json
     "name" : "zhao435021640@gmail.com",
     "password": "1",
     "role": "DEPARTMENT"
+}
+
+### AuthController Login DeptHead
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+    "name" : "Meka",
+    "password": "1",
+    "role": "DEPARTMENT"
+}
+
+### AuthController Login Clerk
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+    "name" : "win",
+    "password": "1",
+    "role": "STORE"
 }
 
 ### AuthController Get Test
@@ -23,11 +43,11 @@ Authorization:  Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80
 
 ### DeptController Update Collection Point
 POST https://localhost:5001/api/dept
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NTYzMDI4LCJleHAiOjE1OTc2NDk0MjgsImlhdCI6MTU5NzU2MzAyOH0.GPwfv3mNo8CmMmf_-zX0npOA4g1zX6YeuTkFK7D3iSC0W_OYsgeobVvRN1GhVxLzxMvk-AxEGWCS5EEw9nINAw
 Content-Type: application/json
 
 {
-    "collectionPointId" : "Management School (11:00am)",
-    "name": "Computer Science"
+    "collectionPointId" : "University Hospital (11:00 AM)"
 }
 
 
@@ -65,7 +85,8 @@ Content-Type: application/json
 
 ### RequisitionController Get Requisition By Role
 GET https://localhost:5001/api/requisition
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NDc0NTE1LCJleHAiOjE1OTc1NjA5MTUsImlhdCI6MTU5NzQ3NDUxNX0.fdBcISHitmw6KXrYuY4VRghp0CPekwOXDc9Kf9n8GiusGwjdPyXVJq3Wo8liFp8rjGPa1u9q4ae7kxAapE18Pg
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NTU4NjE0LCJleHAiOjE1OTc2NDUwMTQsImlhdCI6MTU5NzU1ODYxNH0.4tog-4rYlPDHEruIxEoG_qLGf-_RPNxbzvvW1JyVsxTHDGzqlcgLP-qr-pfYANA-_fb3PLRahW1nJR8z-oFMRA
 
 ### RequisitionController Get Requisition By Status
 GET https://localhost:5001/api/requisition/APPLIED
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w

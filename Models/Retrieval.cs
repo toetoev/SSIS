@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace SSIS.Models
 {
     public class Retrieval
@@ -16,6 +18,9 @@ namespace SSIS.Models
 
         [ForeignKey("CreatedByEmail")]
         public virtual StoreStaff CreatedBy { get; set; }
-        public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
+        public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Requisition> Requisitions { get; set; }
     }
 }
