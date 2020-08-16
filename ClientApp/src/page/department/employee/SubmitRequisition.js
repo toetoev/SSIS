@@ -1,6 +1,7 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
 import axios from "axios";
@@ -40,14 +41,18 @@ export default function SubmitRequisition() {
 						<Button type="primary">Clip</Button>
 					</Space>
 				</Col>
-				<Row>
-					<Space>
-						<Add dataSource={dataSource} handleDataChange={handleDataChange} />
-						<Submit dataSource={dataSource} handleDataChange={handleDataChange} />
-					</Space>
-				</Row>
+				<Col>
+					{" "}
+					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
+				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} />
+			<Row justify="end">
+				<Space>
+					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>
+					<Submit dataSource={dataSource} handleDataChange={handleDataChange} />
+				</Space>
+			</Row>
 		</Space>
 	);
 }
@@ -196,6 +201,20 @@ const Submit = ({ dataSource, handleDataChange }) => {
 		<>
 			<Button type="primary" onClick={handleSubmit}>
 				Submit
+			</Button>
+		</>
+	);
+};
+
+const Clear = ({ dataSource, handleDataChange }) => {
+	const handleClick = () => {
+		if (dataSource.length > 0)
+			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
+	};
+	return (
+		<>
+			<Button type="danger" onClick={handleClick}>
+				Clear
 			</Button>
 		</>
 	);
