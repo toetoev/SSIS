@@ -58,11 +58,28 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> GetRequisitionsByDeptStaff(string email)
         {
-            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByDeptStaff(email) };
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            List<RequisitionStatus> requisitionStatuses = new List<RequisitionStatus> { };
+            switch (deptStaff.Role)
+            {
+                case DeptRole.Employee:
+                    requisitionStatuses = Enum.GetValues(typeof(RequisitionStatus)).Cast<RequisitionStatus>().ToList();
+                    break;
+                case DeptRole.DeptRep:
+                    requisitionStatuses = new List<RequisitionStatus> { RequisitionStatus.APPROVED, RequisitionStatus.DELIVERED, RequisitionStatus.PENDING_COLLECTION, RequisitionStatus.PROCESSING_RETRIEVAL };
+                    break;
+                case DeptRole.DeptHead:
+                    requisitionStatuses = new List<RequisitionStatus> { RequisitionStatus.APPLIED, RequisitionStatus.APPROVED, RequisitionStatus.DELIVERED, RequisitionStatus.PENDING_COLLECTION };
+                    break;
+                default:
+                    break;
+            }
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByDeptStaff(deptStaff.Department.Name, requisitionStatuses) };
         }
 
-         public async Task<ApiResponse> GetRequisitionsByStatus(RequisitionStatus status){
-            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status)};
+        public async Task<ApiResponse> GetRequisitionsByStatus(RequisitionStatus status)
+        {
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status) };
         }
     }
 }
