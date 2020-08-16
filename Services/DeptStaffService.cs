@@ -18,9 +18,21 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetDeptStaffByDeptAndRole(deptName, roles) };
         }
-        public async Task<ApiResponse> UpdateDeptRep(DeptStaff deptStaff)
+        public async Task<ApiResponse> UpdateDeptRep(string newRepEmail)
         {
-            await _deptStaffRepository.UpdateDeptRep(deptStaff);
+            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffByEmail(newRepEmail);
+            if (deptStaffFromRepo != null)
+            {
+                DeptStaff currentDeptRep = await _deptStaffRepository.GetCurrentDeptRep(deptStaffFromRepo);
+                if (currentDeptRep != null)
+                {
+                    currentDeptRep.Role = DeptRole.Employee;
+                }
+                deptStaffFromRepo.Role = DeptRole.DeptRep;
+            }
+            else
+                return new ApiResponse { Success = false, Message = "New department staff assigned as department rep doesn't exist" };
+            await _deptStaffRepository.UpdateDeptStaff();
             return new ApiResponse { Success = true };
         }
     }

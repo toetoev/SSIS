@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
@@ -19,6 +20,7 @@ namespace SSIS.Controllers
 
         // /?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE
         [HttpGet("")]
+        // TODO: authorized by dh
         public IActionResult GetDeptStaffByRole([FromQuery] string deptName, [FromQuery] string[] roles)
         {
             foreach (var role in roles)
@@ -31,9 +33,10 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult UpdateDeptRep([FromBody] DeptStaff deptStaff)
+        [Authorize(Roles = DeptRole.DeptHead)]
+        public IActionResult UpdateDeptRep([FromBody] string newRepEmail)
         {
-            return Ok(_deptStaffService.UpdateDeptRep(deptStaff).Result);
+            return Ok(_deptStaffService.UpdateDeptRep(newRepEmail).Result);
         }
     }
 }

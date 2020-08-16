@@ -21,47 +21,24 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByRole(string role)
+        public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status)
         {
-            List<Requisition> requisitions = new List<Requisition>();
-
-            switch (role)
-            {
-                case DeptRole.Employee:
-                    requisitions = await _dbContext.Requisitions.ToListAsync();
-                    break;
-                case DeptRole.DeptRep:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.APPLIED || r.Status != RequisitionStatus.REJECTED).ToListAsync();
-                    break;
-                case DeptRole.DeptHead:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.PROCESSING_RETRIEVAL).ToListAsync();
-                    break;
-                default:
-                    break;
-            }
-            return requisitions;
+            return await _dbContext.Requisitions.Where(r => r.Status == status).ToListAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByStaff(string email)
+        public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses)
         {
-            List<Requisition> requisitions = new List<Requisition>();
-             DeptStaff deptStaff= await _dbContext.DeptStaffs.Where(ds => ds.Email == email).FirstOrDefaultAsync();
+            return await _dbContext.Requisitions.Where(r => r.Department.Name == deptName && requisitionStatuses.Contains(r.Status)).ToListAsync();
+        }
 
-            switch (deptStaff.Role)
-            {
-                case DeptRole.Employee:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name ==deptStaff.Department.Name ).ToListAsync();
-                    break;
-                case DeptRole.DeptRep:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name == deptStaff.Department.Name && r.Status != RequisitionStatus.APPLIED || r.Status != RequisitionStatus.REJECTED).ToListAsync();
-                    break;
-                case DeptRole.DeptHead:
-                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name == deptStaff.Department.Name && r.Status != RequisitionStatus.PROCESSING_RETRIEVAL).ToListAsync();
-                    break;
-                default:
-                    break;
-            }
-            return requisitions;
+        public async Task<Requisition> GetRequisitionById(Guid requisitionId)
+        {
+            return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).SingleOrDefaultAsync();
+        }
+
+        public async Task<int> UpdateRequisition()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

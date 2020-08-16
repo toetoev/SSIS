@@ -1,90 +1,141 @@
-import { Button } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import React from "react";
-import Table from "react-bootstrap/Table";
+import { Button, Form, Modal, Space, Table } from "antd";
+import React, { useState } from "react";
 
 export default function ReviewRequisition() {
+	const dataSource = [];
+	for (let i = 0; i < 100; i++) {
+		dataSource.push({
+			key: i,
+			requestedBy: `Edward King ${i}`,
+			requestedDate: "25 August 1998",
+			status: "Applied",
+		});
+	}
+
+	const columns = [
+		{
+			title: "Requested By",
+			dataIndex: "requestedBy",
+			key: "requestedBy",
+		},
+		{
+			title: "Requested Date",
+			dataIndex: "requestedDate",
+			key: "requestedDate",
+		},
+		{
+			title: "Status",
+			dataIndex: "status",
+			key: "status",
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: ViewRequisition,
+		},
+	];
+
 	return (
-		<div className="">
+		<Space direction="vertical">
 			<h3>Review Requisitions</h3>
-			<br />
-			<Table striped bordered hover>
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Requested By</th>
-						<th>Requested Date</th>
-						<th>Status</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>1</td>
-						<td>Joseph Joestar</td>
-						<td>21/06/20</td>
-						<td>Applied</td>
-						<td>{View()}</td>
-					</tr>
-				</tbody>
-			</Table>
-		</div>
+			<Table
+				dataSource={dataSource}
+				columns={columns}
+				pagination={{ pageSize: 50 }}
+				scroll={{ y: 500 }}
+			/>
+		</Space>
 	);
 }
+const ViewRequisition = () => {
+	const itemData = [];
+	for (let i = 0; i < 5; i++) {
+		itemData.push({
+			key: i,
+			itemDescription: `Pencil ${i}B`,
+			qty: `${i}`,
+		});
+	}
 
-function View() {
-	const [modalShow, setModalShow] = React.useState(false);
-
+	const reqColumns = [
+		{
+			title: "Item Description",
+			dataIndex: "itemDescription",
+			key: "itemDescription",
+		},
+		{
+			title: "Quantity",
+			dataIndex: "qty",
+			key: "qty",
+		},
+	];
+	const [visible, setVisible] = useState(false);
+	const [status, setStatus] = useState("REJECTED");
+	const showModal = () => {
+		setVisible(true);
+	};
+	const handleOk = (e) => {
+		setVisible(false);
+	};
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
 	return (
-		<>
-			<Button variant="primary" onClick={() => setModalShow(true)}>
+		<div>
+			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-
-			<RequisitionModal show={modalShow} onHide={() => setModalShow(false)} />
-		</>
+			<Modal
+				title="View Requisition"
+				visible={visible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				footer={
+					status === "APPLIED"
+						? [
+								<Button key="reject" type="danger" onClick={handleCancel}>
+									Reject
+								</Button>,
+								<Button key="approve" type="primary" onClick={handleOk}>
+									Approve
+								</Button>,
+						  ]
+						: null
+				}
+			>
+				<Form>
+					<Form.Item label="Requested by:">
+						<span className="ant-form-text"></span>
+					</Form.Item>
+					<Form.Item label="Requested date:">
+						<span className="ant-form-text"></span>
+					</Form.Item>
+					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
+					{status === "APPROVED" ? (
+						<>
+							<Form.Item label="Approved by:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+							<Form.Item label="Approved date:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+						</>
+					) : null}
+					{status === "REJECTED" ? (
+						<>
+							<Form.Item label="Rejected by:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+							<Form.Item label="Rejected date:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+							<Form.Item label="Rejected reason:">
+								<span className="ant-form-text"></span>
+							</Form.Item>
+						</>
+					) : null}
+				</Form>
+			</Modal>
+		</div>
 	);
-}
-
-function RequisitionModal(props) {
-	return (
-		<Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-			<Modal.Header closeButton>
-				<Modal.Title id="contained-modal-title-vcenter">Requisition Details</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<div className="">
-					<p>Requested by: Joseph Joestar</p>
-					<p>Requested date: 21/06/20</p>
-					<p>Requested items: </p>
-					<Table striped bordered hover>
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Hamon</td>
-								<td>1,998</td>
-							</tr>
-						</tbody>
-					</Table>
-					<form>
-						<Form.Group controlId="exampleForm.ControlTextarea1">
-							<Form.Label>Rejection reason (optional)</Form.Label>
-							<Form.Control as="textarea" rows="3" />
-						</Form.Group>
-						<Button variant="outline-success">Approve</Button>{" "}
-						<Button variant="outline-danger">Reject</Button>{" "}
-					</form>
-				</div>
-			</Modal.Body>
-			{/* <Modal.Footer>
-				<Button onClick={props.onHide}>Close</Button>
-			</Modal.Footer> */}
-		</Modal>
-	);
-}
+};

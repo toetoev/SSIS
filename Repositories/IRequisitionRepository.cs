@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SSIS.Models;
@@ -7,7 +8,10 @@ namespace SSIS.Repositories
     public interface IRequisitionRepository
     {
         Task<int> CreateRequisition(Requisition requisition);
-        Task<List<Requisition>> GetRequisitionsByRole(string role);
-        Task<List<Requisition>> GetRequisitionsByStaff(string email);
+        Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses);
+
+        Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
+        Task<Requisition> GetRequisitionById(Guid requisitionId);
+        Task<int> UpdateRequisition();
     }
 }

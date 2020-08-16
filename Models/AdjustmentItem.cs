@@ -12,9 +12,10 @@ namespace SSIS.Models
         [Key]
         public Guid AdjustmentId { get; set; }
         public int AdjustedQty { get; set; }
+
+        [Required]
         public string Reason { get; set; }
 
-        [JsonIgnore]
         public virtual Item Item { get; set; }
 
         [JsonIgnore]

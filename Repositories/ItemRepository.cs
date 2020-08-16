@@ -18,12 +18,17 @@ namespace SSIS.Repositories
         }
         public async Task<List<Item>> GetAll()
         {
-            return await _dbContext.Items.ToListAsync();
+            return await _dbContext.Items.OrderBy(i => i.Description).ToListAsync();
         }
 
-        public async Task<Item> GetItemById(Item item)
+        public async Task<Item> GetItemById(Guid itemId)
         {
-            return await _dbContext.Items.Where(i => i.Id == item.Id).FirstOrDefaultAsync();
+            return await _dbContext.Items.Where(i => i.Id == itemId).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Item>> GetItemsByCategory(string name)
+        {
+            return await _dbContext.Items.Where(i => i.CategoryName == name).ToListAsync();
         }
 
         public async Task<bool> ItemExist(Guid itemId)

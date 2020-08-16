@@ -22,11 +22,17 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetCollectionPointByStaff(currentUser) };
         }
 
-        public async Task<ApiResponse> UpdateCollectionPoint(Department department)
+        public async Task<ApiResponse> UpdateCollectionPoint(string currentUser, string collectionPoint)
         {
-            await _deptRepository.UpdateCollectionPoint(department);
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(currentUser);
+            if (await _deptRepository.CollectionPointExist(collectionPoint))
+            {
+                deptStaff.Department.CollectionPointId = collectionPoint;
+                await _deptRepository.UpdateCollectionPoint();
+            }
+            else
+                return new ApiResponse { Success = false, Message = "Collection point chosen doesn't exist" };
             return new ApiResponse { Success = true };
         }
-
     }
 }

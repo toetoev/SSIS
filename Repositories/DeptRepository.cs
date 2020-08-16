@@ -31,12 +31,8 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();
         }
-        public async Task<int> UpdateCollectionPoint(Department department)
+        public async Task<int> UpdateCollectionPoint()
         {
-            Department departmentFromRepo = await GetDepartment(department.Name);
-            if (departmentFromRepo != null)
-                if (department.CollectionPointId != null && await CollectionPointExist(department.CollectionPointId))
-                    departmentFromRepo.CollectionPointId = department.CollectionPointId;
             return await _dbContext.SaveChangesAsync();
         }
     }

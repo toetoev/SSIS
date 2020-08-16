@@ -1,13 +1,16 @@
-import { Container, Row } from "react-bootstrap";
+import "../../../css/dashboard.css";
+
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import Header from "../../component/Header";
-import MaintainAuthDelegation from "./MaintainAuthDelegation";
+import { Layout } from "antd";
+import Logout from "../../component/Logout";
+import MaintainDelegation from "./MaintainDelegation";
 import MaintainDept from "./MaintainDept";
 import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
 import Sidebar from "../../component/Sidebar";
 
+const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
 	const items = [
@@ -16,11 +19,32 @@ export default function DeptHead() {
 		{ to: `${path}/delegation`, title: "Delegation" },
 	];
 	return (
-		<div>
-			<Header></Header>
-			<Container fluid>
-				<Row>
-					<Sidebar items={items}></Sidebar>
+		<Layout style={{ minHeight: "100vh" }}>
+			<Header className="header">
+				<Logout></Logout>
+			</Header>
+			<Layout>
+				<Sider width={200} className="site-layout-background">
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/requisition`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/delegation`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
+				</Sider>
+				<Content
+					className="site-layout-background"
+					style={{
+						padding: 24,
+						margin: 0,
+						minHeight: 280,
+					}}
+				>
 					<Switch>
 						<Route exact path={`${path}`}>
 							<MaintainDept></MaintainDept>
@@ -29,11 +53,11 @@ export default function DeptHead() {
 							<ReviewRequisition></ReviewRequisition>
 						</Route>
 						<Route path={`${path}/delegation`}>
-							<MaintainAuthDelegation></MaintainAuthDelegation>
+							<MaintainDelegation></MaintainDelegation>
 						</Route>
 					</Switch>
-				</Row>
-			</Container>
-		</div>
+				</Content>
+			</Layout>
+		</Layout>
 	);
 }

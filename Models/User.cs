@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -11,9 +12,11 @@ namespace SSIS.Models
         public string Email { get; set; }
 
         [MaxLength(36)]
+        [Required]
         public string Name { get; set; }
 
         [MaxLength(50)]
+        [Required]
         public string Password { get; set; }
 
         public string Role { get; set; }

@@ -24,26 +24,16 @@ namespace SSIS.Repositories
         {
             return await _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptStaffFromRepo.Department.Name && ds.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
         }
-        public async Task<DeptStaff> GetDeptStaffByEmail(DeptStaff deptStaff)
+        public async Task<DeptStaff> GetDeptStaffByEmail(string email)
         {
-            return await _dbContext.DeptStaffs.Where(ds => ds.Email == deptStaff.Email).FirstOrDefaultAsync();
+            return await _dbContext.DeptStaffs.Where(ds => ds.Email == email).FirstOrDefaultAsync();
         }
         public async Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles)
         {
             return await _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptName && roles.Contains(ds.Role)).ToListAsync();
         }
-        public async Task UpdateDeptRep(DeptStaff deptStaff)
+        public async Task UpdateDeptStaff()
         {
-            DeptStaff deptStaffFromRepo = await GetDeptStaffByEmail(deptStaff);
-            if (deptStaffFromRepo != null)
-            {
-                DeptStaff currentDeptRep = await GetCurrentDeptRep(deptStaffFromRepo);
-                if (currentDeptRep != null)
-                {
-                    currentDeptRep.Role = DeptRole.Employee;
-                }
-                deptStaffFromRepo.Role = DeptRole.DeptRep;
-            }
             await _dbContext.SaveChangesAsync();
         }
 

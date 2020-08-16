@@ -29,6 +29,8 @@ namespace SSIS
         {
             // services.AddCors();
             services.AddControllers();
+            // .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddDbContext<DataContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DbConn")));
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -54,12 +56,16 @@ namespace SSIS
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
             services.AddScoped<IRequisitionService, RequisitionService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IRetrievalService, RetrievalService>();
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
+            services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IRetrievalRepository, RetrievalRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,7 +105,7 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-        // dataInitializer.Seed();
+            // dataInitializer.Seed();
         }
     }
 }

@@ -38,11 +38,11 @@ namespace SSIS.Databases
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
                 new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "Kai Huei", Email = "kaihuei@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "Kai Huei", Email = "kaihueiboss@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
 
                 new DeptStaff { Name = "ABC", Email = "abc@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Martini", Email = "martini@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "Chris", Email = "chris@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "DEF", Email = "def@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "GHI", Email = "ghi@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -232,12 +232,12 @@ namespace SSIS.Databases
         private void SeedCollectionPoint()
         {
             string[] collectionPointLocations = {
-                "Stationery Store - Administration Building (9:30am)",
-                "Management School (11:00am)",
-                "Medical School (9:30am) ",
-                "Engineering School (11:00am)",
-                "Science School (9:30am)",
-                "University Hospital (11:00am)"
+                "Stationery Store - Administration Building (9:00 AM)",
+                "Management School (11:00 AM)",
+                "Medical School (9:30 AM) ",
+                "Engineering School (11:00 AM)",
+                "Science School (9:30 AM)",
+                "University Hospital (11:00 AM)"
             };
             Array.ForEach(collectionPointLocations, el => _dbContext.Add(new CollectionPoint { Location = el }));
             _dbContext.SaveChanges();
