@@ -4,28 +4,22 @@ import React, { useState } from "react";
 export default function SubmitRequisition() {
 	const columns = [
 		{
-			title: "No",
-			dataIndex: "no",
+			title: "Product Description",
+			dataIndex: "description",
 		},
 		{
-			title: "Product Id",
-			dataIndex: "id",
-			sorter: (a, b) => a.amount - b.amount,
+			title: "Unit of Measure",
+			dataIndex: "uom",
 		},
 		{
-			title: "Product Name",
-			dataIndex: "name",
-		},
-		{
-			title: "Product Price",
-			dataIndex: "price",
+			title: "Quantity",
+			dataIndex: "quantity",
 		},
 		{
 			title: "Action",
 			key: "action",
 			render: () => (
 				<Space>
-					<Button type="primary">Edit</Button>
 					<Button type="danger">Delete</Button>
 				</Space>
 			),
@@ -34,10 +28,9 @@ export default function SubmitRequisition() {
 
 	const dataSource = [
 		{
-			no: "0",
-			id: "A001",
-			name: "apple",
-			price: "20",
+			description: "Pencil 2B",
+			uom: "Box of 10",
+			quantity: "5",
 		},
 	];
 
@@ -52,7 +45,10 @@ export default function SubmitRequisition() {
 						<Button type="primary">Clip</Button>
 					</Space>
 				</Col>
-				<Add />
+				<Row>
+					<Add />
+					<Submit />
+				</Row>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} />
 		</Space>
@@ -78,7 +74,7 @@ const Add = () => {
 	const handleSubmit = () => {};
 	return (
 		<>
-			<Button type="primary" onClick={showModal}>
+			<Button type="secondary" onClick={showModal}>
 				Add
 			</Button>
 			<Modal
@@ -112,6 +108,24 @@ const Add = () => {
 					</Form.Item>
 				</Form>
 			</Modal>
+		</>
+	);
+};
+
+const Submit = () => {
+	const { Option } = Select;
+	const [visible, setVisible] = useState(false);
+
+	const handleChange = () => {
+		console.log("handle change");
+	};
+	const handleSubmit = () => {};
+	return (
+		<>
+			<Button type="primary">
+				{/* Add onClick() */}
+				Submit
+			</Button>
 		</>
 	);
 };
