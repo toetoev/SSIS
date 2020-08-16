@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -16,10 +17,16 @@ namespace SSIS.Models
             base.Password = password;
             base.Role = role;
         }
+
+        [JsonIgnore]
         public virtual ICollection<Retrieval> Retrievals { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Adjustment> SubmittedAdjustments { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Adjustment> IssuedAdjustments { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Order> OrderedOrders { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Order> ReceivedOrders { get; set; }
 
     }
