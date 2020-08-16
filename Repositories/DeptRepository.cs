@@ -27,11 +27,6 @@ namespace SSIS.Repositories
             return false;
         }
 
-        public async Task<string> GetCollectionPoint(string deptName)
-        {
-            return await _dbContext.Departments.Where(dept => dept.Name == deptName).Select(dept => dept.CollectionPointId).SingleOrDefaultAsync();
-        }
-
         public async Task<Department> GetDepartment(string name)
         {
             return await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();

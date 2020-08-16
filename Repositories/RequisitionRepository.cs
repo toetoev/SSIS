@@ -20,5 +20,48 @@ namespace SSIS.Repositories
             _dbContext.Add(requisition);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<List<Requisition>> GetRequisitionsByRole(string role)
+        {
+            List<Requisition> requisitions = new List<Requisition>();
+
+            switch (role)
+            {
+                case DeptRole.Employee:
+                    requisitions = await _dbContext.Requisitions.ToListAsync();
+                    break;
+                case DeptRole.DeptRep:
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.APPLIED || r.Status != RequisitionStatus.REJECTED).ToListAsync();
+                    break;
+                case DeptRole.DeptHead:
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Status != RequisitionStatus.PROCESSING_RETRIEVAL).ToListAsync();
+                    break;
+                default:
+                    break;
+            }
+            return requisitions;
+        }
+
+        public async Task<List<Requisition>> GetRequisitionsByStaff(string email)
+        {
+            List<Requisition> requisitions = new List<Requisition>();
+             DeptStaff deptStaff= await _dbContext.DeptStaffs.Where(ds => ds.Email == email).FirstOrDefaultAsync();
+
+            switch (deptStaff.Role)
+            {
+                case DeptRole.Employee:
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name ==deptStaff.Department.Name ).ToListAsync();
+                    break;
+                case DeptRole.DeptRep:
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name == deptStaff.Department.Name && r.Status != RequisitionStatus.APPLIED || r.Status != RequisitionStatus.REJECTED).ToListAsync();
+                    break;
+                case DeptRole.DeptHead:
+                    requisitions = await _dbContext.Requisitions.Where(r => r.Department.Name == deptStaff.Department.Name && r.Status != RequisitionStatus.PROCESSING_RETRIEVAL).ToListAsync();
+                    break;
+                default:
+                    break;
+            }
+            return requisitions;
+        }
     }
 }

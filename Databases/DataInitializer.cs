@@ -24,6 +24,7 @@ namespace SSIS.Databases
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
+            SeedStoreStaff();
             SeedSupplier();
             SeedCategory();
             SeedItem();
@@ -36,11 +37,31 @@ namespace SSIS.Databases
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" }
+                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "Kai Huei", Email = "kaihuei@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+
+                new DeptStaff { Name = "ABC", Email = "abc@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "Martini", Email = "martini@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "Chris", Email = "chris@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
                 _dbContext.Add(deptStaff);
+            }
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedStoreStaff()
+        {
+            ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
+            {
+                new StoreStaff { Name = "Win", Email = "win@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "Kai", Email = "kai@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "Zana", Email = "zana@gmail.com", Password = "1", Role = "MANAGER" }
+            };
+            foreach (var storeStaff in storeStaffs)
+            {
+                _dbContext.Add(storeStaff);
             }
             _dbContext.SaveChanges();
         }

@@ -6,6 +6,9 @@ namespace SSIS.Models
 {
     public class StoreStaff : User
     {
+
+        public StoreStaff() { }
+
         public StoreStaff(string name, string email, string password, string role)
         {
             base.Name = name;
