@@ -24,11 +24,9 @@ namespace SSIS.Models
         public virtual ICollection<Requisition> RequestedRequisitions { get; set; }
 
         [JsonIgnore]
-
         public virtual ICollection<Requisition> ReviewedRequisitions { get; set; }
 
         [JsonIgnore]
-
         public virtual ICollection<Requisition> AcknowledgedRequisitions { get; set; }
 
         [JsonIgnore]

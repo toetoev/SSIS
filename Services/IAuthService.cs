@@ -6,7 +6,6 @@ namespace SSIS.Services
 {
     public interface IAuthService
     {
-        // Task<ApiResponse> Register(User user);
         Task<ApiResponse> Login(User user);
     }
 }

@@ -1,9 +1,9 @@
-using SSIS.Models;
-using SSIS.Payloads;
-using SSIS.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SSIS.Models;
+using SSIS.Payloads;
+using SSIS.Repositories;
 
 namespace SSIS.Services
 {
@@ -25,13 +25,14 @@ namespace SSIS.Services
             StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
             List<RetrievalItem> retrievalItems = new List<RetrievalItem>();
             Dictionary<Guid, int> totalItemQty = new Dictionary<Guid, int>();
+            Guid retrievalId = Guid.NewGuid();
             foreach (var requisitionId in requisitionIds)
             {
                 Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
-                if (requisition != null && requisition.Status==RequisitionStatus.APPLIED)
+                if (requisition != null)
                 {
-                    requisition.Status = RequisitionStatus.PENDING_COLLECTION;
-                    await _requisitionRepository.UpdateRequisition();
+                    requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
+                    requisition.RetrievalId = retrievalId;
                     foreach (var requisitionItem in requisition.RequisitionItems)
                     {
                         if (totalItemQty.ContainsKey(requisitionItem.ItemId))
@@ -45,35 +46,12 @@ namespace SSIS.Services
                     }
                 }
             }
-
             foreach (var itemId in totalItemQty.Keys)
             {
                 retrievalItems.Add(new RetrievalItem { ItemId = itemId, TotalQtyNeeded = totalItemQty[itemId] });
             }
-
-            Retrieval retrieval = new Retrieval { Id = Guid.NewGuid(), CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
+            Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
-        }
-
-        public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)
-        {
-            Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
-
-            if (retrieval != null)
-            {
-                foreach (var requisition in retrieval.Requisitions)
-                {
-                    requisition.Status = RequisitionStatus.APPROVED;
-                    requisition.Retrieval = null;
-                }
-            return new ApiResponse { Success = true, Data = await _retrievalRepository.DeleteRetrieval(retrieval) };
-            }
-            return new ApiResponse { Success = false, Message = "Could not find the retrieval to delete" };
-        }
-
-        public async Task<ApiResponse> GetAllRetrievals()
-        {
-            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAll() };
         }
     }
 }

@@ -15,13 +15,18 @@ namespace SSIS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public DateTime RequestedOn { get; set; }
-        public DateTime ReviewedOn { get; set; }
+        public Nullable<DateTime> ReviewedOn { get; set; }
         public string Comment { get; set; }
-        public DateTime AcknowledgedOn { get; set; }
+        public Nullable<DateTime> AcknowledgedOn { get; set; }
         public RequisitionStatus Status { get; set; }
+
+        [Required]
+        public string DepartmentName { get; set; }
 
         [JsonIgnore]
         public virtual Department Department { get; set; }
+
+        [Required]
         public string RequestedByEmail { get; set; }
         public virtual DeptStaff RequestedBy { get; set; }
         public string ReviewedByEmail { get; set; }
@@ -30,7 +35,8 @@ namespace SSIS.Models
         public virtual DeptStaff AcknowledgedBy { get; set; }
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
 
-        public Guid RetrievalId { get; set; }
+        [ForeignKey("RetrievalId")]
+        public Guid? RetrievalId { get; set; }
 
         [JsonIgnore]
         public virtual Retrieval Retrieval { get; set; }

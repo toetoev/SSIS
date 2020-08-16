@@ -13,7 +13,7 @@ namespace SSIS.Models
         public DateTime SubmittedOn { get; set; }
         public string SubmittedByEmail { get; set; }
         public virtual StoreStaff SubmittedBy { get; set; }
-        public DateTime IssuedOn { get; set; }
+        public Nullable<DateTime> IssuedOn { get; set; }
         public string IssuedByEmail { get; set; }
         public virtual StoreStaff IssuedBy { get; set; }
         public AdjustmentStatus Status { get; set; }

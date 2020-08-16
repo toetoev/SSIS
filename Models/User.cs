@@ -12,9 +12,11 @@ namespace SSIS.Models
         public string Email { get; set; }
 
         [MaxLength(36)]
+        [Required]
         public string Name { get; set; }
 
         [MaxLength(50)]
+        [Required]
         public string Password { get; set; }
 
         public string Role { get; set; }

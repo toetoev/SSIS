@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SSIS.Models
 {
@@ -10,6 +11,7 @@ namespace SSIS.Models
 
         [Key]
         public DateTime StartDate { get; set; }
+
         public string DelegatedToEmail { get; set; }
         public DateTime EndDate { get; set; }
         public string Comment { get; set; }
