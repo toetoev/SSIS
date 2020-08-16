@@ -46,9 +46,7 @@ POST https://localhost:5001/api/dept
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NTYzMDI4LCJleHAiOjE1OTc2NDk0MjgsImlhdCI6MTU5NzU2MzAyOH0.GPwfv3mNo8CmMmf_-zX0npOA4g1zX6YeuTkFK7D3iSC0W_OYsgeobVvRN1GhVxLzxMvk-AxEGWCS5EEw9nINAw
 Content-Type: application/json
 
-{
-    "collectionPointId" : "University Hospital (11:00 AM)"
-}
+"University Hospital (11:00 AM)"
 
 
 
@@ -59,11 +57,10 @@ GET https://localhost:5001/api/deptStaff?deptName=Computer%20Science&roles=DEPTR
 
 ### DeptStaffController Update Dept Rep
 POST https://localhost:5001/api/deptStaff
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NTYzMDI4LCJleHAiOjE1OTc2NDk0MjgsImlhdCI6MTU5NzU2MzAyOH0.GPwfv3mNo8CmMmf_-zX0npOA4g1zX6YeuTkFK7D3iSC0W_OYsgeobVvRN1GhVxLzxMvk-AxEGWCS5EEw9nINAw
 Content-Type: application/json
 
-{
-    "email" : "zhao435021640@gmail.com"
-}
+"zhao435021640@gmail.com"
 
 
 
@@ -71,22 +68,31 @@ Content-Type: application/json
 
 ### RequisitionController Create Requisition
 POST https://localhost:5001/api/requisition
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NDc0NTE1LCJleHAiOjE1OTc1NjA5MTUsImlhdCI6MTU5NzQ3NDUxNX0.fdBcISHitmw6KXrYuY4VRghp0CPekwOXDc9Kf9n8GiusGwjdPyXVJq3Wo8liFp8rjGPa1u9q4ae7kxAapE18Pg
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NTY3NTM3LCJleHAiOjE1OTc2NTM5MzcsImlhdCI6MTU5NzU2NzUzN30.VsO1F8cuUHDMI3q6eK14t3kqQsqIzxhBcCurty-JjGHW7GfnGoUtcz_YvLxAwl1FNhFyPf6dEgfALLILzidVnw
 Content-Type: application/json
 
 [{
-    "itemId" :"89C36910-05F3-4C02-A797-01C8EB7460AB",
+    "itemId" :"37FDA11A-2E77-4208-AE72-02C7D1EEC084",
     "need":1
 },
 {
-    "itemId" :"17847B64-20C3-4A23-BFEF-02B3E5FD36FF",
+    "itemId" :"B9203A2B-ACEB-44E3-AAEB-065A56E94A9B",
     "need":2
 }]
 
-### RequisitionController Get Requisition By Role
+### RequisitionController Get Requisition By DeptStaff
 GET https://localhost:5001/api/requisition
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk3NTU4NjE0LCJleHAiOjE1OTc2NDUwMTQsImlhdCI6MTU5NzU1ODYxNH0.4tog-4rYlPDHEruIxEoG_qLGf-_RPNxbzvvW1JyVsxTHDGzqlcgLP-qr-pfYANA-_fb3PLRahW1nJR8z-oFMRA
 
 ### RequisitionController Get Requisition By Status
 GET https://localhost:5001/api/requisition/APPLIED
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w
+
+
+
+### RetrievalController Create Retrieval
+POST https://localhost:5001/api/retrieval
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzU3MDc2OCwiZXhwIjoxNTk3NjU3MTY4LCJpYXQiOjE1OTc1NzA3Njh9.KvczbR8-NYGH07ObQDXikZ9EE-nVwIYtGPOHg37M50zeRGcsFXRwIQcq4mjZEXWYBwHilbNRQy-hm8-4agSerg
+Content-Type: application/json
+
+["F7695283-EAF6-467E-AFE9-65BAA56B5207", "200B4F6B-EB11-4217-B858-FD8C2837C176"]

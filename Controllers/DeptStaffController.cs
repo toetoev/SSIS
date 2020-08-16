@@ -34,9 +34,9 @@ namespace SSIS.Controllers
 
         [HttpPost("")]
         [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult UpdateDeptRep([FromBody] DeptStaff deptStaff)
+        public IActionResult UpdateDeptRep([FromBody] string newRepEmail)
         {
-            return Ok(_deptStaffService.UpdateDeptRep(deptStaff).Result);
+            return Ok(_deptStaffService.UpdateDeptRep(newRepEmail).Result);
         }
     }
 }

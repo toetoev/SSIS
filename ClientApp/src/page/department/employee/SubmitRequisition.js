@@ -1,52 +1,35 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import Confirm from "../../component/Confirm";
+import Error from "../../component/Error";
+import Success from "../../component/Success";
 import axios from "axios";
 
 export default function SubmitRequisition() {
+	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{
-			title: "No",
-			dataIndex: "no",
+			title: "Product Description",
+			dataIndex: "description",
 		},
 		{
-			title: "Product Id",
-			dataIndex: "id",
-			sorter: (a, b) => a.amount - b.amount,
-		},
-		{
-			title: "Product Name",
-			dataIndex: "name",
-		},
-		{
-			title: "Product Price",
-			dataIndex: "price",
+			title: "Quantity",
+			dataIndex: "quantity",
 		},
 		{
 			title: "Action",
 			key: "action",
 			render: () => (
 				<Space>
-					<Button type="primary">Edit</Button>
 					<Button type="danger">Delete</Button>
 				</Space>
 			),
 		},
 	];
-
-	const dataSource = [
-		{
-			no: "0",
-			id: "A001",
-			name: "apple",
-			price: "20",
-		},
-	];
-
-	useEffect(() => {
-		//axios 
-	}, []);
-
+	const handleDataChange = (data) => {
+		setDataSource(data);
+	};
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
@@ -58,30 +41,89 @@ export default function SubmitRequisition() {
 						<Button type="primary">Clip</Button>
 					</Space>
 				</Col>
-				<Add />
+				<Col>
+					{" "}
+					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
+				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} />
+			<Row justify="end">
+				<Space>
+					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>
+					<Submit dataSource={dataSource} handleDataChange={handleDataChange} />
+				</Space>
+			</Row>
 		</Space>
 	);
 }
-const Add = () => {
-	const { Option } = Select;
+
+const Add = ({ dataSource, handleDataChange }) => {
+	const [form] = Form.useForm();
+	const [item, setItem] = useState("");
+	const [quantity, setQuantity] = useState(0);
 	const [visible, setVisible] = useState(false);
+	const [itemOptions, setItemOptions] = useState([]);
+
 	const showModal = () => {
 		setVisible(true);
 	};
 
-	const handleOk = (e) => {
-		setVisible(false);
+	const handleOk = () => {
+		form.validateFields()
+			.then((val) => {
+				console.log(val);
+				console.log("Valid");
+				if (dataSource.find((val) => val.key === item)) {
+					handleDataChange(
+						dataSource.map((val) => {
+							if (val.key === item) {
+								val.quantity = val.quantity + quantity;
+							}
+							return val;
+						})
+					);
+				} else {
+					handleDataChange([
+						...dataSource,
+						{
+							key: item,
+							description: itemOptions.find((val) => val.value === item).label,
+							quantity: quantity,
+						},
+					]);
+				}
+				setVisible(false);
+			})
+			.catch((err) => {});
 	};
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-	const handleChange = () => {
-		console.log("handle change");
+
+	const onValuesChange = (val) => {
+		if (val.quantity) setQuantity(Number(val.quantity));
+		if (val.item) setItem(val.item);
 	};
-	const handleSubmit = () => {};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item")
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemOptions(
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -101,23 +143,79 @@ const Add = () => {
 					</Button>,
 				]}
 			>
-				<Form layout="vertical" onSubmit={handleSubmit}>
-					<Form.Item label="Item Description : ">
-						<Select
-							style={{ width: "100%" }}
-							defaultValue="blue"
-							onChange={handleChange}
-						>
-							<Option value="blue">Highlighter Blue</Option>
-							<Option value="red">Highlighter Red</Option>
-						</Select>
+				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item
+						name="item"
+						label="Item Description : "
+						rules={[{ required: true, message: "Please choose one item" }]}
+					>
+						<Select options={itemOptions} style={{ width: "100%" }}></Select>
 					</Form.Item>
-
-					<Form.Item label="Quantity : ">
+					<Form.Item
+						name="quantity"
+						label="Quantity : "
+						rules={[
+							{
+								required: true,
+								type: "number",
+								transform: (val) => Number(val),
+								min: 1,
+								message: "Please choose at least one item",
+							},
+						]}
+					>
 						<Input type="number" placeholder="0" />
 					</Form.Item>
 				</Form>
 			</Modal>
+		</>
+	);
+};
+
+const Submit = ({ dataSource, handleDataChange }) => {
+	const handleSubmit = () => {
+		if (dataSource.length > 0) {
+			const data = dataSource.map((val) => {
+				return { itemId: val.key, need: val.quantity };
+			});
+			axios
+				.post("https://localhost:5001/api/requisition", data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						handleDataChange([]);
+						Success("Requisition Applied Successfully");
+					} else {
+						alert(result.message);
+					}
+				});
+		} else {
+			Error("", "Please choose some items before submit");
+		}
+	};
+	return (
+		<>
+			<Button type="primary" onClick={handleSubmit}>
+				Submit
+			</Button>
+		</>
+	);
+};
+
+const Clear = ({ dataSource, handleDataChange }) => {
+	const handleClick = () => {
+		if (dataSource.length > 0)
+			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
+	};
+	return (
+		<>
+			<Button type="danger" onClick={handleClick}>
+				Clear
+			</Button>
 		</>
 	);
 };

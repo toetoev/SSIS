@@ -24,6 +24,10 @@ namespace SSIS.Databases
             modelBuilder.Entity<Order>().HasOne(o => o.ReceivedBy).WithMany(ss => ss.ReceivedOrders).HasForeignKey(o => o.ReceivedByEmail);
             modelBuilder.Entity<Delegation>().HasOne(d => d.DelegatedBy).WithMany(ds => ds.DelegatedByDelegations).HasForeignKey(d => d.DelegatedByEmail);
             modelBuilder.Entity<Delegation>().HasOne(d => d.DelegatedTo).WithMany(ds => ds.DelegatedToDelegations).HasForeignKey(d => d.DelegatedToEmail);
+            //  modelBuilder.Entity<Requisition >()..HasRequired(r => r.)
+            //             .WithMany(n=>n.Posts )
+            //             .HasForeignKey(n => n.BlogId)
+            //             .WillCascadeOnDelete(true);
         }
 
         public DbSet<StoreStaff> StoreStaffs { get; set; }

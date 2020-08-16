@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function RequisitionHistory() {
@@ -67,6 +67,7 @@ export default function RequisitionHistory() {
 	);
 }
 
+// TODO: add props for passing detailed data into component, then set to the field
 const ViewAcknowledgement = () => {
 	const requisitionData = [];
 	for (let i = 0; i < 5; i++) {
@@ -116,33 +117,30 @@ const ViewAcknowledgement = () => {
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Modal title="View Requisition" visible={visible} onCancel={handleCancel} footer={null}>
-				<Form>
-					<Form.Item label="Collection Date:">
-						<span className="ant-form-text"></span>
-					</Form.Item>
-					<Form.Item label="Collection Point:">
-						<span className="ant-form-text"></span>
-					</Form.Item>
-					<Form.Item label="Requested Items:">
-						<span className="ant-form-text"></span>
-					</Form.Item>
-					<Table
-						dataSource={requisitionData}
-						columns={requisitionColumns}
-						scroll={{ y: 100 }}
-					/>
-					{status == "DELIVERED" ? (
-						<>
-							<Form.Item label="Delivered by:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-							<Form.Item label="Delivered date:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-						</>
-					) : null}
-				</Form>
+			<Modal
+				title="Requisition Details"
+				visible={visible}
+				onCancel={handleCancel}
+				footer={null}
+			>
+				<Descriptions>
+					<Descriptions.Item label="Collection Point">Collection Point</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Requested Items"></Descriptions.Item>
+				</Descriptions>
+				<Table
+					dataSource={requisitionData}
+					columns={requisitionColumns}
+					pagination={false}
+					scroll={{ y: 100 }}
+				/>
+				{status == "DELIVERED" ? (
+					<Descriptions>
+						<Descriptions.Item label="Delivered by:"></Descriptions.Item>
+						<Descriptions.Item label="Delivered date:"></Descriptions.Item>
+					</Descriptions>
+				) : null}
 			</Modal>
 		</div>
 	);
