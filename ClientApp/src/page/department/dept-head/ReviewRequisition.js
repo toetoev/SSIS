@@ -91,7 +91,7 @@ const ViewRequisition = () => {
 				onOk={handleOk}
 				onCancel={handleCancel}
 				footer={
-					status == "APPLIED"
+					status === "APPLIED"
 						? [
 								<Button key="reject" type="danger" onClick={handleCancel}>
 									Reject
@@ -111,7 +111,7 @@ const ViewRequisition = () => {
 						<span className="ant-form-text"></span>
 					</Form.Item>
 					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
-					{status == "APPROVED" ? (
+					{status === "APPROVED" ? (
 						<>
 							<Form.Item label="Approved by:">
 								<span className="ant-form-text"></span>
@@ -121,7 +121,7 @@ const ViewRequisition = () => {
 							</Form.Item>
 						</>
 					) : null}
-					{status == "REJECTED" ? (
+					{status === "REJECTED" ? (
 						<>
 							<Form.Item label="Rejected by:">
 								<span className="ant-form-text"></span>

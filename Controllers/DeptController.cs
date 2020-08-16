@@ -26,11 +26,11 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        // [Authorize]
-        // TODO: authorize by dh
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult UpdateCollectionPoint([FromBody] Department department)
         {
-            return Ok(_deptService.UpdateCollectionPoint(department).Result);
+            string currentUser = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_deptService.UpdateCollectionPoint(currentUser, department.CollectionPointId).Result);
         }
     }
 }

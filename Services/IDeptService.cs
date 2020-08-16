@@ -6,7 +6,7 @@ namespace SSIS.Services
 {
     public interface IDeptService
     {
-        Task<ApiResponse> UpdateCollectionPoint(Department department);
+        Task<ApiResponse> UpdateCollectionPoint(string currentUser, string collectionPoint);
         Task<ApiResponse> GetCollectionPointByStaff(string currentUser);
     }
 }

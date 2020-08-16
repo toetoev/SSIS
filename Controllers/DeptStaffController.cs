@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
@@ -32,7 +33,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        // TODO: authorized by dh
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult UpdateDeptRep([FromBody] DeptStaff deptStaff)
         {
             return Ok(_deptStaffService.UpdateDeptRep(deptStaff).Result);

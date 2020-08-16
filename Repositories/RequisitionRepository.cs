@@ -47,9 +47,14 @@ namespace SSIS.Repositories
             return requisitions;
         }
 
-        public async Task<Requisition> GetRequisitionsById(Guid requisitionId)
+        public async Task<Requisition> GetRequisitionById(Guid requisitionId)
         {
             return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).SingleOrDefaultAsync();
+        }
+
+        public async Task<int> UpdateRequisition()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
