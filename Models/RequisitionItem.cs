@@ -14,7 +14,6 @@ namespace SSIS.Models
         public Guid RequisitionId { get; set; }
         public int Need { get; set; }
         public int Actual { get; set; }
-
         public virtual Item Item { get; set; }
 
         [JsonIgnore]
