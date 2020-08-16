@@ -33,7 +33,6 @@ namespace SSIS.Services
                 {
                     requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
                     requisition.RetrievalId = retrievalId;
-                    await _requisitionRepository.UpdateRequisition();
                     foreach (var requisitionItem in requisition.RequisitionItems)
                     {
                         if (totalItemQty.ContainsKey(requisitionItem.ItemId))
