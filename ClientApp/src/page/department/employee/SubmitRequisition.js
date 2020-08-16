@@ -1,5 +1,7 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import axios from "axios";
 
 export default function SubmitRequisition() {
 	const columns = [
@@ -40,6 +42,10 @@ export default function SubmitRequisition() {
 			price: "20",
 		},
 	];
+
+	useEffect(() => {
+		//axios 
+	}, []);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
