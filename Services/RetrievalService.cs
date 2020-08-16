@@ -25,11 +25,15 @@ namespace SSIS.Services
             StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
             List<RetrievalItem> retrievalItems = new List<RetrievalItem>();
             Dictionary<Guid, int> totalItemQty = new Dictionary<Guid, int>();
+            Guid retrievalId = Guid.NewGuid();
             foreach (var requisitionId in requisitionIds)
             {
-                Requisition requisition = await _requisitionRepository.GetRequisitionsById(requisitionId);
+                Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
                 if (requisition != null)
                 {
+                    requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
+                    requisition.RetrievalId = retrievalId;
+                    await _requisitionRepository.UpdateRequisition();
                     foreach (var requisitionItem in requisition.RequisitionItems)
                     {
                         if (totalItemQty.ContainsKey(requisitionItem.ItemId))
@@ -47,7 +51,7 @@ namespace SSIS.Services
             {
                 retrievalItems.Add(new RetrievalItem { ItemId = itemId, TotalQtyNeeded = totalItemQty[itemId] });
             }
-            Retrieval retrieval = new Retrieval { Id = Guid.NewGuid(), CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
+            Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
         }
     }
