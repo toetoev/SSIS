@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Space, Table } from "antd";
+import { Button, Form, Input, Modal, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function ReviewRequisition() {
@@ -6,7 +6,7 @@ export default function ReviewRequisition() {
 	for (let i = 0; i < 100; i++) {
 		dataSource.push({
 			key: i,
-			requestedBy: `Edward King ${i}`,
+			requestedBy: "Edward King ${i}",
 			requestedDate: "25 August 1998",
 			status: "Applied",
 		});
@@ -52,8 +52,8 @@ const ViewRequisition = () => {
 	for (let i = 0; i < 5; i++) {
 		itemData.push({
 			key: i,
-			itemDescription: `Pencil ${i}B`,
-			qty: `${i}`,
+			itemDescription: "Pencil ${i}B",
+			qty: "${i}",
 		});
 	}
 
@@ -70,7 +70,8 @@ const ViewRequisition = () => {
 		},
 	];
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("REJECTED");
+	const [status, setStatus] = useState("APPROVED");
+	const { TextArea } = Input;
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -110,7 +111,7 @@ const ViewRequisition = () => {
 					<Form.Item label="Requested date:">
 						<span className="ant-form-text"></span>
 					</Form.Item>
-					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
+					<Table dataSource={itemData} columns={reqColumns} />
 					{status == "APPROVED" ? (
 						<>
 							<Form.Item label="Approved by:">
