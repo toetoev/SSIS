@@ -1,45 +1,34 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import axios from "axios";
 
 export default function SubmitRequisition() {
 	const columns = [
 		{
-			title: "No",
-			dataIndex: "no",
+			title: "Product Description",
+			dataIndex: "description",
 		},
 		{
-			title: "Product Id",
-			dataIndex: "id",
-			sorter: (a, b) => a.amount - b.amount,
+			title: "Unit of Measure",
+			dataIndex: "uom",
 		},
 		{
-			title: "Product Name",
-			dataIndex: "name",
-		},
-		{
-			title: "Product Price",
-			dataIndex: "price",
+			title: "Quantity",
+			dataIndex: "quantity",
 		},
 		{
 			title: "Action",
 			key: "action",
 			render: () => (
-				<div>
-					<a className="btn btn-warning mr-3">Edit</a>
-					<a className="btn btn-danger mr-3">Delete</a>
-				</div>
+				<Space>
+					<Button type="danger">Delete</Button>
+				</Space>
 			),
 		},
 	];
 
-	const dataSource = [
-		{
-			no: "0",
-			id: "A001",
-			name: "apple",
-			price: "20",
-		},
-	];
+	const dataSource = [];
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
@@ -52,15 +41,23 @@ export default function SubmitRequisition() {
 						<Button type="primary">Clip</Button>
 					</Space>
 				</Col>
-				<Add />
+				<Row>
+					<Space>
+						<Add />
+						<Submit />
+					</Space>
+				</Row>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} />
 		</Space>
 	);
 }
+
 const Add = () => {
-	const { Option } = Select;
+	const [itemDescription, setItemDescription] = useState([]);
+	const [quantity, setQuantity] = useState();
 	const [visible, setVisible] = useState(false);
+
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -72,10 +69,33 @@ const Add = () => {
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-	const handleChange = () => {
-		console.log("handle change");
+
+	const onValuesChange = (val) => {
+		if (val.quantity) setQuantity(val.quantity);
+		if (val.itemDescription) setItemDescription(val.itemDescription);
 	};
-	const handleSubmit = () => {};
+	const onFinish = () => {
+		// axios.post("https://localhost:5001/api/requisition");
+	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item")
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemDescription(
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -95,23 +115,33 @@ const Add = () => {
 					</Button>,
 				]}
 			>
-				<Form layout="vertical" onSubmit={handleSubmit}>
-					<Form.Item label="Item Description : ">
-						<Select
-							style={{ width: "100%" }}
-							defaultValue="blue"
-							onChange={handleChange}
-						>
-							<Option value="blue">Highlighter Blue</Option>
-							<Option value="red">Highlighter Red</Option>
-						</Select>
+				<Form layout="vertical" onFinish={onFinish} onValuesChange={onValuesChange}>
+					<Form.Item name="itemDescription" label="Item Description : ">
+						<Select options={itemDescription} style={{ width: "100%" }}></Select>
 					</Form.Item>
-
-					<Form.Item label="Quantity : ">
+					<Form.Item name="quantity" label="Quantity : ">
 						<Input type="number" placeholder="0" />
 					</Form.Item>
 				</Form>
 			</Modal>
+		</>
+	);
+};
+
+const Submit = () => {
+	const { Option } = Select;
+	const [visible, setVisible] = useState(false);
+
+	const handleChange = () => {
+		console.log("handle change");
+	};
+	const handleSubmit = () => {};
+	return (
+		<>
+			<Button type="primary">
+				{/* Add onClick() */}
+				Submit
+			</Button>
 		</>
 	);
 };
