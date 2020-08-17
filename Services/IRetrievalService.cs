@@ -1,9 +1,9 @@
-﻿using SSIS.Models;
-using SSIS.Payloads;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SSIS.Models;
+using SSIS.Payloads;
 
 namespace SSIS.Services
 {
@@ -12,5 +12,6 @@ namespace SSIS.Services
         Task<ApiResponse> CreateRetrieval(List<Guid> requisitionIds, string email);
         Task<ApiResponse> GetAllRetrievals();
         Task<ApiResponse> DeleteRetrieval(Guid retrievalId);
+        Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, Dictionary<Guid, int> itemIdWithActualQuantity, string email);
     }
 }

@@ -22,7 +22,7 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> CreateRetrieval(List<Guid> requisitionIds, string email)
         {
-            StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            StoreStaff storeStaff = await NewMethod(email);
             List<RetrievalItem> retrievalItems = new List<RetrievalItem>();
             Dictionary<Guid, int> totalItemQty = new Dictionary<Guid, int>();
             Guid retrievalId = Guid.NewGuid();
@@ -54,6 +54,11 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
         }
 
+        private async Task<StoreStaff> NewMethod(string email)
+        {
+            return await _storeStaffRepository.GetStoreStaffByEmail(email);
+        }
+
         public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)
         {
             Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
@@ -73,6 +78,32 @@ namespace SSIS.Services
         public async Task<ApiResponse> GetAllRetrievals()
         {
             return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAll() };
+        }
+
+        public async Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, Dictionary<Guid, int> itemIdWithActualQuantity, string email)
+        {
+            StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
+
+            Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
+
+            if (retrieval != null && retrieval.CreatedBy == storeStaff)
+            {
+                ICollection<RetrievalItem> retrievalItems = retrieval.RetrievalItems;
+                foreach (var item in itemIdWithActualQuantity.Keys)
+                {
+                    foreach (var retrievalitem in retrievalItems)
+                    {
+                        if (item == retrievalitem.ItemId && (itemIdWithActualQuantity[item] < retrievalitem.TotalQtyNeeded))
+                        {
+                            retrievalitem.TotalQtyRetrieved = itemIdWithActualQuantity[item];
+                        }
+                    }
+
+                }
+
+            }
+            return new ApiResponse { Success = true, Data = await _retrievalRepository.UpdateRetrieval() };
+
         }
     }
 }
