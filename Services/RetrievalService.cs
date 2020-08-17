@@ -29,7 +29,7 @@ namespace SSIS.Services
             foreach (var requisitionId in requisitionIds)
             {
                 Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
-                if (requisition != null)
+                if (requisition != null && requisition.Status == RequisitionStatus.APPROVED)
                 {
                     requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
                     requisition.RetrievalId = retrievalId;
