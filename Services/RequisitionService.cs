@@ -75,6 +75,23 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status) };
         }
 
+        public async Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId, string email)
+        {
+            List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId);
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            foreach (var requisition in requisitions)
+            {
+                if (requisition != null)
+                {
+                    if (deptStaff.Email == requisition.Retrieval.CreatedByEmail)
+                    {
+                        requisition.RequisitionItems = requisition.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList();
+                    }
+                }
+            }
+            return new ApiResponse { Success = true, Data = requisitions };
+        }
+
         public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email)
         {
             Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);

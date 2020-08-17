@@ -13,5 +13,6 @@ namespace SSIS.Repositories
         Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
         Task<Requisition> GetRequisitionById(Guid requisitionId);
         Task<int> UpdateRequisition();
+        Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId);
     }
 }
