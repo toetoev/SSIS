@@ -1,14 +1,15 @@
-import { Button, Input, Space, Table, Row, Col } from "antd";
-import React, { useState } from "react";
+import { Button, Input, Space, Table } from "antd";
 
-export default function SupplierList() {
+import React from "react";
+
+export default function MaintainSupplier() {
 	const dataSource = [
 		{
 			key: "1",
 			supplierName: "ALPHA Office Supplies",
 			contactName: "Ms Irene Tanx",
 			phone: "461 9928",
-			action: "action"
+			action: "action",
 		},
 	];
 	const columns = [
@@ -53,24 +54,17 @@ export default function SupplierList() {
 		<>
 			<h3>Supplier List</h3>
 
-			<div
-				style={{ float: "right", marginBottom: 16 }}
-			>
+			<div style={{ float: "right", marginBottom: 16 }}>
 				<Space>
 					<Search
 						placeholder="input search text"
-						onSearch={value => console.log(value)}
+						onSearch={(value) => console.log(value)}
 						style={{ width: 200 }}
 					/>
 
-					<Button
-						type="primary"
-					>
-						Add Supplier
-        		</Button>
+					<Button type="primary">Add Supplier</Button>
 				</Space>
 			</div>
-
 
 			<Table columns={columns} dataSource={dataSource} />
 		</>

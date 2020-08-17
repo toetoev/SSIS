@@ -1,7 +1,8 @@
 import { Button, Input, Space, Table } from "antd";
-import React, { useState } from "react";
 
-export default function ViewStockAdjustment() {
+import React from "react";
+
+export default function StockAdjustment() {
 	const dataSource = [
 		{
 			key: "1",
@@ -54,8 +55,8 @@ export default function ViewStockAdjustment() {
 
 			<Search
 				placeholder="input search text"
-				onSearch={value => console.log(value)}
-				style={{ width: 200, float: "right", marginBottom: 16}}
+				onSearch={(value) => console.log(value)}
+				style={{ width: 200, float: "right", marginBottom: 16 }}
 			/>
 
 			<Table columns={columns} dataSource={dataSource} />
