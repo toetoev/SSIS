@@ -23,9 +23,9 @@ namespace SSIS.Controllers
             _requisitionService = requisitionService;
         }
 
-        [HttpPut("{requisitionId}/{status}")]
+        [HttpPut("{requisitionId}")]
         [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromRoute] RequisitionStatus status)
+        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromBody] RequisitionStatus status)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.ReviewRequisition(requisitionId, status, email).Result);

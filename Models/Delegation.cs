@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using SSIS.Util;
+using SSIS.Utils;
 
 namespace SSIS.Models
 {

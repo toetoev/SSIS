@@ -90,9 +90,11 @@ GET https://localhost:5001/api/requisition/APPROVED
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w
 
 ### RequisitionController Review Requisition
-PUT https://localhost:5001/api/requisition/E9FF7B45-4FCA-438A-ADC4-20516EB15177/APPROVED
+PUT https://localhost:5001/api/requisition/1213988E-159C-46C4-878E-F497207E4B2C
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NjU3NTM0LCJleHAiOjE1OTc3NDM5MzQsImlhdCI6MTU5NzY1NzUzNH0.VN-0FcK1l1xk2woRGxvkkf_t-oytUeOhv8_nXPtRIYhRdGMNh6YnyyJcghKNb6ZIChKBz9mR0UrIinBbaCwHtQ
+Content-Type: application/json
 
+"APPROVED"
 
 
 
