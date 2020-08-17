@@ -36,24 +36,17 @@ namespace SSIS.Services
                 Department = requestedBy.Department,
             };
 
-            bool isItemValid = true;
             foreach (var requisitionItem in requisitionItems)
             {
                 if (!await _itemRepository.ItemExist(requisitionItem.ItemId))
-                {
-                    isItemValid = false;
-                    break;
-                }
+                    return new ApiResponse { Success = false, Message = "Some items do not exist" };
+                if (requisitionItem.Need < 1)
+                    return new ApiResponse { Success = false, Message = "Item requested should at least have one" };
                 requisitionItem.RequisitionId = requisition.Id;
             }
-            if (isItemValid)
-            {
-                requisition.RequisitionItems = requisitionItems;
-                await _requisitionRepository.CreateRequisition(requisition);
-                return new ApiResponse { Success = true };
-            }
-            else
-                return new ApiResponse { Success = false, Message = "Some items do not exist" };
+            requisition.RequisitionItems = requisitionItems;
+            await _requisitionRepository.CreateRequisition(requisition);
+            return new ApiResponse { Success = true };
         }
 
         public async Task<ApiResponse> GetRequisitionsByDeptStaff(string email)
