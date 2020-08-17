@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Services;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 
 namespace SSIS.Controllers
 {
@@ -30,9 +30,10 @@ namespace SSIS.Controllers
 
         [HttpGet("")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetAllRetrievals()
+        public IActionResult GetAllRetrievalsByCurrentStaff()
         {
-            return Ok(_retrievalService.GetAllRetrievals().Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_retrievalService.GetAllRetrievalsByCurrentStaff(email).Result);
         }
 
         [HttpDelete("{retrievalId}")]
