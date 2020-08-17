@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Services;
@@ -20,6 +21,14 @@ namespace SSIS.Controllers
         public RequisitionController(IRequisitionService requisitionService)
         {
             _requisitionService = requisitionService;
+        }
+
+        [HttpPut("{requisitionId}/{status}")]
+        [Authorize(Roles = DeptRole.DeptHead)]
+        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromRoute] RequisitionStatus status)
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.ReviewRequisition(requisitionId, status, email));
         }
 
         [HttpGet("{status}")]
@@ -43,14 +52,6 @@ namespace SSIS.Controllers
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
-        }
-
-        [HttpPut("{requisitionId}/{status}")]
-        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromRoute] RequisitionStatus status)
-        {
-            System.Console.WriteLine(requisitionId);
-            System.Console.WriteLine(status);
-            return Ok();
         }
     }
 }
