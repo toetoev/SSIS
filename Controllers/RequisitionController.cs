@@ -44,13 +44,5 @@ namespace SSIS.Controllers
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
         }
-
-        [HttpPut("{requisitionId}/{status}")]
-        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromRoute] RequisitionStatus status)
-        {
-            System.Console.WriteLine(requisitionId);
-            System.Console.WriteLine(status);
-            return Ok();
-        }
     }
 }

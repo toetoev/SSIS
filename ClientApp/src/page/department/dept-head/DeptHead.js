@@ -1,3 +1,5 @@
+import "../../../css/dashboard.css";
+
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import { Layout } from "antd";

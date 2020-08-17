@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
-using SSIS.Util;
+using System.Text.Json.Serialization;
 
 namespace SSIS.Models
 {
@@ -16,8 +15,6 @@ namespace SSIS.Models
         [Column("CreatedBy")]
         [Required]
         public string CreatedByEmail { get; set; }
-
-        [JsonConverter(typeof(DateFormatConverter))]
         public DateTime CreatedOn { get; set; }
 
         [ForeignKey("CreatedByEmail")]

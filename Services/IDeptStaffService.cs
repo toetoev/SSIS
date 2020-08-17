@@ -7,6 +7,6 @@ namespace SSIS.Services
     public interface IDeptStaffService
     {
         Task<ApiResponse> UpdateDeptRep(string newRepEmail);
-        Task<ApiResponse> GetDeptStaffByDeptAndRole(string email, string[] roles);
+        Task<ApiResponse> GetDeptStaffByDeptAndRole(string deptName, string[] roles);
     }
 }
