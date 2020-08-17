@@ -18,7 +18,7 @@ export default function Login() {
 
 	const handleSubmit = () => {
 		axios
-			.post("https://localhost:5001/api/auth/login", {
+			.post("https://localhost:5001/api/auth", {
 				name: nameOrEmail,
 				password: password,
 				role: role,
