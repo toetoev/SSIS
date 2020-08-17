@@ -13,5 +13,6 @@ namespace SSIS.Repositories
         Task<List<Retrieval>> GetAllByCurrentStaff(string currentStaffEmail);
         Task<Retrieval> GetRetrievalById(Guid id);
         Task<int> DeleteRetrieval(Retrieval retrieval);
+        Task<int> UpdateRetrieval();
     }
 }

@@ -12,5 +12,6 @@ namespace SSIS.Services
         Task<ApiResponse> CreateRetrieval(List<Guid> requisitionIds, string email);
         Task<ApiResponse> GetAllRetrievalsByCurrentStaff(string currentStaffEmail);
         Task<ApiResponse> DeleteRetrieval(Guid retrievalId);
+        Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, Dictionary<Guid, int> itemIdWithActualQuantity, string email);
     }
 }

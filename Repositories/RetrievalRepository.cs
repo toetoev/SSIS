@@ -39,5 +39,10 @@ namespace SSIS.Repositories
             _dbContext.Retrievals.Remove(retrieval);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateRetrieval()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }
