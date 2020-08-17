@@ -24,9 +24,9 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Retrieval>> GetAll()
+        public async Task<List<Retrieval>> GetAllByCurrentStaff(string currentStaffEmail)
         {
-            return await _dbContext.Retrievals.ToListAsync();
+            return await _dbContext.Retrievals.Where(r => r.CreatedBy.Email == currentStaffEmail).ToListAsync();
         }
 
         public async Task<Retrieval> GetRetrievalById(Guid id)

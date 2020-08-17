@@ -31,9 +31,10 @@ namespace SSIS.Controllers
 
         [HttpGet("")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetAllRetrievals()
+        public IActionResult GetAllRetrievalsByCurrentStaff()
         {
-            return Ok(_retrievalService.GetAllRetrievals().Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_retrievalService.GetAllRetrievalsByCurrentStaff(email).Result);
         }
 
         [HttpDelete("{retrievalId}")]

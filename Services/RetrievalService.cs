@@ -75,9 +75,9 @@ namespace SSIS.Services
             return new ApiResponse { Success = false, Message = "Could not find the retrieval to delete" };
         }
 
-        public async Task<ApiResponse> GetAllRetrievals()
+        public async Task<ApiResponse> GetAllRetrievalsByCurrentStaff(string currentStaffEmail)
         {
-            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAll() };
+            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAllByCurrentStaff(currentStaffEmail) };
         }
 
         public async Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, Dictionary<Guid, int> itemIdWithActualQuantity, string email)
