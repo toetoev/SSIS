@@ -24,11 +24,11 @@ namespace SSIS.Controllers
         }
 
         [HttpPut("{requisitionId}")]
-        [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromBody] RequisitionStatus status)
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep)]
+        public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] RequisitionStatus status)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_requisitionService.ReviewRequisition(requisitionId, status, email).Result);
+            return Ok(_requisitionService.UpdateRequisitionStatus(requisitionId, status, email).Result);
         }
 
         [HttpGet("{status}")]

@@ -75,7 +75,7 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status) };
         }
 
-        public async Task<ApiResponse> ReviewRequisition(Guid requisitionId, RequisitionStatus status, string email)
+        public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email)
         {
             Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
             DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
@@ -83,8 +83,22 @@ namespace SSIS.Services
             {
                 if (requisition.DepartmentName == deptStaff.Department.Name)
                 {
-                    requisition.Status = status;
-                    return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    if (deptStaff.Role == DeptRole.DeptHead && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
+                    {
+                        requisition.Status = status;
+                        return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    }
+                    if (deptStaff.Role == DeptRole.DeptRep && requisition.Status == RequisitionStatus.PENDING_COLLECTION && status == RequisitionStatus.DELIVERED)
+                    {
+                        requisition.Status = status;
+                        foreach (var requisitionItem in requisition.RequisitionItems)
+                        {
+                            Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);
+                            itemFromRepo.Stock -= requisitionItem.Actual;
+                        }
+                        return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    }
+
                 }
                 else return new ApiResponse { Success = false, Message = "Sorry, you can only review requisition of your own department" };
 
