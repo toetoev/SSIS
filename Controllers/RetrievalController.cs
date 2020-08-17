@@ -24,7 +24,6 @@ namespace SSIS.Controllers
         [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult CreateRetrieval([FromBody] List<Guid> requisitionIds)
         {
-            System.Console.WriteLine("CreateRetrieval");
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_retrievalService.CreateRetrieval(requisitionIds, email).Result);
         }
@@ -46,10 +45,10 @@ namespace SSIS.Controllers
 
         [HttpPost("{retrievalId}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult UpdateRetrievalActualQuantity([FromRoute] Guid retrievalId, [FromBody] Dictionary<Guid, int> itemIdWithActualQuantity)
+        public IActionResult UpdateRetrievalActualQuantity([FromRoute] Guid retrievalId, [FromBody] List<RetrievalItem> retrievalItems)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_retrievalService.UpdateRetrievalActualQuantity(retrievalId, itemIdWithActualQuantity, email).Result);
+            return Ok(_retrievalService.UpdateRetrievalActualQuantity(retrievalId, retrievalItems, email).Result);
         }
     }
 }

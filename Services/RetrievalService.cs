@@ -45,6 +45,9 @@ namespace SSIS.Services
                         }
                     }
                 }
+                else
+                    return new ApiResponse { Success = false, Message = "Cannot find all approved requisitions" };
+
             }
             foreach (var itemId in totalItemQty.Keys)
             {
@@ -80,27 +83,22 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAllByCurrentStaff(currentStaffEmail) };
         }
 
-        public async Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, Dictionary<Guid, int> itemIdWithActualQuantity, string email)
+        public async Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, List<RetrievalItem> retrievalItems, string email)
         {
-            StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
-
             Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
-
-            if (retrieval != null && retrieval.CreatedBy == storeStaff)
+            if (retrieval != null && retrieval.CreatedBy.Email == email)
             {
-                ICollection<RetrievalItem> retrievalItems = retrieval.RetrievalItems;
-                foreach (var item in itemIdWithActualQuantity.Keys)
+                foreach (var retrievalItem in retrieval.RetrievalItems)
                 {
-                    foreach (var retrievalitem in retrievalItems)
+                    RetrievalItem retrievalItemInput = retrievalItems.Find(ri => ri.ItemId == retrievalItem.ItemId);
+                    if (retrievalItemInput != null && retrievalItem.TotalQtyNeeded >= retrievalItemInput.TotalQtyRetrieved)
                     {
-                        if (item == retrievalitem.ItemId && (itemIdWithActualQuantity[item] < retrievalitem.TotalQtyNeeded))
-                        {
-                            retrievalitem.TotalQtyRetrieved = itemIdWithActualQuantity[item];
-                        }
+                        retrievalItem.TotalQtyRetrieved = retrievalItemInput.TotalQtyRetrieved;
+                        await _retrievalRepository.UpdateRetrieval();
                     }
-
+                    else
+                        return new ApiResponse { Success = false, Message = "Please don't retrieve items more than needed" };
                 }
-
             }
             return new ApiResponse { Success = true, Data = await _retrievalRepository.UpdateRetrieval() };
 
