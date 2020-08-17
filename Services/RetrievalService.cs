@@ -33,7 +33,6 @@ namespace SSIS.Services
                 {
                     requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
                     requisition.RetrievalId = retrievalId;
-                    await _requisitionRepository.UpdateRequisition();
                     foreach (var requisitionItem in requisition.RequisitionItems)
                     {
                         if (totalItemQty.ContainsKey(requisitionItem.ItemId))
@@ -53,6 +52,27 @@ namespace SSIS.Services
             }
             Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
+        }
+
+        public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)
+        {
+            Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
+
+            if (retrieval != null)
+            {
+                foreach (var requisition in retrieval.Requisitions)
+                {
+                    requisition.Status = RequisitionStatus.APPROVED;
+                    requisition.Retrieval = null;
+                }
+                return new ApiResponse { Success = true, Data = await _retrievalRepository.DeleteRetrieval(retrieval) };
+            }
+            return new ApiResponse { Success = false, Message = "Could not find the retrieval to delete" };
+        }
+
+        public async Task<ApiResponse> GetAllRetrievals()
+        {
+            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAll() };
         }
     }
 }

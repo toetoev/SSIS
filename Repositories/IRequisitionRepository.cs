@@ -8,7 +8,7 @@ namespace SSIS.Repositories
     public interface IRequisitionRepository
     {
         Task<int> CreateRequisition(Requisition requisition);
-        Task<List<Requisition>> GetRequisitionsByDeptStaff(string email);
+        Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses);
 
         Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
         Task<Requisition> GetRequisitionById(Guid requisitionId);

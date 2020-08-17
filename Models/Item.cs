@@ -27,7 +27,6 @@ namespace SSIS.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonIgnore]
         public Guid Id { get; set; }
         public string Bin { get; set; }
         public string Description { get; set; }
@@ -35,6 +34,7 @@ namespace SSIS.Models
         public int ReorderLevel { get; set; }
         public int ReorderQty { get; set; }
         public int Stock { get; set; }
+
         public string CategoryName { get; set; }
         public virtual Category Category { get; set; }
 

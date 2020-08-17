@@ -13,14 +13,13 @@ namespace SSIS.Models
         public Guid Id { get; set; }
 
         [Column("CreatedBy")]
+        [Required]
         public string CreatedByEmail { get; set; }
         public DateTime CreatedOn { get; set; }
 
         [ForeignKey("CreatedByEmail")]
         public virtual StoreStaff CreatedBy { get; set; }
         public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }
-
-        public Guid RequisitionId { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Requisition> Requisitions { get; set; }
