@@ -14,9 +14,10 @@ namespace SSIS.Services
         {
             _deptStaffRepository = deptStaffRepository;
         }
-        public async Task<ApiResponse> GetDeptStaffByDeptAndRole(string deptName, string[] roles)
+        public async Task<ApiResponse> GetDeptStaffByDeptAndRole(string email, string[] roles)
         {
-            return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetDeptStaffByDeptAndRole(deptName, roles) };
+            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetDeptStaffByDeptAndRole(deptStaffFromRepo.Department.Name, roles) };
         }
         public async Task<ApiResponse> UpdateDeptRep(string newRepEmail)
         {
