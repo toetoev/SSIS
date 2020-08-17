@@ -1,6 +1,5 @@
-import { Button, Input, Space, Table } from "antd";
-
-import React from "react";
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
+import React, { useState } from "react";
 
 export default function StockAdjustment() {
 	//const [dataSource, setDataSource] = useState([]);
@@ -149,4 +148,3 @@ const AdjustmentVoucher = () => {
 		</div>
 	);
 };
-

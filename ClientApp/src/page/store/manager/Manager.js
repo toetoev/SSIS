@@ -7,7 +7,7 @@ import MaintainSupplier from "./MaintainSupplier";
 import React from "react";
 import Sidebar from "../../component/Sidebar";
 import StationeryCatalogue from "./StationeryCatalogue";
-import StockAdjustment from "../supervisor/StockAdjustment";
+import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
 
