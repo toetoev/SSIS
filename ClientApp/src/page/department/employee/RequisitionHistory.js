@@ -1,7 +1,8 @@
-import { Button, Descriptions, Form, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import toTitleCase from "../../../util/toTitleCase";
 
 export default function RequisitionHistory() {
 	// TODO: call RequisitionController Get Requisition By Role (Employee will return all history)
@@ -61,7 +62,7 @@ export default function RequisitionHistory() {
 									reviewedDate: requisition.reviewedOn,
 									acknowledgedBy: requisition.acknowledgedBy,
 									acknowledgedDate: requisition.acknowledgedOn,
-									status: requisition.status,
+									status: toTitleCase(requisition.status),
 								},
 							];
 						}, [])
