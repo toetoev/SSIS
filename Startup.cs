@@ -28,8 +28,7 @@ namespace SSIS
         public void ConfigureServices(IServiceCollection services)
         {
             // services.AddCors();
-            services.AddControllers();
-            // .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddDbContext<DataContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DbConn")));
             // In production, the React files will be served from this directory

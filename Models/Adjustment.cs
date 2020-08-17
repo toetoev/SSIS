@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using SSIS.Util;
 
 namespace SSIS.Models
 {
@@ -10,9 +12,13 @@ namespace SSIS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [JsonConverter(typeof(DateFormatConverter))]
         public DateTime SubmittedOn { get; set; }
         public string SubmittedByEmail { get; set; }
         public virtual StoreStaff SubmittedBy { get; set; }
+
+        [JsonConverter(typeof(DateFormatConverter))]
         public Nullable<DateTime> IssuedOn { get; set; }
         public string IssuedByEmail { get; set; }
         public virtual StoreStaff IssuedBy { get; set; }
