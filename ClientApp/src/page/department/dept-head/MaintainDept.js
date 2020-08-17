@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
-const { Option } = Select;
 export default function MaintainDept() {
-	const [collectionPoint, setCollectionPoint] = useState("Management School (11:00 AM)");
-	const [deptRep, setDeptRep] = useState("1");
+	const [form] = Form.useForm();
+	const [collectionPoint, setCollectionPoint] = useState("");
+	const [deptRep, setDeptRep] = useState("");
 
 	const layout = {
 		labelCol: { span: 3 },
@@ -16,12 +16,12 @@ export default function MaintainDept() {
 	};
 	const collectionPointOptions = [
 		{
-			label: "Stationery Store - Administration Building (9:30 AM)",
-			value: "Stationery Store - Administration Building (9:30 AM)",
+			label: "Stationery Store - Administration Building (9:00 AM)",
+			value: "Stationery Store - Administration Building (9:00 AM)",
 		},
 		{ label: "Management School (11:00 AM)", value: "Management School (11:00 AM)" },
 		{ label: "Medical School (9:30 AM)", value: "Medical School (9:30 AM)" },
-		{ label: "Engineering School (9:30 AM)", value: "Engineering School (9:30 AM)" },
+		{ label: "Engineering School (11:00 AM)", value: "Engineering School (11:00 AM)" },
 		{ label: "Science School (9:30 AM)", value: "Science School (9:30 AM)" },
 		{ label: "University Hospital (11:00 AM)", value: "University Hospital (11:00 AM)" },
 	];
@@ -31,9 +31,16 @@ export default function MaintainDept() {
 		if (val.deptRep) setDeptRep(val.deptRep);
 	};
 	const onFinish = () => {
-		axios.post("https://localhost:5001/api/dept", {
-			collectionPointId: collectionPoint,
-		});
+		axios
+			.post("https://localhost:5001/api/dept", `"${collectionPoint}"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				console.log(res.data);
+			});
 		// TODO: call DeptStaffController Update Dept Rep
 	};
 
@@ -45,10 +52,12 @@ export default function MaintainDept() {
 				},
 			})
 			.then((res) => {
-				console.log(res);
 				const result = res.data;
 				if (result.success) {
 					setCollectionPoint(result.data);
+					form.setFieldsValue({
+						collectionPoint: result.data,
+					});
 				}
 			})
 			.catch(function (error) {
@@ -61,12 +70,7 @@ export default function MaintainDept() {
 		// TODO: change the layout
 		<Space direction="vertical" style={{ minWidth: 500 }}>
 			<h3>Maintain Department</h3>
-			<Form
-				{...layout}
-				onFinish={onFinish}
-				onValuesChange={onValuesChange}
-				initialValues={{ collectionPoint: collectionPoint, deptRep: deptRep }}
-			>
+			<Form {...layout} form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
 				<Form.Item name="collectionPoint" label="Collection Point:" labelAlign="left">
 					<Radio.Group options={collectionPointOptions}></Radio.Group>
 				</Form.Item>
