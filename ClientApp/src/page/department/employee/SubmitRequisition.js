@@ -20,9 +20,13 @@ export default function SubmitRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: () => (
+			render: (text) => (
 				<Space>
-					<Button type="danger">Delete</Button>
+					<Delete
+						dataSource={dataSource}
+						handleDataChange={handleDataChange}
+						text={text}
+					></Delete>
 				</Space>
 			),
 		},
@@ -42,7 +46,6 @@ export default function SubmitRequisition() {
 					</Space>
 				</Col>
 				<Col>
-					{" "}
 					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
 				</Col>
 			</Row>
@@ -68,11 +71,9 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleOk = () => {
+	const handleSubmit = () => {
 		form.validateFields()
 			.then((val) => {
-				console.log(val);
-				console.log("Valid");
 				if (dataSource.find((val) => val.key === item)) {
 					handleDataChange(
 						dataSource.map((val) => {
@@ -132,13 +133,13 @@ const Add = ({ dataSource, handleDataChange }) => {
 			<Modal
 				title="Stationery Catalogue"
 				visible={visible}
-				onOk={handleOk}
+				onOk={handleSubmit}
 				onCancel={handleCancel}
 				footer={[
 					<Button key="cancel" onClick={handleCancel}>
 						Cancel
 					</Button>,
-					<Button key="submit" type="primary" onClick={handleOk}>
+					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
 					</Button>,
 				]}
@@ -172,6 +173,19 @@ const Add = ({ dataSource, handleDataChange }) => {
 	);
 };
 
+const Delete = ({ dataSource, handleDataChange, text }) => {
+	const handleDelete = () => {
+		Confirm("Are you sure delete the item?", "", () =>
+			handleDataChange(dataSource.filter((val) => val.key !== text.key))
+		);
+	};
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Delete
+		</Button>
+	);
+};
+
 const Submit = ({ dataSource, handleDataChange }) => {
 	const handleSubmit = () => {
 		if (dataSource.length > 0) {
@@ -190,7 +204,7 @@ const Submit = ({ dataSource, handleDataChange }) => {
 						handleDataChange([]);
 						Success("Requisition Applied Successfully");
 					} else {
-						alert(result.message);
+						Error(result.message, "");
 					}
 				});
 		} else {
@@ -198,11 +212,9 @@ const Submit = ({ dataSource, handleDataChange }) => {
 		}
 	};
 	return (
-		<>
-			<Button type="primary" onClick={handleSubmit}>
-				Submit
-			</Button>
-		</>
+		<Button type="primary" onClick={handleSubmit}>
+			Submit
+		</Button>
 	);
 };
 
@@ -212,10 +224,8 @@ const Clear = ({ dataSource, handleDataChange }) => {
 			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
 	};
 	return (
-		<>
-			<Button type="danger" onClick={handleClick}>
-				Clear
-			</Button>
-		</>
+		<Button type="danger" onClick={handleClick}>
+			Clear
+		</Button>
 	);
 };
