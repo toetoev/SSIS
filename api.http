@@ -53,7 +53,8 @@ Content-Type: application/json
 
 
 ### DeptStaffController Get DeptStaff By Role
-GET https://localhost:5001/api/deptStaff?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE
+GET https://localhost:5001/api/deptStaff?roles=DEPTREP&roles=EMPLOYEE
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NjM0Mzg5LCJleHAiOjE1OTc3MjA3ODksImlhdCI6MTU5NzYzNDM4OX0.Klg64dYAY0kpMd02sSbdOfQuooWq11C4Y0BnXSdqY4UclgOXkw8xikwq9PEMb6uIeKWLxHj7YxI6YNdxqZSlYQ
 
 ### DeptStaffController Update Dept Rep
 POST https://localhost:5001/api/deptStaff
