@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Services;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace SSIS.Controllers
 {
@@ -28,6 +26,20 @@ namespace SSIS.Controllers
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_retrievalService.CreateRetrieval(requisitionIds, email).Result);
+        }
+
+        [HttpGet("")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult GetAllRetrievals()
+        {
+            return Ok(_retrievalService.GetAllRetrievals().Result);
+        }
+
+        [HttpDelete("{retrievalId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult DeleteRetrieval([FromRoute] Guid retrievalId)
+        {
+            return Ok(_retrievalService.DeleteRetrieval(retrievalId).Result);
         }
     }
 }

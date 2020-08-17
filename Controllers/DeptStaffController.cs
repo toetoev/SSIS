@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
@@ -18,18 +19,19 @@ namespace SSIS.Controllers
             _deptStaffService = deptStaffService;
         }
 
-        // /?deptName=Computer%20Science&roles=DEPTREP&roles=EMPLOYEE
+        // /?roles=DEPTREP&roles=EMPLOYEE
         [HttpGet("")]
-        // TODO: authorized by dh
-        public IActionResult GetDeptStaffByRole([FromQuery] string deptName, [FromQuery] string[] roles)
+        [Authorize(Roles = DeptRole.DeptHead)]
+        public IActionResult GetDeptStaffByRole([FromQuery] string[] roles)
         {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
             foreach (var role in roles)
             {
                 if (!DeptRole.isDeptStaff(role))
                     return BadRequest();
 
             }
-            return Ok(_deptStaffService.GetDeptStaffByDeptAndRole(deptName, roles).Result);
+            return Ok(_deptStaffService.GetDeptStaffByDeptAndRole(email, roles).Result);
         }
 
         [HttpPost("")]
