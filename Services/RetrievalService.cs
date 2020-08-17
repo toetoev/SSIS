@@ -63,7 +63,7 @@ namespace SSIS.Services
                 foreach (var requisition in retrieval.Requisitions)
                 {
                     requisition.Status = RequisitionStatus.APPROVED;
-                    requisition.Retrieval = null;
+                    requisition.RetrievalId = null;
                 }
                 return new ApiResponse { Success = true, Data = await _retrievalRepository.DeleteRetrieval(retrieval) };
             }

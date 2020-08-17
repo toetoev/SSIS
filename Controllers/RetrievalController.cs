@@ -35,9 +35,9 @@ namespace SSIS.Controllers
             return Ok(_retrievalService.GetAllRetrievals().Result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{retrievalId}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult DeleteRetrieval([FromQuery] Guid retrievalId)
+        public IActionResult DeleteRetrieval([FromRoute] Guid retrievalId)
         {
             return Ok(_retrievalService.DeleteRetrieval(retrievalId).Result);
         }
