@@ -4,15 +4,13 @@ import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import React from "react";
 import Sidebar from "../../component/Sidebar";
-import ViewStockAdjustment from "./ViewStockAdjustment";
+import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
 
 export default function Supervisor() {
 	let { path } = useRouteMatch();
-	const items = [
-		{ to: `${path}`, title: "View Stock Adjustment" },
-	];
+	const items = [{ to: `${path}`, title: "Stock Adjustment" }];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
@@ -32,7 +30,7 @@ export default function Supervisor() {
 				>
 					<Switch>
 						<Route exact path={`${path}`}>
-							<ViewStockAdjustment></ViewStockAdjustment>
+							<StockAdjustment></StockAdjustment>
 						</Route>
 					</Switch>
 				</Content>
@@ -40,4 +38,3 @@ export default function Supervisor() {
 		</Layout>
 	);
 }
-
