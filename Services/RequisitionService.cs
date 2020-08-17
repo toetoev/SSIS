@@ -33,7 +33,7 @@ namespace SSIS.Services
                 RequestedOn = DateTime.Now,
                 Status = RequisitionStatus.APPLIED,
                 RequestedBy = requestedBy,
-                Department = requestedBy.Department,
+                DepartmentName = requestedBy.DepartmentName,
             };
 
             foreach (var requisitionItem in requisitionItems)
@@ -79,13 +79,17 @@ namespace SSIS.Services
         {
             Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
             DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
-
-            if (requisition != null && requisition.DepartmentName == deptStaff.Department.Name)
+            if (requisition != null)
             {
-                requisition.Status = status;
-                return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                if (requisition.DepartmentName == deptStaff.Department.Name)
+                {
+                    requisition.Status = status;
+                    return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                }
+                else return new ApiResponse { Success = false, Message = "Sorry, you can only review requisition of your own department" };
+
             }
-            return new ApiResponse { Success = false, Message = "Error" };
+            return new ApiResponse { Success = false, Message = "Cannot find requisition reviewing" };
         }
     }
 }

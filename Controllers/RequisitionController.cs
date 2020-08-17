@@ -28,7 +28,7 @@ namespace SSIS.Controllers
         public IActionResult ReviewRequisition([FromRoute] Guid requisitionId, [FromRoute] RequisitionStatus status)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_requisitionService.ReviewRequisition(requisitionId, status, email));
+            return Ok(_requisitionService.ReviewRequisition(requisitionId, status, email).Result);
         }
 
         [HttpGet("{status}")]

@@ -28,12 +28,12 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses)
         {
-            return await _dbContext.Requisitions.Where(r => r.Department.Name == deptName && requisitionStatuses.Contains(r.Status)).ToListAsync();
+            return await _dbContext.Requisitions.Where(r => r.DepartmentName == deptName && requisitionStatuses.Contains(r.Status)).ToListAsync();
         }
 
         public async Task<Requisition> GetRequisitionById(Guid requisitionId)
         {
-            return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).SingleOrDefaultAsync();
+            return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).FirstOrDefaultAsync();
         }
 
         public async Task<int> UpdateRequisition()
