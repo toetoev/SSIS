@@ -20,10 +20,7 @@ namespace SSIS.Models
             ReorderQty = reorderQty;
             Category = category;
         }
-        public Item()
-        {
-
-        }
+        public Item() { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -34,7 +31,6 @@ namespace SSIS.Models
         public int ReorderLevel { get; set; }
         public int ReorderQty { get; set; }
         public int Stock { get; set; }
-
         public string CategoryName { get; set; }
         public virtual Category Category { get; set; }
 
