@@ -1,9 +1,9 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Space, Table, InputNumber, Checkbox, Tabs } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Col, Form, Input, Row, Space, Table, Tabs } from "antd";
+import React, { useEffect } from "react";
 
 import axios from "axios";
 
-export default function RequisitionList() {
+export default function Requisition() {
 	//const [dataSource, setDataSource] = useState([]);
 	const { Search } = Input;
 	const { TabPane } = Tabs;
@@ -44,35 +44,28 @@ export default function RequisitionList() {
 			title: "Details",
 			dataIndex: "action",
 			key: "action",
-			render: () => (
-				<Button>View</Button>
-			),
+			render: () => <Button>View</Button>,
 		},
 		{
 			title: "Select",
 			dataIndex: "select",
 			key: "select",
-			render: () => (
-				<Checkbox />
-			),
+			render: () => <Checkbox />,
 		},
 	];
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Stock Adjustment</h3>
-			<Row
-				justify="space-between"
-				style={{ float: "right" }}
-			>
+			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={value => console.log(value)}
+							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
-						
+
 						<Button type="primary">Add</Button>
 					</Space>
 				</Col>
@@ -80,20 +73,14 @@ export default function RequisitionList() {
 
 			<Tabs defaultActiveKey="To-Do" type="card">
 				<TabPane tab="To-Do" key="To-Do">
-					<Table
-						columns={columns}
-						dataSource={dataSource}
-					/>
+					<Table columns={columns} dataSource={dataSource} />
 				</TabPane>
 				<TabPane tab="Retrieval" key="Retrieval">
 					<Retrieval />
 				</TabPane>
-				<TabPane tab="Disbursement" key="Disbursement">
-				</TabPane>
-				<TabPane tab="Ready for Delivery" key="RFD">
-				</TabPane>
-				<TabPane tab="Completed" key="Completed">
-				</TabPane>
+				<TabPane tab="Disbursement" key="Disbursement"></TabPane>
+				<TabPane tab="Ready for Delivery" key="RFD"></TabPane>
+				<TabPane tab="Completed" key="Completed"></TabPane>
 			</Tabs>
 		</Space>
 	);
@@ -144,7 +131,6 @@ const Retrieval = () => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-
 				}
 			})
 			.catch(function (error) {
@@ -154,11 +140,7 @@ const Retrieval = () => {
 
 	return (
 		<>
-			<Table
-				columns={columns}
-				dataSource={dataSource}
-				pagination={false}
-			/>
+			<Table columns={columns} dataSource={dataSource} pagination={false} />
 		</>
 	);
 };
