@@ -41,7 +41,7 @@ namespace SSIS.Services
                         requisitionItem.Actual = requisitionItemInput.Actual;
                     }
                 }
-                if (totalQtyRetrieved == totalQtyDisbursed)
+                if (totalQtyRetrieved >= totalQtyDisbursed)
                     await _requisitionItemRepository.UpdateRequisitionItems();
                 return new ApiResponse { Success = false, Message = "Total quantity retrieved doesn't match total quantity disbursed" };
             }
