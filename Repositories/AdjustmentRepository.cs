@@ -16,6 +16,11 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<Adjustment> GetAdjustmentById(Guid adjustmentId)
+        {
+            return await _dbContext.Adjustments.Where(a => a.Id == adjustmentId).FirstOrDefaultAsync();
+        }
+
         public async Task<int> CreateAdjustment(Adjustment adjustment)
         {
             _dbContext.Add(adjustment);
@@ -25,6 +30,10 @@ namespace SSIS.Repositories
         public async Task<List<Adjustment>> GetAll()
         {
             return await _dbContext.Adjustments.ToListAsync();
+        }
+        public async Task<int> UpdateAdjustment()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

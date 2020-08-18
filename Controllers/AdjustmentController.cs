@@ -30,6 +30,14 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.GetAllAdjustments().Result);
         }
 
+        [HttpPost("")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.CreateAdjustment(email, adjustmentItems).Result);
+        }
+
         [HttpPut("{adjustmentId}")]
         [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult UpdateAdjustment([FromRoute] Guid adjustmentId, [FromBody] List<AdjustmentItem> adjustmentItems)
