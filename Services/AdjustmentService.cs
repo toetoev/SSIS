@@ -56,5 +56,19 @@ namespace SSIS.Services
             adjustment.AdjustmentItems = adjustmentItems;
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.CreateAdjustment(adjustment) };
         }
+
+        public async Task<ApiResponse> UpdateAdjustmentStatus(Guid adjustmentId, AdjustmentStatus status, string email)
+        {
+            Adjustment adjustment = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
+            //StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            if (adjustment != null && adjustment.Status == AdjustmentStatus.APPLIED)
+
+            {
+                adjustment.Status = status;
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
+
+            }
+            return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };
+        }
     }
 }

@@ -31,6 +31,12 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Adjustments.ToListAsync();
         }
+
+        public async Task<int> UpdateAdjustmentStatus()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<int> UpdateAdjustment()
         {
             return await _dbContext.SaveChangesAsync();
