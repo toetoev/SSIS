@@ -9,6 +9,6 @@ namespace SSIS.Services
     public interface IAdjustmentService
     {
         Task<ApiResponse> GetAllAdjustments();
-        Task<ApiResponse> UpdateAdjustment(Guid adjustmentId, List<AdjustmentItem> adjustmentItems, string submittedByEmail);
+        Task<ApiResponse> CreateAdjustment(string email, List<AdjustmentItem> adjustmentItems);
     }
 }

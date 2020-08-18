@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
@@ -16,31 +14,9 @@ namespace SSIS.Services
             _dbContext = dbContext;
         }
 
-        public async Task<int> CreateOrder(Order newOrder)
-        {
-            _dbContext.Add(newOrder);
-            return await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<int> DeleteOrder(Guid orderId)
-        {
-            _dbContext.Remove(orderId);
-            return await _dbContext.SaveChangesAsync();
-        }
-
         public async Task<List<Order>> GetAll()
         {
             return await _dbContext.Orders.ToListAsync();
-        }
-
-        public async Task<Order> GetOrderById(Guid orderId)
-        {
-            return await _dbContext.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
-        }
-
-        public async Task<Order> GetOrderBySupplierAndDate(Guid supplierId, DateTime date)
-        {
-            return await _dbContext.Orders.Where(o => o.SupplierId == supplierId && o.OrderedOn.Date == date).FirstOrDefaultAsync();
         }
     }
 }
