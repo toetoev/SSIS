@@ -60,9 +60,15 @@ export default function RequisitionHistory() {
 								{
 									key: requisition.id,
 									requestedDate: requisition.requestedOn,
-									reviewedBy: requisition.reviewedByEmail,
+									reviewedBy:
+										requisition.reviewedBy === null
+											? ""
+											: requisition.reviewedBy.name,
 									reviewedDate: requisition.reviewedOn,
-									acknowledgedBy: requisition.acknowledgedByEmail,
+									acknowledgedBy:
+										requisition.acknowledgedBy === null
+											? ""
+											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
 									action: requisition.requisitionItems,

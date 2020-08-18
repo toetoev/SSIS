@@ -1,5 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
+import Dashboard from "../Dashboard";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import React from "react";
@@ -10,7 +11,10 @@ const { Header, Sider, Content } = Layout;
 
 export default function Supervisor() {
 	let { path } = useRouteMatch();
-	const items = [{ to: `${path}`, title: "Stock Adjustment" }];
+	const items = [
+		{ to: `${path}`, title: "Dashboard" },
+		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
+	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
@@ -30,6 +34,9 @@ export default function Supervisor() {
 				>
 					<Switch>
 						<Route exact path={`${path}`}>
+							<Dashboard></Dashboard>
+						</Route>
+						<Route exact path={`${path}/stock-adjustment`}>
 							<StockAdjustment></StockAdjustment>
 						</Route>
 					</Switch>

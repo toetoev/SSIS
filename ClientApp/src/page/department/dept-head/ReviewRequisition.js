@@ -48,7 +48,10 @@ export default function ReviewRequisition() {
 								...rows,
 								{
 									key: requisition.id,
-									requestedBy: requisition.requestedByEmail,
+									requestedBy:
+										requisition.requestedBy === null
+											? ""
+											: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,
 									status: toTitleCase(requisition.status),
 									action: requisition.requisitionItems,
