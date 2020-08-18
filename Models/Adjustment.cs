@@ -24,5 +24,6 @@ namespace SSIS.Models
         public virtual StoreStaff IssuedBy { get; set; }
         public AdjustmentStatus Status { get; set; }
         public virtual ICollection<AdjustmentItem> AdjustmentItems { get; set; }
+
     }
 }

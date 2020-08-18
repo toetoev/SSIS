@@ -1,13 +1,13 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, useRouteMatch } from "react-router-dom";
 
 import Dashboard from "../Dashboard";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
+import Ordering from "./Ordering";
 import React from "react";
+import Requisition from "./Requisition";
 import Sidebar from "../../component/Sidebar";
-import StockAdjustment from "./StockAjustment";
-import StockList from "./StockList";
-import RequisitionList from "./RequisitionList";
+import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
 export default function Clerk() {
@@ -15,8 +15,8 @@ export default function Clerk() {
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/requisition`, title: "Requisitions" },
-		{ to: `${path}/stocklist`, title: "Ordering" },
-		{ to: `${path}/stockadjustment`, title: "Stock Adjustment" },
+		{ to: `${path}/ordering`, title: "Ordering" },
+		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
 	];
 
 	return (
@@ -40,12 +40,12 @@ export default function Clerk() {
 						<Dashboard></Dashboard>
 					</Route>
 					<Route path={`${path}/requisition`}>
-						<RequisitionList></RequisitionList>
+						<Requisition></Requisition>
 					</Route>
-					<Route path={`${path}/stocklist`}>
-						<StockList></StockList>
+					<Route path={`${path}/ordering`}>
+						<Ordering></Ordering>
 					</Route>
-					<Route path={`${path}/stockadjustment`}>
+					<Route path={`${path}/stock-adjustment`}>
 						<StockAdjustment></StockAdjustment>
 					</Route>
 				</Content>

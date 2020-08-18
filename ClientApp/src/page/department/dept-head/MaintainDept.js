@@ -28,41 +28,6 @@ export default function MaintainDept() {
 		{ label: "Science School (9:30 AM)", value: "Science School (9:30 AM)" },
 		{ label: "University Hospital (11:00 AM)", value: "University Hospital (11:00 AM)" },
 	];
-	const onValuesChange = (val) => {
-		if (val.collectionPoint) setCollectionPoint(val.collectionPoint);
-		if (val.deptRep) setDeptRep(val.deptRep);
-	};
-	const onFinish = () => {
-		axios
-			.post("https://localhost:5001/api/dept", `"${collectionPoint}"`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					axios
-						.post("https://localhost:5001/api/deptStaff", `"${deptRep}"`, {
-							headers: {
-								Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-								"Content-type": "application/json",
-							},
-						})
-						.then((res) => {
-							const result = res.data;
-							if (result.success) {
-								Success("Department info update successfully");
-							} else {
-								Error(result.message);
-							}
-						});
-				} else {
-					Error(result.message);
-				}
-			});
-	};
 
 	useEffect(() => {
 		axios
@@ -115,6 +80,42 @@ export default function MaintainDept() {
 			});
 	}, []);
 
+	const onValuesChange = (val) => {
+		if (val.collectionPoint) setCollectionPoint(val.collectionPoint);
+		if (val.deptRep) setDeptRep(val.deptRep);
+	};
+
+	const onFinish = () => {
+		axios
+			.post("https://localhost:5001/api/dept", `"${collectionPoint}"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					axios
+						.post("https://localhost:5001/api/deptStaff", `"${deptRep}"`, {
+							headers: {
+								Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+								"Content-type": "application/json",
+							},
+						})
+						.then((res) => {
+							const result = res.data;
+							if (result.success) {
+								Success("Department info update successfully");
+							} else {
+								Error(result.message);
+							}
+						});
+				} else {
+					Error(result.message);
+				}
+			});
+	};
 	return (
 		// TODO: change the layout
 		<Space direction="vertical" style={{ minWidth: 500 }}>

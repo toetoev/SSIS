@@ -32,7 +32,5 @@ namespace SSIS.Controllers
             System.Console.WriteLine(user.ToString());
             return Ok(_authService.Login(user).Result);
         }
-
-        // [Authorize(Roles = StoreRole.Clerk)]
     }
 }

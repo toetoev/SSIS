@@ -4,6 +4,7 @@ import { Button, Form, Input, Radio } from "antd";
 import React, { useState } from "react";
 
 import DeptRole from "../../constant/DeptRole";
+import Error from "../component/Error";
 import StoreRole from "../../constant/StoreRole";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -31,7 +32,7 @@ export default function Login() {
 					localStorage.setItem("ROLE", result.data.role);
 					directToHomePageBasedOnRole();
 				} else {
-					// TODO: show error msg using popup modal
+					Error(result.message);
 				}
 			})
 			.catch(function (error) {
@@ -79,7 +80,7 @@ export default function Login() {
 	return (
 		<div className="login-box-body login-box">
 			<p className="login-box-msg">Sign in - Logic University</p>
-			{/* TODO: change form layout */}
+			{/* // TODO: change form layout */}
 			<Form onFinish={handleSubmit}>
 				<Form.Item
 					label="Name / Email: "
