@@ -37,7 +37,7 @@ namespace SSIS.Controllers
             return Ok(_orderService.ReceiveOrder(orderId, orderItems, receivedByEmail).Result);
         }
 
-        [HttpDelete("{orderId")]
+        [HttpDelete("{orderId}")]
         public IActionResult DeleteOrder([FromRoute] Guid orderId)
         {
             return Ok(_orderService.DeleteOrder(orderId).Result);
