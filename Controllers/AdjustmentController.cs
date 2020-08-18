@@ -34,8 +34,8 @@ namespace SSIS.Controllers
         [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult UpdateAdjustment([FromRoute] Guid adjustmentId, [FromBody] List<AdjustmentItem> adjustmentItems)
         {
-            string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.UpdateAdjustment(adjustmentId, adjustmentItems, email).Result);
+            string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.UpdateAdjustment(adjustmentId, adjustmentItems, submittedByEmail).Result);
         }
     }
 }

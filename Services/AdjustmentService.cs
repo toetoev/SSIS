@@ -23,36 +23,39 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
 
-        public async Task<ApiResponse> UpdateAdjustment(Guid adjustmentId, List<AdjustmentItem> adjustmentItems, string email)
+        public async Task<ApiResponse> UpdateAdjustment(Guid adjustmentId, List<AdjustmentItem> adjustmentItems, string submittedByEmail)
         {
-            Adjustment adjustment = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
-
-            if (adjustment != null && adjustment.SubmittedByEmail == email && adjustment.Status == AdjustmentStatus.APPLIED)
+            Adjustment adjustmentFromRepo = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
+            if (adjustmentFromRepo != null && adjustmentFromRepo.SubmittedByEmail == submittedByEmail)
             {
-                foreach (var adjustmentItem in adjustment.AdjustmentItems)
+                if (adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
                 {
-                    AdjustmentItem adjustmentItemInput = adjustmentItems.Find(ai => ai.ItemId == adjustmentItem.ItemId);
-                    int adjustItemQty = adjustmentItemInput.AdjustedQty;
-                    if (adjustItemQty < 0)
+                    foreach (var adjustmentItem in adjustmentFromRepo.AdjustmentItems)
                     {
-                        adjustItemQty *= -1;
-                    }
-                    if (adjustmentItemInput != null)
-                    {
-
-                        Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
+                        AdjustmentItem adjustmentItemInput = adjustmentItems.Find(ai => ai.ItemId == adjustmentItem.ItemId);
+                        if (adjustmentItemInput != null)
                         {
-                            if (adjustmentItemInput.AdjustedQty <= itemFromRepo.Stock)
+                            Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
+                            if (itemFromRepo != null)
                             {
-                                adjustmentItem.AdjustedQty = adjustmentItemInput.AdjustedQty;
-                                await _adjustmentRepository.UpdateAdjustment();
+                                if (adjustmentItemInput.AdjustedQty <= itemFromRepo.Stock)
+                                {
+                                    adjustmentItem.AdjustedQty = adjustmentItemInput.AdjustedQty;
+                                }
+                                else
+                                    return new ApiResponse { Success = false, Message = "Sorry, cannot adjust quantity more than stock quantity" };
                             }
-                            else
-                                return new ApiResponse { Success = false, Message = "Sorry, don't have enough item to adjust" };
+                            else return new ApiResponse { Success = false };
                         }
+                        else
+                            return new ApiResponse { Success = false };
                     }
                 }
+                else
+                    return new ApiResponse { Success = false, Message = "Cannot edit issued adjustment voucher" };
             }
+            else
+                return new ApiResponse { Success = false };
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustment() };
         }
     }
