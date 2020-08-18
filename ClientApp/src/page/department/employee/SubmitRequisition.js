@@ -127,7 +127,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 
 	return (
 		<>
-			<Button type="primary" onClick={showModal}>
+			<Button type="secondary" onClick={showModal}>
 				Add
 			</Button>
 			<Modal
