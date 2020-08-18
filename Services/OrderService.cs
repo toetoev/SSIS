@@ -72,7 +72,11 @@ namespace SSIS.Services
                 }
 
             }
+<<<<<<< HEAD
             return new ApiResponse { Success = true };
+=======
+            throw new System.NotImplementedException();
+>>>>>>> f011d86e8562e9b3223b512f528aecc8b68d5428
         }
 
         public async Task<ApiResponse> GetAllOrders()
