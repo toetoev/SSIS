@@ -9,5 +9,7 @@ namespace SSIS.Repositories
     public interface IAdjustmentRepository
     {
         Task<List<Adjustment>> GetAll();
+        Task<Adjustment> GetAdjustmentById(Guid adjustmentId);
+        Task<int> UpdateAdjustment();
     }
 }
