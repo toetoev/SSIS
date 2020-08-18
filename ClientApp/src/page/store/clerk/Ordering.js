@@ -1,16 +1,4 @@
-import {
-	Button,
-	Col,
-	Form,
-	Input,
-	InputNumber,
-	Modal,
-	Row,
-	Select,
-	Space,
-	Table,
-	Tabs,
-} from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
