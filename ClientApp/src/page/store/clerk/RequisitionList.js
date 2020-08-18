@@ -128,7 +128,7 @@ const Retrieval = () => {
 			render: () => (
 				<Space>
 					<Button>
-						<RetrievalList />
+						<a>View</a>
 					</Button>
 					<Button type="danger">
 						<a>Delete</a>
