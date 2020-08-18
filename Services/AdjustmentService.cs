@@ -32,9 +32,9 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
-        public async Task<ApiResponse> CreateAdjustment(string email, List<AdjustmentItem> adjustmentItems)
+        public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems)
         {
-            StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(submittedByEmail);
             Adjustment adjustment = new Adjustment
             {
                 Id = Guid.NewGuid(),
@@ -44,12 +44,14 @@ namespace SSIS.Services
             };
             foreach (var adjustmentItem in adjustmentItems)
             {
-                if (!await _itemRepository.ItemExist(adjustmentItem.ItemId))
+                Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
+                if (itemFromRepo != null)
                 {
-                    return new ApiResponse { Success = false, Message = "Some items do not exist" };
+                    if (adjustmentItem.AdjustedQty < 0 && itemFromRepo.Stock >= Math.Abs(adjustmentItem.AdjustedQty))
+                        adjustmentItem.AdjustmentId = adjustment.Id;
                 }
-                adjustmentItem.AdjustmentId = adjustment.Id;
-
+                else
+                    return new ApiResponse { Success = false, Message = "Some items do not exist" };
             }
             adjustment.AdjustmentItems = adjustmentItems;
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.CreateAdjustment(adjustment) };
