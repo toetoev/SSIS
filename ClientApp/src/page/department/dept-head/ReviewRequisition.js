@@ -30,6 +30,7 @@ export default function ReviewRequisition() {
 	];
 
 	useEffect(() => {
+		console.log('hello');
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -40,6 +41,7 @@ export default function ReviewRequisition() {
 				const result = res.data;
 				if (result.success) {
 					console.log(result.data);
+					console.log('hi');
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
