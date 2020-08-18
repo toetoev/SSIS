@@ -33,12 +33,16 @@ namespace SSIS.Services
                             Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
                             if (itemFromRepo != null)
                             {
-                                if (adjustmentItemInput.AdjustedQty <= itemFromRepo.Stock)
+                                if (adjustmentItemInput.AdjustedQty < 0)
                                 {
-                                    adjustmentItem.AdjustedQty = adjustmentItemInput.AdjustedQty;
+                                    if (itemFromRepo.Stock >= Math.Abs(adjustmentItemInput.AdjustedQty))
+                                    {
+                                        adjustmentItem.AdjustedQty = adjustmentItemInput.AdjustedQty;
+                                    }
+                                    return new ApiResponse { Success = false, Message = "Adjusted quantity cannot be more than stock quantity" };
                                 }
                                 else
-                                    return new ApiResponse { Success = false, Message = "Sorry, cannot adjust quantity more than stock quantity" };
+                                    adjustmentItem.AdjustedQty = adjustmentItemInput.AdjustedQty;
                             }
                             else return new ApiResponse { Success = false };
                         }
