@@ -11,6 +11,8 @@ namespace SSIS.Repositories
         Task<List<Adjustment>> GetAll();
         Task<int> CreateAdjustment(Adjustment adjustment);
         Task<Adjustment> GetAdjustmentById(Guid adjustmentId);
+        Task<int> UpdateAdjustmentStatus();
         Task<int> UpdateAdjustment();
     }
+
 }
