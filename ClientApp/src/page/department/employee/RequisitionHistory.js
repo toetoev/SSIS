@@ -60,9 +60,9 @@ export default function RequisitionHistory() {
 								{
 									key: requisition.id,
 									requestedDate: requisition.requestedOn,
-									reviewedBy: requisition.reviewedBy,
+									reviewedBy: requisition.reviewedByEmail,
 									reviewedDate: requisition.reviewedOn,
-									acknowledgedBy: requisition.acknowledgedBy,
+									acknowledgedBy: requisition.acknowledgedByEmail,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
 									action: requisition.requisitionItems,
@@ -118,7 +118,7 @@ const ViewAcknowledgement = ({ text, record }) => {
 	];
 
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("PENDING_COLLECTION");
+	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};

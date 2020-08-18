@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using SSIS.Models;
+using SSIS.Payloads;
 using SSIS.Services;
 
 namespace SSIS.Controllers
@@ -26,12 +30,12 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.GetAllAdjustments().Result);
         }
 
-        [HttpPost("")]
+        [HttpPut("{adjustmentId}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
+        public IActionResult UpdateAdjustment([FromRoute] Guid adjustmentId, [FromBody] List<AdjustmentItem> adjustmentItems)
         {
-            string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.CreateAdjustment(email, adjustmentItems).Result);
+            string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.UpdateAdjustment(adjustmentId, adjustmentItems, submittedByEmail).Result);
         }
     }
 }

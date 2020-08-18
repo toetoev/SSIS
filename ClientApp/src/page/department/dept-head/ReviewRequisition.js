@@ -1,39 +1,66 @@
-import { Button, Form, Modal, Space, Table } from "antd";
-import React, { useState } from "react";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
+import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
-	const dataSource = [];
-	for (let i = 0; i < 100; i++) {
-		dataSource.push({
-			key: i,
-			requestedBy: `Edward King ${i}`,
-			requestedDate: "25 August 1998",
-			status: "Applied",
-		});
-	}
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			key: "requestedBy",
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			key: "requestedDate",
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			key: "status",
 		},
 		{
 			title: "Action",
 			key: "action",
-			render: ViewRequisition,
+			render: (text, record) => (
+				<ViewRequisition text={text} record={record}></ViewRequisition>
+			),
 		},
 	];
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					console.log(result.data);
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									requestedBy: requisition.requestedByEmail,
+									requestedDate: requisition.requestedOn,
+									status: toTitleCase(requisition.status),
+									action: requisition.requisitionItems,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	return (
 		<Space direction="vertical">
@@ -49,28 +76,19 @@ export default function ReviewRequisition() {
 }
 const ViewRequisition = () => {
 	const itemData = [];
-	for (let i = 0; i < 5; i++) {
-		itemData.push({
-			key: i,
-			itemDescription: `Pencil ${i}B`,
-			qty: `${i}`,
-		});
-	}
 
 	const reqColumns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
-			key: "itemDescription",
 		},
 		{
 			title: "Quantity",
 			dataIndex: "qty",
-			key: "qty",
 		},
 	];
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("REJECTED");
+	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -103,38 +121,36 @@ const ViewRequisition = () => {
 						: null
 				}
 			>
-				<Form>
-					<Form.Item label="Requested by:">
-						<span className="ant-form-text"></span>
-					</Form.Item>
-					<Form.Item label="Requested date:">
-						<span className="ant-form-text"></span>
-					</Form.Item>
-					<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
-					{status === "APPROVED" ? (
-						<>
-							<Form.Item label="Approved by:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-							<Form.Item label="Approved date:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-						</>
-					) : null}
-					{status === "REJECTED" ? (
-						<>
-							<Form.Item label="Rejected by:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-							<Form.Item label="Rejected date:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-							<Form.Item label="Rejected reason:">
-								<span className="ant-form-text"></span>
-							</Form.Item>
-						</>
-					) : null}
-				</Form>
+				<Descriptions>
+					<Descriptions.Item label="Requested By"></Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Requested Date"></Descriptions.Item>
+				</Descriptions>
+				<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
+				{status === "APPROVED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Approved By"></Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Approved Date"></Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				{status === "REJECTED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Rejected By"></Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Date"></Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Reason"></Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
 			</Modal>
 		</div>
 	);
