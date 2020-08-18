@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SSIS.Models;
@@ -9,5 +10,6 @@ namespace SSIS.Controllers
     {
         Task<ApiResponse> GetAllOrders();
         Task<ApiResponse> CreateOrder(List<Order> orders, string orderedByEmail);
+        Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail);
     }
 }

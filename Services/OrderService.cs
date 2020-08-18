@@ -79,5 +79,32 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _orderRepository.GetAll() };
         }
+
+        public async Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail)
+        {
+            Order orderFromRepo = _orderRepository.GetOrderById(orderId);
+            if (orderFromRepo != null)
+            {
+                StoreStaff receivedBy = await _storeStaffRepository.GetStoreStaffByEmail(receivedByEmail);
+                foreach (var orderItem in orderItems)
+                {
+                    Item itemFromRepo = await _itemRepository.GetItemById(orderItem.ItemId);
+                    if (itemFromRepo != null)
+                    {
+                        OrderItem orderItemFromRepo = orderFromRepo.OrderItems.Where(oi => oi.ItemId == orderItem.ItemId).FirstOrDefault();
+                        if (orderItemFromRepo != null)
+                        {
+                            orderItemFromRepo.DeliveredQty = orderItem.DeliveredQty;
+                            orderItemFromRepo.Remarks = orderItem.Remarks;
+                            itemFromRepo.Stock += orderItem.DeliveredQty;
+                        }
+                    }
+                }
+                orderFromRepo.ReceivedBy = receivedBy;
+                orderFromRepo.ReceivedOn = DateTime.Now;
+                orderFromRepo.Status = OrderStatus.RECEIVED;
+            }
+            return new ApiResponse { Success = true };
+        }
     }
 }

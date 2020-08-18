@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,13 @@ namespace SSIS.Controllers
         {
             string orderedBy = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_orderService.CreateOrder(orders, orderedBy).Result);
+        }
+
+        [HttpPut("{orderId}")]
+        public IActionResult ReceiveOrder([FromRoute] Guid orderId, [FromBody] List<OrderItem> orderItems)
+        {
+            string receivedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_orderService.ReceiveOrder(orderId, orderItems, receivedByEmail).Result);
         }
     }
 }
