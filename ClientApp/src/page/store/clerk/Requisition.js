@@ -56,7 +56,7 @@ export default function Requisition() {
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Stock Adjustment</h3>
+			<h3>Requisitions</h3>
 			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
