@@ -37,13 +37,5 @@ namespace SSIS.Controllers
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_adjustmentService.CreateAdjustment(email, adjustmentItems).Result);
         }
-
-        [HttpPut("{adjustmentId}")]
-        [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult UpdateAdjustment([FromRoute] Guid adjustmentId, [FromBody] List<AdjustmentItem> adjustmentItems)
-        {
-            string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.UpdateAdjustment(adjustmentId, adjustmentItems, submittedByEmail).Result);
-        }
     }
 }
