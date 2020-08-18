@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Services;
@@ -22,9 +23,17 @@ namespace SSIS.Controllers
             _requisitionService = requisitionService;
         }
 
+        [HttpPut("{requisitionId}")]
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep)]
+        public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] RequisitionStatus status)
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.UpdateRequisitionStatus(requisitionId, status, email).Result);
+        }
+
         [HttpGet("{status}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetRequisitionByStatus([FromRoute] RequisitionStatus status)
+        public IActionResult GetRequisitionsByStatus([FromRoute] RequisitionStatus status)
         {
             return Ok(_requisitionService.GetRequisitionsByStatus(status).Result);
         }
@@ -35,6 +44,14 @@ namespace SSIS.Controllers
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.GetRequisitionsByDeptStaff(email).Result);
+        }
+
+        [HttpGet("{retrievalId}/requisition-item/{itemId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId, email).Result);
         }
 
         [HttpPost("")]

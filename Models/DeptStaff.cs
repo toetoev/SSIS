@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace SSIS.Models
 {
@@ -17,7 +14,9 @@ namespace SSIS.Models
             Password = password;
             Role = role;
         }
+        public string DepartmentName { get; set; }
 
+        [JsonIgnore]
         public virtual Department Department { get; set; }
 
         [JsonIgnore]

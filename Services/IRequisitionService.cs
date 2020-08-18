@@ -12,5 +12,7 @@ namespace SSIS.Services
         Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email);
         Task<ApiResponse> GetRequisitionsByDeptStaff(string email);
         Task<ApiResponse> GetRequisitionsByStatus(RequisitionStatus status);
+        Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email);
+        Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId, string email);
     }
 }

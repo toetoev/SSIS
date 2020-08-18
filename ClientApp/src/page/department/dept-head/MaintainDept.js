@@ -1,12 +1,15 @@
 import { Button, Form, Radio, Select, Space } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Error from "./../../component/Error";
+import Success from "./../../component/Success";
 import axios from "axios";
 
 export default function MaintainDept() {
 	const [form] = Form.useForm();
 	const [collectionPoint, setCollectionPoint] = useState("");
 	const [deptRep, setDeptRep] = useState("");
+	const [deptRepOptions, setDeptRepOptions] = useState([]);
 
 	const layout = {
 		labelCol: { span: 3 },
@@ -25,7 +28,6 @@ export default function MaintainDept() {
 		{ label: "Science School (9:30 AM)", value: "Science School (9:30 AM)" },
 		{ label: "University Hospital (11:00 AM)", value: "University Hospital (11:00 AM)" },
 	];
-	const deptRepOptions = [];
 	const onValuesChange = (val) => {
 		if (val.collectionPoint) setCollectionPoint(val.collectionPoint);
 		if (val.deptRep) setDeptRep(val.deptRep);
@@ -39,9 +41,27 @@ export default function MaintainDept() {
 				},
 			})
 			.then((res) => {
-				console.log(res.data);
+				const result = res.data;
+				if (result.success) {
+					axios
+						.post("https://localhost:5001/api/deptStaff", `"${deptRep}"`, {
+							headers: {
+								Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+								"Content-type": "application/json",
+							},
+						})
+						.then((res) => {
+							const result = res.data;
+							if (result.success) {
+								Success("Department info update successfully");
+							} else {
+								Error(result.message);
+							}
+						});
+				} else {
+					Error(result.message);
+				}
 			});
-		// TODO: call DeptStaffController Update Dept Rep
 	};
 
 	useEffect(() => {
@@ -63,7 +83,36 @@ export default function MaintainDept() {
 			.catch(function (error) {
 				console.log(error);
 			});
-		// TODO: call DeptStaffController Get DeptStaff By Role, set deptRep to be initial value, and employees to be options
+		axios
+			.get("https://localhost:5001/api/deptStaff?roles=DEPTREP&roles=EMPLOYEE", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDeptRepOptions(
+						result.data.reduce(
+							(options, deptStaff) => [
+								...options,
+								{ label: deptStaff.name, value: deptStaff.email },
+							],
+							[]
+						)
+					);
+					let currentDeptRep = result.data.filter((val) => val.role === "DEPTREP");
+					if (currentDeptRep.length === 1) {
+						setDeptRep(currentDeptRep[0].email);
+						form.setFieldsValue({
+							deptRep: currentDeptRep[0].email,
+						});
+					}
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
 	}, []);
 
 	return (

@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SSIS.Databases;
-using SSIS.Models;
-using SSIS.Payloads;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SSIS.Databases;
+using SSIS.Models;
+using SSIS.Payloads;
 
 namespace SSIS.Repositories
 {
@@ -24,9 +24,9 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Retrieval>> GetAll()
+        public async Task<List<Retrieval>> GetAllByCurrentStaff(string currentStaffEmail)
         {
-            return await _dbContext.Retrievals.ToListAsync();
+            return await _dbContext.Retrievals.Where(r => r.CreatedBy.Email == currentStaffEmail).ToListAsync();
         }
 
         public async Task<Retrieval> GetRetrievalById(Guid id)
@@ -37,6 +37,11 @@ namespace SSIS.Repositories
         public async Task<int> DeleteRetrieval(Retrieval retrieval)
         {
             _dbContext.Retrievals.Remove(retrieval);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateRetrieval()
+        {
             return await _dbContext.SaveChangesAsync();
         }
     }

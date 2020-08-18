@@ -33,7 +33,7 @@ namespace SSIS.Services
                 RequestedOn = DateTime.Now,
                 Status = RequisitionStatus.APPLIED,
                 RequestedBy = requestedBy,
-                Department = requestedBy.Department,
+                DepartmentName = requestedBy.DepartmentName,
             };
 
             foreach (var requisitionItem in requisitionItems)
@@ -73,6 +73,54 @@ namespace SSIS.Services
         public async Task<ApiResponse> GetRequisitionsByStatus(RequisitionStatus status)
         {
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status) };
+        }
+
+        public async Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId, string email)
+        {
+            List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId);
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            foreach (var requisition in requisitions)
+            {
+                if (requisition != null)
+                {
+                    if (deptStaff.Email == requisition.Retrieval.CreatedByEmail)
+                    {
+                        requisition.RequisitionItems = requisition.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList();
+                    }
+                }
+            }
+            return new ApiResponse { Success = true, Data = requisitions };
+        }
+
+        public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email)
+        {
+            Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            if (requisition != null)
+            {
+                if (requisition.DepartmentName == deptStaff.Department.Name)
+                {
+                    if (deptStaff.Role == DeptRole.DeptHead && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
+                    {
+                        requisition.Status = status;
+                        return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    }
+                    if (deptStaff.Role == DeptRole.DeptRep && requisition.Status == RequisitionStatus.PENDING_COLLECTION && status == RequisitionStatus.DELIVERED)
+                    {
+                        requisition.Status = status;
+                        foreach (var requisitionItem in requisition.RequisitionItems)
+                        {
+                            Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);
+                            itemFromRepo.Stock -= requisitionItem.Actual;
+                        }
+                        return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    }
+
+                }
+                else return new ApiResponse { Success = false, Message = "Sorry, you can only review requisition of your own department" };
+
+            }
+            return new ApiResponse { Success = false, Message = "Cannot find requisition reviewing" };
         }
     }
 }

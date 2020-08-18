@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using SSIS.Utils;
 
 namespace SSIS.Models
 {
@@ -14,9 +13,15 @@ namespace SSIS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [JsonConverter(typeof(DateFormatConverter))]
         public DateTime RequestedOn { get; set; }
+
+        [JsonConverter(typeof(DateFormatConverter))]
         public Nullable<DateTime> ReviewedOn { get; set; }
         public string Comment { get; set; }
+
+        [JsonConverter(typeof(DateFormatConverter))]
         public Nullable<DateTime> AcknowledgedOn { get; set; }
         public RequisitionStatus Status { get; set; }
 

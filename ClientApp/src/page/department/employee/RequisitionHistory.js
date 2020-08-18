@@ -1,58 +1,82 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
-import React, { useState } from "react";
+import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
+import toTitleCase from "../../../util/toTitleCase";
 
 export default function RequisitionHistory() {
 	// TODO: call RequisitionController Get Requisition By Role (Employee will return all history)
-	const dataSource = [];
-	for (let i = 0; i < 100; i++) {
-		dataSource.push({
-			key: i,
-			requestedDate: `Edward King ${i}`,
-			reviewedBy: "Colin",
-			reviewedDate: "26/02/1998",
-			AcknowledgedBy: "",
-			AcknowledgedDate: "",
-			status: "PENDING_COLLECTION",
-		});
-	}
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			key: "requestedDate",
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
-			key: "reviewedBy",
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
-			key: "reviewedDate",
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
-			key: "acknowledgedBy",
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
-			key: "acknowledgedDate",
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			key: "status",
 		},
 		{
 			title: "Action",
 			key: "action",
-			render: ViewAcknowledgement,
+			render: (text, record) => (
+				<ViewAcknowledgement text={text} record={record}></ViewAcknowledgement>
+			),
 		},
 	];
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					console.log(result.data);
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									requestedDate: requisition.requestedOn,
+									reviewedBy: requisition.reviewedBy,
+									reviewedDate: requisition.reviewedOn,
+									acknowledgedBy: requisition.acknowledgedBy,
+									acknowledgedDate: requisition.acknowledgedOn,
+									status: toTitleCase(requisition.status),
+									action: requisition.requisitionItems,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	return (
 		<Space direction="vertical">
@@ -68,38 +92,28 @@ export default function RequisitionHistory() {
 }
 
 // TODO: add props for passing detailed data into component, then set to the field
-const ViewAcknowledgement = () => {
+
+const ViewAcknowledgement = ({ text, record }) => {
+	console.log(text.action);
+	console.log(record);
 	const requisitionData = [];
-	for (let i = 0; i < 5; i++) {
-		requisitionData.push({
-			key: i,
-			itemDescription: `Pencil ${i}B`,
-			requestedQty: `${i + 10}`,
-			receivedQty: `${i + 10}`,
-			unfulfilledQty: "0",
-		});
-	}
 
 	const requisitionColumns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
-			key: "itemDescription",
 		},
 		{
 			title: "Requested Quantity",
 			dataIndex: "requestedQty",
-			key: "requestedQty",
 		},
 		{
 			title: "Received Quantity",
 			dataIndex: "receivedQty",
-			key: "receivedQty",
 		},
 		{
 			title: "Unfulfilled Quantity",
 			dataIndex: "unfulfilledQty",
-			key: "unfulfilledQty",
 		},
 	];
 
@@ -111,7 +125,6 @@ const ViewAcknowledgement = () => {
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

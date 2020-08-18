@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace SSIS.Models
 {
@@ -15,7 +15,6 @@ namespace SSIS.Models
 
         [Required]
         public string Reason { get; set; }
-
         public virtual Item Item { get; set; }
 
         [JsonIgnore]

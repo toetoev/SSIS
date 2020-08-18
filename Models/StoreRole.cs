@@ -1,4 +1,3 @@
-using System;
 namespace SSIS.Models
 {
     public static class StoreRole
