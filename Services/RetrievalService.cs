@@ -22,7 +22,7 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> CreateRetrieval(List<Guid> requisitionIds, string email)
         {
-            StoreStaff storeStaff = await NewMethod(email);
+            StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
             List<RetrievalItem> retrievalItems = new List<RetrievalItem>();
             Dictionary<Guid, int> totalItemQty = new Dictionary<Guid, int>();
             Guid retrievalId = Guid.NewGuid();
@@ -55,11 +55,6 @@ namespace SSIS.Services
             }
             Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
-        }
-
-        private async Task<StoreStaff> NewMethod(string email)
-        {
-            return await _storeStaffRepository.GetStoreStaffByEmail(email);
         }
 
         public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)

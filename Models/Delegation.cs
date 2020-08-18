@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using SSIS.Util;
+using SSIS.Utils;
 
 namespace SSIS.Models
 {
@@ -14,7 +13,6 @@ namespace SSIS.Models
         [Key]
         [JsonConverter(typeof(DateFormatConverter))]
         public DateTime StartDate { get; set; }
-
         public string DelegatedToEmail { get; set; }
 
         [JsonConverter(typeof(DateFormatConverter))]

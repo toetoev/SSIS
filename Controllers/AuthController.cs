@@ -26,7 +26,7 @@ namespace SSIS.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
+        [HttpPost("")]
         public IActionResult Login([FromBody] User user)
         {
             System.Console.WriteLine(user.ToString());

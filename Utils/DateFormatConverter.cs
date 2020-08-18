@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Converters;
 
-namespace SSIS.Util
+namespace SSIS.Utils
 {
     public class DateFormatConverter : IsoDateTimeConverter
     {
