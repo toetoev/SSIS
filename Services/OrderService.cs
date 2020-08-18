@@ -75,6 +75,19 @@ namespace SSIS.Services
             return new ApiResponse { Success = true };
         }
 
+        public async Task<ApiResponse> DeleteOrder(Guid orderId)
+        {
+            Order orderFromRepo = await _orderRepository.GetOrderById(orderId);
+            if (orderFromRepo != null)
+            {
+                if (orderFromRepo.Status == OrderStatus.ORDERED)
+                    return new ApiResponse { Success = true, Data = await _orderRepository.DeleteOrder(orderId) };
+                else
+                    return new ApiResponse { Success = false, Message = "Cannot delete order already received" };
+            }
+            return new ApiResponse { Success = false, Message = "Order to be deleted does not exist" };
+        }
+
         public async Task<ApiResponse> GetAllOrders()
         {
             return new ApiResponse { Success = true, Data = await _orderRepository.GetAll() };
@@ -82,7 +95,7 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail)
         {
-            Order orderFromRepo = _orderRepository.GetOrderById(orderId);
+            Order orderFromRepo = await _orderRepository.GetOrderById(orderId);
             if (orderFromRepo != null)
             {
                 StoreStaff receivedBy = await _storeStaffRepository.GetStoreStaffByEmail(receivedByEmail);

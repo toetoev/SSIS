@@ -12,5 +12,6 @@ namespace SSIS.Services
         Task<Order> GetOrderBySupplierAndDate(Guid supplierId, DateTime date);
         Task<int> CreateOrder(Order newOrder);
         Task<Order> GetOrderById(Guid orderId);
+        Task<int> DeleteOrder(Guid orderId);
     }
 }

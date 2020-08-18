@@ -11,5 +11,6 @@ namespace SSIS.Controllers
         Task<ApiResponse> GetAllOrders();
         Task<ApiResponse> CreateOrder(List<Order> orders, string orderedByEmail);
         Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail);
+        Task<ApiResponse> DeleteOrder(Guid orderId);
     }
 }

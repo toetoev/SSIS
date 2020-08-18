@@ -36,5 +36,11 @@ namespace SSIS.Controllers
             string receivedByEmail = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_orderService.ReceiveOrder(orderId, orderItems, receivedByEmail).Result);
         }
+
+        [HttpDelete("{orderId")]
+        public IActionResult DeleteOrder([FromRoute] Guid orderId)
+        {
+            return Ok(_orderService.DeleteOrder(orderId).Result);
+        }
     }
 }

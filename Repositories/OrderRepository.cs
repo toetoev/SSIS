@@ -22,6 +22,12 @@ namespace SSIS.Services
             return await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<int> DeleteOrder(Guid orderId)
+        {
+            _dbContext.Remove(orderId);
+            return await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<Order>> GetAll()
         {
             return await _dbContext.Orders.ToListAsync();
