@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using SSIS.Models;
 
 namespace SSIS.Controllers
 {
@@ -17,6 +20,13 @@ namespace SSIS.Controllers
         public IActionResult GetAll()
         {
             return Ok(_orderService.GetAllOrders().Result);
+        }
+
+        [HttpPost("")]
+        public IActionResult CreateOrder([FromBody] List<Order> orders)
+        {
+            string orderedBy = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_orderService.CreateOrder(orders, orderedBy).Result);
         }
     }
 }
