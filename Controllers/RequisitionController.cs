@@ -48,7 +48,7 @@ namespace SSIS.Controllers
 
         [HttpGet("{retrievalId}/requisition-item/{itemId}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetRequitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
+        public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId, email).Result);

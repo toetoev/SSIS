@@ -43,7 +43,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId)
         {
-            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId).ToListAsync();
+            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId).OrderBy(r => r.RequestedOn).ToListAsync();
         }
     }
 }
