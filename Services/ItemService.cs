@@ -36,5 +36,9 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _itemRepository.GetItemsByCategory(name) };
         }
 
+        public async Task<ApiResponse> GetLowStockItems()
+        {
+            return new ApiResponse { Success = true, Data = await _itemRepository.GetLowStockItems() };
+        }
     }
 }

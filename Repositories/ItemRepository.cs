@@ -31,6 +31,11 @@ namespace SSIS.Repositories
             return await _dbContext.Items.Where(i => i.CategoryName == name).ToListAsync();
         }
 
+        public async Task<List<Item>> GetLowStockItems()
+        {
+            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).ToListAsync();
+        }
+
         public async Task<bool> ItemExist(Guid itemId)
         {
             return await _dbContext.Items.AnyAsync(i => i.Id == itemId);

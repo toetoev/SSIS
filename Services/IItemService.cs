@@ -12,7 +12,7 @@ namespace SSIS.Services
         Task<ApiResponse> GetAllItemsByCategory(string categoryName);
 
         Task<ApiResponse> GetItemById(Guid itemId);
-
+        Task<ApiResponse> GetLowStockItems();
     }
 
 }
