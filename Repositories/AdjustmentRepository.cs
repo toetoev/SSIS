@@ -15,6 +15,13 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<int> CreateAdjustment(Adjustment adjustment)
+        {
+            _dbContext.Add(adjustment);
+            return await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<Adjustment>> GetAll()
         {
             return await _dbContext.Adjustments.ToListAsync();

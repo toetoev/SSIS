@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
@@ -21,6 +24,14 @@ namespace SSIS.Controllers
         public IActionResult GetAllAdjustments()
         {
             return Ok(_adjustmentService.GetAllAdjustments().Result);
+        }
+
+        [HttpPost("")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.CreateAdjustment(email, adjustmentItems).Result);
         }
     }
 }
