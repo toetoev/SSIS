@@ -22,13 +22,9 @@ namespace SSIS.Services
         {
             StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (storeStaffFromRepo != null)
-            {
                 return new ApiResponse { Success = true, Data = await _retrievalItemRepository.GetAllRetrievalItems(email) };
-            }
             else
-            {
                 return null;
-            }
         }
     }
 }

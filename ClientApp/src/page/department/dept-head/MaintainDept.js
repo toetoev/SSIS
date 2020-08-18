@@ -103,6 +103,7 @@ export default function MaintainDept() {
 					);
 					let currentDeptRep = result.data.filter((val) => val.role === "DEPTREP");
 					if (currentDeptRep.length === 1) {
+						setDeptRep(currentDeptRep[0].email);
 						form.setFieldsValue({
 							deptRep: currentDeptRep[0].email,
 						});

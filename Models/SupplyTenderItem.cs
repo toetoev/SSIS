@@ -15,7 +15,6 @@ namespace SSIS.Models
 
         [Range(1, 3)]
         public int Priority { get; set; }
-
         public virtual Item Item { get; set; }
 
         [JsonIgnore]

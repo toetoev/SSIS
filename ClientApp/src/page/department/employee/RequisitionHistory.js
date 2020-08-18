@@ -36,7 +36,9 @@ export default function RequisitionHistory() {
 		{
 			title: "Action",
 			key: "action",
-			render: ViewAcknowledgement,
+			render: (text, record) => (
+				<ViewAcknowledgement text={text} record={record}></ViewAcknowledgement>
+			),
 		},
 	];
 
@@ -63,6 +65,7 @@ export default function RequisitionHistory() {
 									acknowledgedBy: requisition.acknowledgedBy,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
+									action: requisition.requisitionItems,
 								},
 							];
 						}, [])
@@ -90,7 +93,9 @@ export default function RequisitionHistory() {
 
 // TODO: add props for passing detailed data into component, then set to the field
 
-const ViewAcknowledgement = () => {
+const ViewAcknowledgement = ({ text, record }) => {
+	console.log(text.action);
+	console.log(record);
 	const requisitionData = [];
 
 	const requisitionColumns = [

@@ -12,17 +12,19 @@ namespace SSIS.Services
         private readonly IRequisitionRepository _requisitionRepository;
         private readonly IStoreStaffRepository _storeStaffRepository;
         private readonly IRetrievalRepository _retrievalRepository;
+        private readonly IItemRepository _itemRepository;
 
-        public RetrievalService(IRequisitionRepository requisitionRepository, IStoreStaffRepository storeStaffRepository, IRetrievalRepository retrievalRepository)
+        public RetrievalService(IRequisitionRepository requisitionRepository, IStoreStaffRepository storeStaffRepository, IRetrievalRepository retrievalRepository, IItemRepository itemRepository)
         {
             _requisitionRepository = requisitionRepository;
             _storeStaffRepository = storeStaffRepository;
             _retrievalRepository = retrievalRepository;
+            _itemRepository = itemRepository;
         }
 
         public async Task<ApiResponse> CreateRetrieval(List<Guid> requisitionIds, string email)
         {
-            StoreStaff storeStaff = await NewMethod(email);
+            StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
             List<RetrievalItem> retrievalItems = new List<RetrievalItem>();
             Dictionary<Guid, int> totalItemQty = new Dictionary<Guid, int>();
             Guid retrievalId = Guid.NewGuid();
@@ -57,11 +59,6 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
         }
 
-        private async Task<StoreStaff> NewMethod(string email)
-        {
-            return await _storeStaffRepository.GetStoreStaffByEmail(email);
-        }
-
         public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)
         {
             Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
@@ -93,8 +90,14 @@ namespace SSIS.Services
                     RetrievalItem retrievalItemInput = retrievalItems.Find(ri => ri.ItemId == retrievalItem.ItemId);
                     if (retrievalItemInput != null && retrievalItem.TotalQtyNeeded >= retrievalItemInput.TotalQtyRetrieved)
                     {
-                        retrievalItem.TotalQtyRetrieved = retrievalItemInput.TotalQtyRetrieved;
-                        await _retrievalRepository.UpdateRetrieval();
+                        Item itemFromRepo = await _itemRepository.GetItemById(retrievalItemInput.ItemId);
+                        if (retrievalItemInput.TotalQtyRetrieved <= itemFromRepo.Stock)
+                        {
+                            retrievalItem.TotalQtyRetrieved = retrievalItemInput.TotalQtyRetrieved;
+                            await _retrievalRepository.UpdateRetrieval();
+                        }
+                        else
+                            return new ApiResponse { Success = false, Message = "Sorry, don't have enough item to retrieve" };
                     }
                     else
                         return new ApiResponse { Success = false, Message = "Please don't retrieve items more than needed" };

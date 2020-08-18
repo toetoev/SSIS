@@ -14,7 +14,6 @@ namespace SSIS.Models
         public int OrderedQty { get; set; }
         public int DeliveredQty { get; set; }
         public string Remarks { get; set; }
-
         public virtual Item Item { get; set; }
 
         [JsonIgnore]

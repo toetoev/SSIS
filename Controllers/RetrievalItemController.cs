@@ -27,7 +27,7 @@ namespace SSIS.Controllers
         public IActionResult GetAllRetrievalItems()
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_retrievalItemService.GetAllRetrievalItems(email));
+            return Ok(_retrievalItemService.GetAllRetrievalItems(email).Result);
         }
     }
 }

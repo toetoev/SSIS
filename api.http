@@ -1,5 +1,5 @@
 ### AuthController Login Employee
-POST https://localhost:5001/api/auth/login
+POST https://localhost:5001/api/auth
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### AuthController Login DeptHead
-POST https://localhost:5001/api/auth/login
+POST https://localhost:5001/api/auth
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### AuthController Login Clerk
-POST https://localhost:5001/api/auth/login
+POST https://localhost:5001/api/auth
 Content-Type: application/json
 
 {
@@ -87,19 +87,25 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80M
 
 ### RequisitionController Get Requisition By Status
 GET https://localhost:5001/api/requisition/APPROVED
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzY3NzcyNCwiZXhwIjoxNTk3NzY0MTI0LCJpYXQiOjE1OTc2Nzc3MjR9.5kj5iNNI1qE0RSIC-pPHaBHDIIhEcxzeal0Jc_6MP3tMXDN-FiU4loMQT_j5plptPXJUr5QXXrQ2KkgKrJDGgw
 
 ### RequisitionController Review Requisition
-PUT https://localhost:5001/api/requisition/28C38951-2AE8-43F5-9B87-66086570BD82/APPROVED
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzQ4MjI1NCwiZXhwIjoxNTk3NTY4NjU0LCJpYXQiOjE1OTc0ODIyNTR9.oLfiCfdt5GUAnwqJY3Ez9PSw1vI7716urjlA1jUFkFkHUEnrOwEpeuDgSwYu50CpiUlW6RtOqNMUD4hKOPU6-w
+PUT https://localhost:5001/api/requisition/1213988E-159C-46C4-878E-F497207E4B2C
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1la2FAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNZWthIiwicm9sZSI6IkRFUFRIRUFEIiwibmJmIjoxNTk3NjU3NTM0LCJleHAiOjE1OTc3NDM5MzQsImlhdCI6MTU5NzY1NzUzNH0.VN-0FcK1l1xk2woRGxvkkf_t-oytUeOhv8_nXPtRIYhRdGMNh6YnyyJcghKNb6ZIChKBz9mR0UrIinBbaCwHtQ
+Content-Type: application/json
+
+"APPROVED"
+
+
+
 
 
 ### RetrievalController Create Retrieval
 POST https://localhost:5001/api/retrieval
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzU3MDc2OCwiZXhwIjoxNTk3NjU3MTY4LCJpYXQiOjE1OTc1NzA3Njh9.KvczbR8-NYGH07ObQDXikZ9EE-nVwIYtGPOHg37M50zeRGcsFXRwIQcq4mjZEXWYBwHilbNRQy-hm8-4agSerg
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5NzY3MTIyOCwiZXhwIjoxNTk3NzU3NjI4LCJpYXQiOjE1OTc2NzEyMjh9.LXn0_V1huHTOFKGrVA0HN-BADKVojx8Q9mX03lV9hbx0kYubQpJiGhL-nd-TQ1-RiTZ-oX7g8Bm8Vhic_vRFBw
 Content-Type: application/json
 
-["7E1E053A-C700-47BA-8B81-E64103193C83", "BB166123-B348-4C2F-A00B-E0D41E51D6EC"]
+["E9FF7B45-4FCA-438A-ADC4-20516EB15177"]
 
 
 ### RetrievalController Update Retrieval Actual Quantity

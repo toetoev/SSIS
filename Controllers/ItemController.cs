@@ -11,16 +11,22 @@ namespace SSIS.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
-        
-        public ItemController(IItemService itemService){
+
+        public ItemController(IItemService itemService)
+        {
             _itemService = itemService;
         }
 
-        [HttpGet("")]        
+        [HttpGet("")]
         public IActionResult GetAllItems()
         {
             return Ok(_itemService.GetAllItems().Result);
         }
 
+        [HttpGet("low-stock")]
+        public IActionResult GetLowStockItems()
+        {
+            return Ok(_itemService.GetLowStockItems().Result);
+        }
     }
 }
