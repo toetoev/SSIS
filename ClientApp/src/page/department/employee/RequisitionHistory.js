@@ -5,9 +5,7 @@ import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function RequisitionHistory() {
-	// TODO: call RequisitionController Get Requisition By Role (Employee will return all history)
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
 			title: "Requested Date",
@@ -97,7 +95,7 @@ export default function RequisitionHistory() {
 	);
 }
 
-// TODO: add props for passing detailed data into component, then set to the field
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
 
 const ViewAcknowledgement = ({ text, record }) => {
 	console.log(text.action);

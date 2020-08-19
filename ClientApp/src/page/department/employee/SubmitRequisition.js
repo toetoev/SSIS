@@ -71,6 +71,24 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item")
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemOptions(
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	const handleSubmit = () => {
 		form.validateFields()
 			.then((val) => {
@@ -106,24 +124,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 		if (val.quantity) setQuantity(Number(val.quantity));
 		if (val.item) setItem(val.item);
 	};
-
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setItemOptions(
-						result.data.reduce((options, item) => {
-							return [...options, { label: item.description, value: item.id }];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
 
 	return (
 		<>

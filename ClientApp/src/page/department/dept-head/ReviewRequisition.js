@@ -6,7 +6,6 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
 			title: "Requested By",
@@ -77,6 +76,8 @@ export default function ReviewRequisition() {
 		</Space>
 	);
 }
+
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
 const ViewRequisition = () => {
 	const itemData = [];
 
