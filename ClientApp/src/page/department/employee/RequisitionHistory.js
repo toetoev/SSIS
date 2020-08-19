@@ -114,7 +114,7 @@ const RequisitionModal = ({ text }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(requisition.status[0]);
+	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
@@ -153,16 +153,40 @@ const RequisitionModal = ({ text }) => {
 						{requisition.department.collectionPointId}
 					</Descriptions.Item>
 				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Requested Items"></Descriptions.Item>
-				</Descriptions>
-				<Table
-					dataSource={dataSource}
-					columns={columns}
-					pagination={false}
-					scroll={{ y: 100 }}
-				/>
-				{status === "Delivered" ? (
+				{status === "APPROVED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Approved By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Approved Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				{status === "REJECTED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Rejected By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Reason">
+								{requisition.comment}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				{status === "DELIVERED" ? (
 					<Descriptions>
 						<Descriptions.Item label="Delivered by:">
 							{requisition.acknowledgedBy === null
@@ -174,6 +198,15 @@ const RequisitionModal = ({ text }) => {
 						</Descriptions.Item>
 					</Descriptions>
 				) : null}
+				<Descriptions>
+					<Descriptions.Item label="Requested Items"></Descriptions.Item>
+				</Descriptions>
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 100 }}
+				/>
 			</Modal>
 		</div>
 	);

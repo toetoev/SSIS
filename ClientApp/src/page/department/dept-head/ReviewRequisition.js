@@ -94,7 +94,7 @@ const ReviewRequisitionModal = ({ text }) => {
 		}, [])
 	);
 	const [visible, setVisible] = useState(false);
-	const [status] = useState(text.status[0]);
+	const [status] = useState(requisition.status);
 	const columns = [
 		{
 			title: "Item Description",
@@ -113,7 +113,6 @@ const ReviewRequisitionModal = ({ text }) => {
 		setVisible(false);
 	};
 
-	console.log(requisition);
 	const handleReview = (reviewResult) => {
 		axios
 			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
@@ -139,7 +138,7 @@ const ReviewRequisitionModal = ({ text }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={
-					status === "Applied"
+					status === "APPLIED"
 						? [
 								<Button
 									key="reject"
@@ -169,7 +168,7 @@ const ReviewRequisitionModal = ({ text }) => {
 						{requisition.requestedOn}
 					</Descriptions.Item>
 				</Descriptions>
-				{status === "Approved" ? (
+				{status === "APPROVED" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Approved By">
@@ -183,7 +182,7 @@ const ReviewRequisitionModal = ({ text }) => {
 						</Descriptions>
 					</>
 				) : null}
-				{status === "Rejected" ? (
+				{status === "REJECTED" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Rejected By">
