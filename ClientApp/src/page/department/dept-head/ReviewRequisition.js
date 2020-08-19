@@ -81,9 +81,20 @@ export default function ReviewRequisition() {
 
 const ReviewRequisitionModal = ({ text }) => {
 	const requisition = text.action;
-	const [dataSource, setDataSource] = useState([]);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					qty: requisitionItem.need,
+				},
+			];
+		}, [])
+	);
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
+	const [status] = useState(text.status[0]);
 	const columns = [
 		{
 			title: "Item Description",
@@ -117,21 +128,6 @@ const ReviewRequisitionModal = ({ text }) => {
 			});
 		setVisible(false);
 	};
-	useEffect(() => {
-		setDataSource(
-			requisition.requisitionItems.reduce((rows, requisitionItem) => {
-				return [
-					...rows,
-					{
-						key: requisitionItem.itemId,
-						itemDescription: requisitionItem.item.description,
-						qty: requisitionItem.need,
-					},
-				];
-			}, [])
-		);
-		setStatus(text.status[0]);
-	}, []);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

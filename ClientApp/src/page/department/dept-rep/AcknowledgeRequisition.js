@@ -6,7 +6,7 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Requested Date",
@@ -40,6 +40,7 @@ export default function AcknowledgeRequisition() {
 	];
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -49,7 +50,6 @@ export default function AcknowledgeRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -73,10 +73,12 @@ export default function AcknowledgeRequisition() {
 							];
 						}, [])
 					);
+					setLoading(false);
 				}
 			})
 
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -85,6 +87,7 @@ export default function AcknowledgeRequisition() {
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
 			<Table
+				loading={loading}
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
@@ -96,7 +99,22 @@ export default function AcknowledgeRequisition() {
 
 const AcknowledgementModal = ({ text }) => {
 	const requisition = text.action;
-	const [dataSource, setDataSource] = useState([]);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, acknowledge) => {
+			return [
+				...rows,
+				{
+					key: acknowledge.itemId,
+					itemDescription: acknowledge.item.description,
+					requestedQty: acknowledge.need,
+					receivedQty: acknowledge.actual,
+					unfulfilledQty: acknowledge.need - acknowledge.actual,
+				},
+			];
+		}, [])
+	);
+	const [status] = useState(text.status[0]);
+	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
 			title: "Item Description",
@@ -115,8 +133,6 @@ const AcknowledgementModal = ({ text }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -124,27 +140,20 @@ const AcknowledgementModal = ({ text }) => {
 		setVisible(false);
 	};
 	const handleAcknowledge = (e) => {
-		// TODO: call UpdateRequisitionStatus
+		axios
+			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) window.location.reload(false);
+				else Error(result.message);
+			});
 		setVisible(false);
 	};
-
-	useEffect(() => {
-		setDataSource(
-			requisition.requisitionItems.reduce((rows, acknowledge) => {
-				return [
-					...rows,
-					{
-						key: acknowledge.itemId,
-						itemDescription: acknowledge.item.description,
-						requestedQty: acknowledge.need,
-						receivedQty: acknowledge.actual,
-						unfulfilledQty: acknowledge.need - acknowledge.actual,
-					},
-				];
-			}, [])
-		);
-		setStatus(text.status[0]);
-	}, []);
 
 	return (
 		<div>

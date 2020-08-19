@@ -34,7 +34,7 @@ export default function RequisitionHistory() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <RequisitionModal text={text}/>,
+			render: (text) => <RequisitionModal text={text} />,
 		},
 	];
 
@@ -93,8 +93,22 @@ export default function RequisitionHistory() {
 }
 
 const RequisitionModal = ({ text }) => {
-	const [dataSource, setDataSource] = useState([]);
-
+	const [dataSource] = useState(
+		text.action.reduce((rows, requisition) => {
+			return [
+				...rows,
+				{
+					key: requisition.itemId,
+					itemDescription: requisition.item.description,
+					requestedQty: requisition.need,
+					receivedQty: requisition.actual,
+					unfulfilledQty: requisition.need - requisition.actual,
+				},
+			];
+		}, [])
+	);
+	const [status] = useState(text.status[0]);
+	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
 			title: "Item Description",
@@ -114,32 +128,12 @@ const RequisitionModal = ({ text }) => {
 		},
 	];
 
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-
-	useEffect(() => {
-		setDataSource(
-			text.action.reduce((rows, requisition) => {
-				return [
-					...rows,
-					{
-						key : requisition.itemId,
-						itemDescription : requisition.item.description,
-						requestedQty : requisition.need,
-						receivedQty : requisition.actual,
-						unfulfilledQty : (requisition.need - requisition.actual),
-					},
-				]
-			}, [])
-		);
-		setStatus(text.status[0]);
-	}, []);
 
 	return (
 		<div>
