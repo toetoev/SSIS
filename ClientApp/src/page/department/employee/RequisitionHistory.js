@@ -34,7 +34,7 @@ export default function RequisitionHistory() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => <RequisitionModal text={text} record={record} />,
+			render: (text) => <RequisitionModal text={text}/>,
 		},
 	];
 
@@ -48,7 +48,6 @@ export default function RequisitionHistory() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((dataSource, requisition) => {
 							return [
@@ -93,13 +92,10 @@ export default function RequisitionHistory() {
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const RequisitionModal = ({ text, record }) => {
-	console.log(text.action);
-	console.log(record);
-	const requisitionData = [];
+const RequisitionModal = ({ text }) => {
+	const [dataSource, setDataSource] = useState([]);
 
-	const requisitionColumns = [
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -126,6 +122,25 @@ const RequisitionModal = ({ text, record }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+
+	useEffect(() => {
+		setDataSource(
+			text.action.reduce((rows, requisition) => {
+				return [
+					...rows,
+					{
+						key : requisition.itemId,
+						itemDescription : requisition.item.description,
+						requestedQty : requisition.need,
+						receivedQty : requisition.actual,
+						unfulfilledQty : (requisition.need - requisition.actual),
+					},
+				]
+			}, [])
+		);
+		setStatus(text.status[0]);
+	}, []);
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -139,8 +154,8 @@ const RequisitionModal = ({ text, record }) => {
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
 				<Table
-					dataSource={requisitionData}
-					columns={requisitionColumns}
+					dataSource={dataSource}
+					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>

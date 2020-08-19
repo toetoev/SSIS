@@ -94,7 +94,6 @@ export default function AcknowledgeRequisition() {
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
 const AcknowledgementModal = ({ text }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
@@ -127,7 +126,25 @@ const AcknowledgementModal = ({ text }) => {
 		// TODO: call UpdateRequisitionStatus
 		setVisible(false);
 	};
-	useEffect(() => {}, []);
+
+	useEffect(() => {
+		setDataSource(
+			text.action.reduce((rows, acknowledge) => {
+				return [
+					...rows,
+					{
+						key : acknowledge.itemId,
+						itemDescription : acknowledge.item.description,
+						requestedQty : acknowledge.need,
+						receivedQty : acknowledge.actual,
+						unfulfilledQty : (acknowledge.need - acknowledge.actual),
+					},
+				]
+			}, [])
+		);
+		setStatus(text.status[0]);
+	}, []);
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
