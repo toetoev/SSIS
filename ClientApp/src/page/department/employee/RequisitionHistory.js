@@ -93,6 +93,7 @@ export default function RequisitionHistory() {
 }
 
 const RequisitionModal = ({ text }) => {
+	console.log(text);
 	const [dataSource] = useState(
 		text.action.reduce((rows, requisition) => {
 			return [
@@ -153,7 +154,7 @@ const RequisitionModal = ({ text }) => {
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>
-				{status == "DELIVERED" ? (
+				{status === "Delivered" ? (
 					<Descriptions>
 						<Descriptions.Item label="Delivered by:"></Descriptions.Item>
 						<Descriptions.Item label="Delivered date:"></Descriptions.Item>
