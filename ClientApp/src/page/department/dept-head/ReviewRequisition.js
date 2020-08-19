@@ -8,6 +8,7 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(false);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested By",

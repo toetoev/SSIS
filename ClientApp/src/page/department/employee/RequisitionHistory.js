@@ -8,6 +8,7 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(false);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -105,6 +106,7 @@ export default function RequisitionHistory() {
 }
 
 const RequisitionModal = ({ text }) => {
+	console.log(text);
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -122,6 +124,7 @@ const RequisitionModal = ({ text }) => {
 	);
 	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",

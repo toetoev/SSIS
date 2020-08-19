@@ -7,6 +7,7 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(false);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -115,6 +116,7 @@ const AcknowledgementModal = ({ text }) => {
 	);
 	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -189,28 +191,28 @@ const AcknowledgementModal = ({ text }) => {
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
-				<Table
-					dataSource={dataSource}
-					columns={columns}
-					scroll={{ y: 100 }}
-					pagination={false}
-				/>
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Delivered by">
+							<Descriptions.Item label="Received by">
 								{requisition.acknowledgedBy === null
 									? ""
 									: requisition.acknowledgedBy.name}
 							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Delivered date">
+							<Descriptions.Item label="Received date">
 								{requisition.acknowledgedOn}
 							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);
