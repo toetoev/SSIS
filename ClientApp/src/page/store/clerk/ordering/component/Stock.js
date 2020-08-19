@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Table } from "antd";
 
-export const Stocked = () => {
+export const Stock = () => {
 	const [dataSource, setDataSource] = useState([
 		{
 			key: "1",
@@ -59,6 +59,7 @@ export const Stocked = () => {
 	const handleDataChange = (data) => {
 		setDataSource(data);
 	};
-
+	// TODO: call get all items
+	useEffect(() => {}, []);
 	return <Table columns={columns} dataSource={dataSource} />;
 };

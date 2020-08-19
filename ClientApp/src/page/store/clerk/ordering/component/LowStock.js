@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Modal, Table } from "antd";
+import { Button, Form, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -56,8 +56,12 @@ export const LowStock = () => {
 			render: () => <LowStockModal />,
 		},
 	];
+	// TODO: ItemController GetLowStockItems
+	useEffect(() => {}, []);
 	return <Table columns={columns} dataSource={dataSource} />;
 };
+
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
 const LowStockModal = ({ dataSource, handleDataChange }) => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
@@ -94,40 +98,24 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
+	// TODO: call createOrder
 	const handleSubmit = () => {};
 
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
-
-	const { TextArea } = Input;
 
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
 				Order
 			</Button>
-
 			<Modal
 				title="Tender Order"
 				visible={visible}
-				onOk={handleSubmit}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={handleCancel}>
+					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
 					<Button key="submit" type="primary" onClick={handleSubmit}>
@@ -137,7 +125,6 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 			>
 				<Form form={form} layout="vertical">
 					<p>Date : </p>
-
 					<Table columns={columns} dataSource={orderData} pagination={false} />
 				</Form>
 			</Modal>
@@ -170,12 +157,11 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
-
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: call get supplier by id
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -192,21 +178,17 @@ const Details = ({ dataSource, handleDataChange }) => {
 	return (
 		<>
 			<Button onClick={showModal}>View</Button>
-
 			<Modal
 				title="Stationery Details"
 				visible={visible}
-				onOk={handleSubmit}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
-						Submit
+					<Button key="back" onClick={hideModal}>
+						Back
 					</Button>,
 				]}
 			>
+				{/* // TODO: use description */}
 				<p>Supplier Name : ALPHA Office Supplies</p>
 				<p>Contact Name : Ms Irene Tan</p>
 				<p>Phone No : 85303054</p>

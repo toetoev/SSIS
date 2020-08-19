@@ -2,7 +2,6 @@ import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../../../component/Confirm";
-import axios from "axios";
 
 export const Order = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -36,32 +35,22 @@ export const Order = () => {
 			key: "action",
 			render: (text) => (
 				<Space>
-					<Received text={text}></Received>
-					<Delete
+					<Receive text={text}></Receive>
+					<Remove
 						dataSource={dataSource}
 						handleDataChange={handleDataChange}
 						text={text}
-					></Delete>
+					></Remove>
 				</Space>
 			),
 		},
 	];
-
+	// TODO: call get all order
+	useEffect(() => {}, []);
 	return <Table columns={columns} dataSource={dataSource} />;
 };
-const Delete = ({ dataSource, handleDataChange, text }) => {
-	const handleDelete = () => {
-		Confirm("Are you sure delete the item?", "", () =>
-			handleDataChange(dataSource.filter((val) => val.key !== text.key))
-		);
-	};
-	return (
-		<Button type="danger" onClick={handleDelete}>
-			Delete
-		</Button>
-	);
-};
-const Received = ({ dataSource, handleDataChange }) => {
+
+const Receive = ({ dataSource, handleDataChange }) => {
 	const [form] = Form.useForm();
 	const [item, setItem] = useState("");
 	const [quantity, setQuantity] = useState(0);
@@ -72,6 +61,7 @@ const Received = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
+	// TODO: call receive order
 	const handleSubmit = () => {
 		form.validateFields()
 			.then((val) => {
@@ -99,7 +89,7 @@ const Received = ({ dataSource, handleDataChange }) => {
 			.catch((err) => {});
 	};
 
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
@@ -108,36 +98,17 @@ const Received = ({ dataSource, handleDataChange }) => {
 		if (val.item) setItem(val.item);
 	};
 
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setItemOptions(
-						result.data.reduce((options, item) => {
-							return [...options, { label: item.description, value: item.id }];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
-
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Received
+				Receive
 			</Button>
 			<Modal
 				title="Purchase Orders"
 				visible={visible}
-				onOk={handleSubmit}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={handleCancel}>
+					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
 					<Button key="submit" type="primary" onClick={handleSubmit}>
@@ -155,5 +126,19 @@ const Received = ({ dataSource, handleDataChange }) => {
 				</Form>
 			</Modal>
 		</>
+	);
+};
+
+const Remove = ({ dataSource, handleDataChange, text }) => {
+	// TODO: call delete order
+	const handleDelete = () => {
+		Confirm("Are you sure delete the item?", "", () =>
+			handleDataChange(dataSource.filter((val) => val.key !== text.key))
+		);
+	};
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Remove
+		</Button>
 	);
 };

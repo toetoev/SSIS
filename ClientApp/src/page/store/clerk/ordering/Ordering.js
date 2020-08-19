@@ -1,32 +1,12 @@
 import { Input, Space, Tabs } from "antd";
-import React, { useState } from "react";
 
 import { LowStock } from "./component/LowStock";
 import { Order } from "./component/Order";
-import { Stocked } from "./component/Stocked";
+import React from "react";
+import { Stock } from "./component/Stock";
 
 export default function Ordering() {
-	const [dataSource, setDataSource] = useState([
-		{
-			key: "1",
-			category: "Clip",
-			description: "Clip...",
-			reorderQuantity: "2",
-			reorderLevel: "1",
-			stock: "1",
-			supplier1: "ALPHA",
-			supplier2: "BETA",
-			supplier3: "GAMA",
-			action: "action",
-			bin: "P39",
-			uom: "Box",
-		},
-	]);
 	const { TabPane } = Tabs;
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
-
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Purchase Orders</h3>
@@ -38,7 +18,7 @@ export default function Ordering() {
 					<Order />
 				</TabPane>
 				<TabPane tab="Stocked" key="Stocked">
-					<Stocked />
+					<Stock />
 				</TabPane>
 			</Tabs>
 		</Space>
