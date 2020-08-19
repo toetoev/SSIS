@@ -22,9 +22,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ReviewRequisitionModal text={text} record={record}></ReviewRequisitionModal>
-			),
+			render: (text) => <ReviewRequisitionModal text={text}></ReviewRequisitionModal>,
 		},
 	];
 
@@ -76,7 +74,7 @@ export default function ReviewRequisition() {
 	);
 }
 
-const ReviewRequisitionModal = ({ text, record }) => {
+const ReviewRequisitionModal = ({ text }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{

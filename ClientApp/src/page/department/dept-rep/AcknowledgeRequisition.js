@@ -35,7 +35,7 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => <AcknowledgementModal text={text} record={record} />,
+			render: (text) => <AcknowledgementModal text={text} />,
 		},
 	];
 
@@ -95,12 +95,9 @@ export default function AcknowledgeRequisition() {
 }
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const AcknowledgementModal = ({ text, record }) => {
-	console.log(text.action);
-	console.log(record);
-	const requisitionData = [];
-
-	const requisitionColumns = [
+const AcknowledgementModal = ({ text }) => {
+	const [dataSource, setDataSource] = useState([]);
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -118,7 +115,6 @@ const AcknowledgementModal = ({ text, record }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
-
 	const [visible, setVisible] = useState(false);
 	const [status, setStatus] = useState("");
 	const showModal = () => {
@@ -131,6 +127,7 @@ const AcknowledgementModal = ({ text, record }) => {
 		// TODO: call UpdateRequisitionStatus
 		setVisible(false);
 	};
+	useEffect(() => {}, []);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -166,11 +163,7 @@ const AcknowledgementModal = ({ text, record }) => {
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
-				<Table
-					dataSource={requisitionData}
-					columns={requisitionColumns}
-					scroll={{ y: 100 }}
-				/>
+				<Table dataSource={dataSource} columns={columns} scroll={{ y: 100 }} />
 				{status === "PENDING_COLLECTION" ? (
 					<>
 						<Form.Item
