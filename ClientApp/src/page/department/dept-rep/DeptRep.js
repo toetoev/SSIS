@@ -2,7 +2,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import AcknowledgeRequisition from "./AcknowledgeRequisition";
 import { Layout } from "antd";
-import Logout from "../../component/Logout";
+import { Navbar } from "../../component/Navbar";
 import React from "react";
 import Sidebar from "../../component/Sidebar";
 
@@ -14,7 +14,7 @@ export default function DeptRep() {
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
-				<Logout></Logout>
+				<Navbar></Navbar>
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">

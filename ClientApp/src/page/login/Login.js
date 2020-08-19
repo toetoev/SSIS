@@ -36,6 +36,7 @@ export default function Login() {
 				if (result.success) {
 					localStorage.setItem("ACCESS_TOKEN", result.data.accessToken);
 					localStorage.setItem("ROLE", result.data.role);
+					localStorage.setItem("NAME", result.data.name);
 					directToHomePageBasedOnRole();
 				} else {
 					Error(result.message);
