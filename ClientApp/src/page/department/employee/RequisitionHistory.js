@@ -54,9 +54,9 @@ export default function RequisitionHistory() {
 				if (result.success) {
 					console.log(result.data);
 					setDataSource(
-						result.data.reduce((rows, requisition) => {
+						result.data.reduce((dataSource, requisition) => {
 							return [
-								...rows,
+								...dataSource,
 								{
 									key: requisition.id,
 									requestedDate: requisition.requestedOn,
