@@ -113,7 +113,7 @@ const AcknowledgementModal = ({ text }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(text.status[0]);
+	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
 	const columns = [
 		{

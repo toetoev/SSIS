@@ -37,6 +37,7 @@ export default function SubmitRequisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
+			{/* // TODO: recommendation */}
 			<Row justify="space-between">
 				<Col>
 					<Space>
