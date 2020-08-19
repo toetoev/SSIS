@@ -7,6 +7,7 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Requested By",
@@ -28,6 +29,7 @@ export default function ReviewRequisition() {
 	];
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -54,9 +56,11 @@ export default function ReviewRequisition() {
 							];
 						}, [])
 					);
+					setLoading(false);
 				}
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -65,6 +69,7 @@ export default function ReviewRequisition() {
 		<Space direction="vertical">
 			<h3>Review Requisitions</h3>
 			<Table
+				loading={loading}
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
