@@ -96,6 +96,7 @@ const ReviewRequisitionModal = ({ text }) => {
 	const hideModal = () => {
 		setVisible(false);
 	};
+
 	const handleReview = (reviewResult) => {
 		axios
 			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
@@ -106,7 +107,8 @@ const ReviewRequisitionModal = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (!result.success) Error(result.message);
+				if (result.success) window.location.reload(false);
+				else Error(result.message);
 			});
 		setVisible(false);
 	};
