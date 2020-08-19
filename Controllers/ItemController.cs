@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 using SSIS.Services;
@@ -24,6 +25,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("low-stock")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult GetLowStockItems()
         {
             return Ok(_itemService.GetLowStockItems().Result);

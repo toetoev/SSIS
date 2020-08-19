@@ -28,7 +28,6 @@ namespace SSIS.Models
         [Required]
         public string DepartmentName { get; set; }
 
-        [JsonIgnore]
         public virtual Department Department { get; set; }
 
         [Required]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
 
@@ -18,6 +19,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
+        // [Authorize()]
         public IActionResult GetAll()
         {
             return Ok(_orderService.GetAllOrders().Result);

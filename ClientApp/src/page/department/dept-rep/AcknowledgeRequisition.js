@@ -68,7 +68,7 @@ export default function AcknowledgeRequisition() {
 											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
@@ -95,6 +95,7 @@ export default function AcknowledgeRequisition() {
 }
 
 const AcknowledgementModal = ({ text }) => {
+	const requisition = text.action;
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{
@@ -129,17 +130,17 @@ const AcknowledgementModal = ({ text }) => {
 
 	useEffect(() => {
 		setDataSource(
-			text.action.reduce((rows, acknowledge) => {
+			requisition.requisitionItems.reduce((rows, acknowledge) => {
 				return [
 					...rows,
 					{
-						key : acknowledge.itemId,
-						itemDescription : acknowledge.item.description,
-						requestedQty : acknowledge.need,
-						receivedQty : acknowledge.actual,
-						unfulfilledQty : (acknowledge.need - acknowledge.actual),
+						key: acknowledge.itemId,
+						itemDescription: acknowledge.item.description,
+						requestedQty: acknowledge.need,
+						receivedQty: acknowledge.actual,
+						unfulfilledQty: acknowledge.need - acknowledge.actual,
 					},
-				]
+				];
 			}, [])
 		);
 		setStatus(text.status[0]);
@@ -172,15 +173,20 @@ const AcknowledgementModal = ({ text }) => {
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Collection Date"></Descriptions.Item>
-				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Collection Point"></Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
-				<Table dataSource={dataSource} columns={columns} scroll={{ y: 100 }} />
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
+				{/* // TODO: test conditional rendering */}
 				{status === "PENDING_COLLECTION" ? (
 					<>
 						<Form.Item
@@ -196,10 +202,16 @@ const AcknowledgementModal = ({ text }) => {
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Delivered by"></Descriptions.Item>
+							<Descriptions.Item label="Delivered by">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Delivered date"></Descriptions.Item>
+							<Descriptions.Item label="Delivered date">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}

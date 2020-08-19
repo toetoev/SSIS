@@ -34,7 +34,7 @@ export const Completed = () => {
 			render: () => <CompletedModal />,
 		},
 	];
-
+	// TODO: call get requisition by status
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 
