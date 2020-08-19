@@ -5,8 +5,7 @@ import axios from "axios";
 
 export const Disbursement = () => {
 	const [form] = Form.useForm();
-
-	const dataSource = [];
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
@@ -19,29 +18,63 @@ export const Disbursement = () => {
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
-			render: () => <DisburseModal />,
+			render: (text) => <DisburseModal text={text} />,
 		},
 	];
 	// TODO: call RequisitionController Get Requisition By Status, then set to table
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item")
+			.get("https://localhost:5001/api/requisition/PROCESSING_RETRIEVAL", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);	
 				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									//retrievedItem: requisitionItem.item.actual,
+									//amountRetrieved:requisitionItem.actual,
+									action: requisition,
+								},
+							];
+						}, [])
+					);
 				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	}, []);
+
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const DisburseModal = () => {
-	const itemData = [];
+const DisburseModal = ({text}) => {
+	const requisition = text.action;
+	console.log(requisition);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					//department: requisitionItem.name,
+					//requestedBy: requisitionItem.requestedBy.name,
+					//requestedDate: requisitionItem.requestedOn,
+					neededAmount:requisitionItem.need,
+					actualAmount: requisitionItem.actual,
+				},
+			];
+		}, [])
+	);
 
 	const reqColumns = [
 		{
@@ -84,7 +117,7 @@ const DisburseModal = () => {
 			</Button>
 			<Modal title="" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
-					dataSource={itemData}
+					dataSource ={dataSource}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}

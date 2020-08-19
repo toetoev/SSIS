@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function StockAdjustment() {
+	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
@@ -35,10 +36,26 @@ export default function StockAdjustment() {
 		},
 	];
 
-	const { Search } = Input;
-
 	// TODO: call get all adjustment
-	useEffect(() => {}, []);
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/adjustment", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					console.log(result);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Stock Adjustment</h3>

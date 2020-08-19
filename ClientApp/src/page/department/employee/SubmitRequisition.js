@@ -73,7 +73,11 @@ const Add = ({ dataSource, handleDataChange }) => {
 
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item")
+			.get("https://localhost:5001/api/item", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {

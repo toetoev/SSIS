@@ -1,8 +1,6 @@
 import { Button, Checkbox, Descriptions, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
-import axios from "axios";
-
 import Success from "../../../../component/Success";
 import axios from "axios";
 
@@ -13,16 +11,19 @@ export const Todo = () => {
 	const columns = [
 		{
 			title: "Department Name",
+			dataIndex: "departmentName",
 			key: "departmentName",
 			sorter: true,
 		},
 		{
 			title: "Requested By",
+			dataIndex: "requestedBy",
 			key: "requestedBy",
 			sorter: true,
 		},
 		{
 			title: "Requested Date",
+			dataIndex: "requestedDate",
 			key: "requestedDate",
 			sorter: true,
 		},
@@ -46,7 +47,7 @@ export const Todo = () => {
 
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/requisition/APPLIED", {
+			.get("https://localhost:5001/api/requisition/APPROVED", {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 				},
@@ -106,7 +107,7 @@ export const Todo = () => {
 
 const CreateRetrieval = ({ selectedRowKeys }) => {
 	const handleCreateRetrieval = () => {
-		axios
+		/*axios
 			.post("https://localhost:5001/api/retrieval", selectedRowKeys, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
@@ -120,7 +121,7 @@ const CreateRetrieval = ({ selectedRowKeys }) => {
 				} else {
 					Error(result.message);
 				}
-			});
+			});*/
 	};
 	return (
 		<Button type="primary" onClick={handleCreateRetrieval}>
@@ -130,7 +131,7 @@ const CreateRetrieval = ({ selectedRowKeys }) => {
 };
 
 const TodoModal = ({ text }) => {
-	const requisition = text;
+	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [

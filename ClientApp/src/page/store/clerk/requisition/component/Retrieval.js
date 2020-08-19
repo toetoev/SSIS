@@ -19,10 +19,10 @@ export const Retrieval = () => {
 		{
 			title: "Action",
 			key: "action",
-			render: () => <RetrievalModal />,
+			render: (text) => <RetrievalModal text={text}/>,
 		},
 	];
-	// TODO: call RequisitionController Get Requisition By Status, then set to table
+
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/requisition/PROCESSING_RETRIEVAL", {
@@ -33,7 +33,20 @@ export const Retrieval = () => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result);
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									//not sure what to put in this
+									processedBy: requisition.requestedBy.name,
+									createdOn: requisition.requestedOn,
+									action: requisition,
+								},
+							];
+						}, [])
+					);
 				}
 			})
 			.catch(function (error) {
@@ -45,8 +58,24 @@ export const Retrieval = () => {
 };
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const RetrievalModal = () => {
-	const itemData = [];
+const RetrievalModal = ({text}) => {
+	const requisition = text.action;
+	console.log(requisition);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					bin: requisitionItem.item.bin,
+					itemDescription: requisitionItem.item.description,
+					needed: requisitionItem.need,
+					//this one should be update
+					retrieved : requisitionItem.actual,
+				},
+			];
+		}, [])
+	);
 
 	const reqColumns = [
 		{
@@ -95,7 +124,7 @@ const RetrievalModal = () => {
 
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
-					dataSource={itemData}
+					dataSource={dataSource}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}

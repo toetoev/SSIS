@@ -1,10 +1,11 @@
 import { Button, Form, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
 
 export const ReadyForDelivery = () => {
+	const [dataSource, setDataSource] = useState([]);
 	const [form] = Form.useForm();
-
-	const dataSource = [];
 
 	const columns = [
 		{
@@ -29,28 +30,77 @@ export const ReadyForDelivery = () => {
 		},
 		{
 			title: "Disbursement List",
-			dataIndex: "action",
 			key: "action",
-			render: () => <ReadyForDeliveryModal />,
+			render:  (text) => <ReadyForDeliveryModal text={text} />,
 		},
 	];
 	// TODO: call RequisitionController Get Requisition By Status, then set to table
-	useEffect(() => {}, []);
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition/PENDING_COLLECTION", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									departmentName: requisition.department.name,
+									requestedBy:
+										requisition.requestedBy === null
+											? ""
+											: requisition.requestedBy.name,
+									requestedDate: requisition.requestedOn,
+									collectionPoint: requisition.department.collectionPointId,
+									//what field is it?
+									//collectionDate: requisition.department.collectionDate,
+									action: requisition,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ReadyForDeliveryModal = () => {
-	const itemData = [];
+const ReadyForDeliveryModal = ({text}) => {
+	const requisition = text.action;
+	console.log(requisition);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					uom: requisitionItem.item.uoM,
+					needed:requisitionItem.need , 
+					actual:requisitionItem.actual,
+				},
+			];
+		}, [])
+	);
 	const reqColumns = [
 		{
 			title: "Stationary Description",
-			dataIndex: "bin",
+			dataIndex: "itemDescription",
 		},
 		{
 			title: "UoM",
-			dataIndex: "itemDescription",
+			dataIndex: "uom",
 		},
 		{
 			title: "Amount Needed",
@@ -81,7 +131,7 @@ const ReadyForDeliveryModal = () => {
 			<Button type="danger">Delete</Button>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
-					dataSource={itemData}
+					dataSource={dataSource}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}
