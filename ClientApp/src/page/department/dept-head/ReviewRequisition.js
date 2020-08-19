@@ -118,7 +118,6 @@ const ReviewRequisitionModal = ({ text }) => {
 		setVisible(false);
 	};
 	useEffect(() => {
-		console.log(requisition);
 		setDataSource(
 			requisition.requisitionItems.reduce((rows, requisitionItem) => {
 				return [
