@@ -1,8 +1,7 @@
-import { Modal } from "antd";
-const Success = (msg, onOk) => {
-	Modal.success({
+import { message } from "antd";
+const Success = (msg) => {
+	message.success({
 		content: msg,
-		onOk: onOk,
 	});
 };
 export default Success;

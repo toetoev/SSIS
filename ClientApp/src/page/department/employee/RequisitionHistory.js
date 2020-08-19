@@ -4,6 +4,7 @@ import { default as React, useEffect, useState } from "react";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -11,26 +12,32 @@ export default function RequisitionHistory() {
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: true,
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
+			sorter: true,
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
+			sorter: true,
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: true,
 		},
 		{
 			title: "Action",
@@ -89,7 +96,7 @@ export default function RequisitionHistory() {
 			<Table
 				dataSource={dataSource}
 				columns={columns}
-				pagination={{ pageSize: 50 }}
+				pagination={false}
 				scroll={{ y: 500 }}
 				loading={loading}
 			/>

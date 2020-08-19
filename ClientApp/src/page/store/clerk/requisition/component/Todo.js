@@ -1,7 +1,6 @@
 import { Button, Checkbox, Descriptions, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
-import Success from "../../../../component/Success";
 import axios from "axios";
 
 export const Todo = () => {
@@ -13,7 +12,7 @@ export const Todo = () => {
 			title: "Department Name",
 			dataIndex: "departmentName",
 			key: "departmentName",
-			sorter: true,
+			sorter: (a, b) => a - b,
 		},
 		{
 			title: "Requested By",
