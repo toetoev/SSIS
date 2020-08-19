@@ -1,5 +1,5 @@
-import { Button, Checkbox, Descriptions, Modal, Table } from "antd";
-import React, { useState } from "react";
+import { Button, Checkbox, Descriptions, Modal, Row, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
 
 export const Todo = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -37,10 +37,25 @@ export const Todo = () => {
 			render: () => <Checkbox />,
 		},
 	];
-
-	return <Table columns={columns} dataSource={dataSource} />;
+	// TODO: call RequisitionController Get Requisition By Status, then set to table
+	useEffect(() => {}, []);
+	return (
+		<Row>
+			<Space direction="vertical" style={{ width: "100%" }}>
+				<Table columns={columns} dataSource={dataSource} />
+				<Row justify="end">
+					<CreateRetrieval></CreateRetrieval>
+				</Row>
+			</Space>
+		</Row>
+	);
 };
 
+const CreateRetrieval = () => {
+	return <Button type="primary">Create Retrieval</Button>;
+};
+
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
 const TodoModal = () => {
 	const itemData = [];
 
@@ -60,10 +75,7 @@ const TodoModal = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
-		setVisible(false);
-	};
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 	return (
@@ -71,12 +83,7 @@ const TodoModal = () => {
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Modal
-				title="Requisition Details"
-				visible={visible}
-				onCancel={handleCancel}
-				footer={null}
-			>
+			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
 					<Descriptions.Item label="Collection Point">Collection Point</Descriptions.Item>
 				</Descriptions>

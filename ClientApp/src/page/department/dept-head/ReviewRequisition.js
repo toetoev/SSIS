@@ -23,7 +23,7 @@ export default function ReviewRequisition() {
 			title: "Action",
 			key: "action",
 			render: (text, record) => (
-				<ViewRequisition text={text} record={record}></ViewRequisition>
+				<ReviewRequisitionModal text={text} record={record}></ReviewRequisitionModal>
 			),
 		},
 	];
@@ -78,7 +78,7 @@ export default function ReviewRequisition() {
 }
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ViewRequisition = () => {
+const ReviewRequisitionModal = () => {
 	const itemData = [];
 
 	const reqColumns = [

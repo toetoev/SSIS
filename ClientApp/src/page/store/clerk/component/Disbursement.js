@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Space, Table } from "antd";
+import { Button, Form, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -21,14 +21,10 @@ export const Disbursement = () => {
 			title: "Action",
 			dataIndex: "action",
 			key: "action",
-			render: () => (
-				<Space>
-					<DisburseModal />
-				</Space>
-			),
+			render: () => <DisburseModal />,
 		},
 	];
-
+	// TODO: call RequisitionController Get Requisition By Status, then set to table
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -41,9 +37,9 @@ export const Disbursement = () => {
 				console.log(error);
 			});
 	}, []);
-
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
 const DisburseModal = () => {
 	const itemData = [];
 
@@ -71,14 +67,14 @@ const DisburseModal = () => {
 	];
 
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	// TODO: call DisburseRequisition
+	const handleConfirm = (e) => {
 		setVisible(false);
 	};
 	return (
@@ -86,16 +82,21 @@ const DisburseModal = () => {
 			<Button type="primary" onClick={showModal}>
 				Disburse
 			</Button>
-			<Modal title="" visible={visible} onCancel={handleCancel} footer={null}>
+			<Modal title="" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
 					dataSource={itemData}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>
-				<Button type="secondary">Print</Button>
-				<Button type="secondary">Save</Button>
-				<Button type="primary">Confirm</Button>
+				<Row justify="end">
+					<Space>
+						<Button type="secondary">Print</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
+					</Space>
+				</Row>
 			</Modal>
 		</div>
 	);

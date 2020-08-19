@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Space, Table } from "antd";
+import { Button, Form, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -29,14 +29,10 @@ export const Retrieval = () => {
 			title: "Action",
 			dataIndex: "action",
 			key: "action",
-			render: () => (
-				<Space>
-					<MaintainRetrieval />
-				</Space>
-			),
+			render: () => <RetrievalModal />,
 		},
 	];
-
+	// TODO: call RequisitionController Get Requisition By Status, then set to table
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -53,7 +49,8 @@ export const Retrieval = () => {
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 
-const MaintainRetrieval = () => {
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
+const RetrievalModal = () => {
 	const itemData = [];
 
 	const reqColumns = [
@@ -80,33 +77,42 @@ const MaintainRetrieval = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	// TODO: call deleteRetrieval
+	const handleDelete = (e) => {};
+
+	// TODO: call UpdateRetrievalActualQuantity
+	const handleConfirm = (e) => {
 		setVisible(false);
 	};
 	return (
 		<div>
-			<Button type="primary" onClick={showModal}>
-				View
-			</Button>
-			<Button type="danger">Delete</Button>
-			<Modal
-				title="Requisition Details"
-				visible={visible}
-				onCancel={handleCancel}
-				footer={null}
-			>
+			<Space>
+				<Button type="primary" onClick={showModal}>
+					View
+				</Button>
+				<Button type="danger" onClick={handleDelete}>
+					Delete
+				</Button>
+			</Space>
+
+			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
 					dataSource={itemData}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>
-				<Button type="secondary">Print</Button>
-				<Button type="secondary">Save</Button>
-				<Button type="primary">Confirm</Button>
+				<Row justify="end">
+					<Space>
+						<Button type="secondary">Print</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
+					</Space>
+				</Row>
 			</Modal>
 		</div>
 	);

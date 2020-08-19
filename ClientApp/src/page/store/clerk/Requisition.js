@@ -1,4 +1,4 @@
-import { Button, Input, Space, Tabs } from "antd";
+import { Input, Space, Tabs } from "antd";
 
 import { Completed } from "./component/Completed";
 import { Disbursement } from "./component/Disbursement";
@@ -12,7 +12,7 @@ export default function Requisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Requisitions</h3>
-			<Tabs defaultActiveKey="To-Do" type="card" tabBarExtraContent={<Operations />}>
+			<Tabs defaultActiveKey="To-Do" type="card" tabBarExtraContent={<SearchBar />}>
 				<TabPane tab="To-Do" key="To-Do">
 					<Todo />
 				</TabPane>
@@ -33,7 +33,7 @@ export default function Requisition() {
 	);
 }
 
-const Operations = () => {
+const SearchBar = () => {
 	const { Search } = Input;
 	return (
 		<Space>
@@ -42,7 +42,6 @@ const Operations = () => {
 				onSearch={(value) => console.log(value)}
 				style={{ width: 200 }}
 			/>
-			<Button type="primary">Create Retrieval</Button>
 		</Space>
 	);
 };
