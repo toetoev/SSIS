@@ -4,7 +4,6 @@ import Dashboard from "../Dashboard";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import React from "react";
-import Sidebar from "../../component/Sidebar";
 import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
@@ -22,7 +21,14 @@ export default function Supervisor() {
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Dashboard></Dashboard>
+						</Route>
+						<Route exact path={`${path}/stock-adjustment`}>
+							<StockAdjustment></StockAdjustment>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"
