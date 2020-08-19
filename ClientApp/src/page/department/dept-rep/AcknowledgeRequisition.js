@@ -49,7 +49,7 @@ export default function AcknowledgeRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
+					console.log(result);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -174,7 +174,7 @@ const AcknowledgementModal = ({ text }) => {
 			>
 				<Descriptions>
 					<Descriptions.Item label="Collection Point">
-						{requisition.department.collectionPointId}
+						
 					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>

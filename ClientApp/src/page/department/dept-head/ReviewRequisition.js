@@ -102,6 +102,7 @@ const ReviewRequisitionModal = ({ text }) => {
 		setVisible(false);
 	};
 
+	console.log(requisition);
 	const handleReview = (reviewResult) => {
 		axios
 			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
