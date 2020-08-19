@@ -1,7 +1,7 @@
 import { Button, Checkbox, Descriptions, Modal, Table } from "antd";
 import React, { useState } from "react";
 
-export const Todo = (dataSource) => {
+export const Todo = () => {
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{

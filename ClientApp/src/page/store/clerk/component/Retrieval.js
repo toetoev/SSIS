@@ -1,7 +1,7 @@
-import { Form, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table, Form } from "antd";
 import axios from "axios";
-import React, { useEffect } from "react";
-import { MaintainRetrieval } from "../Requisition";
+import React, { useEffect, useState } from "react";
+
 
 export const Retrieval = () => {
 	const [form] = Form.useForm();

@@ -156,13 +156,7 @@ export default function StockList() {
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Purchase Orders</h3>
 
-			<Search
-				placeholder="input search text"
-				onSearch={(value) => console.log(value)}
-				style={{ width: 200, float: "right" }}
-			/>
-
-			<Tabs defaultActiveKey="Low-Stock" type="card">
+			<Tabs defaultActiveKey="Low-Stock" type="card" tabBarExtraContent={<Operations />}>
 				<TabPane tab="Low-Stock" key="Low-Stock">
 					<Table columns={columns} dataSource={dataSource} />
 				</TabPane>
@@ -176,6 +170,19 @@ export default function StockList() {
 		</Space>
 	);
 }
+
+const Operations = () => {
+	const { Search } = Input;
+	return (
+		<Space>
+			<Search
+				placeholder="input search text"
+				onSearch={(value) => console.log(value)}
+				style={{ width: 200 }}
+			/>
+		</Space>
+	);
+};
 
 const Delete = ({ dataSource, handleDataChange, text }) => {
 	const handleDelete = () => {
