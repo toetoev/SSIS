@@ -3,9 +3,12 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
+import { getInputClassName } from "antd/lib/input/Input";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
+	const [status, setStatus] = useState("");
+
 	const columns = [
 		{
 			title: "Requested By",
@@ -29,7 +32,6 @@ export default function ReviewRequisition() {
 	];
 
 	useEffect(() => {
-		console.log('hello');
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -39,8 +41,6 @@ export default function ReviewRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
-					console.log('hi');
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -82,6 +82,9 @@ export default function ReviewRequisition() {
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
 const ViewRequisition = () => {
 	const itemData = [];
+	const [descriptions, setDescriptions] = useState([]);
+	const [visible, setVisible] = useState(false);
+	const [status, setStatus] = useState("");
 
 	const reqColumns = [
 		{
@@ -93,8 +96,7 @@ const ViewRequisition = () => {
 			dataIndex: "qty",
 		},
 	];
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
+
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -104,6 +106,26 @@ const ViewRequisition = () => {
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDescriptions(result.data);
+					
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -117,18 +139,18 @@ const ViewRequisition = () => {
 				footer={
 					status === "APPLIED"
 						? [
-								<Button key="reject" type="danger" onClick={handleCancel}>
-									Reject
+							<Button key="reject" type="danger" onClick={handleCancel}>
+								Reject
 								</Button>,
-								<Button key="approve" type="primary" onClick={handleOk}>
-									Approve
+							<Button key="approve" type="primary" onClick={handleOk}>
+								Approve
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Requested By"></Descriptions.Item>
+					<Descriptions.Item label="RequestedBy" name={descriptions.requestedBy} value={descriptions.requestedBy}>{descriptions.requestedBy}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Date"></Descriptions.Item>

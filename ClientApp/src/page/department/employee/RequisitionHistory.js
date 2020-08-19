@@ -141,7 +141,7 @@ const ViewAcknowledgement = ({ text, record }) => {
 				footer={null}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Collection Point">Collection Point</Descriptions.Item>
+					<Descriptions.Item label="Collection Point"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
