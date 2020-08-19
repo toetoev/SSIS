@@ -31,11 +31,14 @@ export default function StockAdjustment() {
 			title: "Action",
 			dataIndex: "action",
 			key: "action",
-			render: AdjustmentVoucher,
+			render: StockAdjustmentModal,
 		},
 	];
 
 	const { Search } = Input;
+
+	// TODO: call get all adjustment
+	useEffect(() => {}, []);
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Stock Adjustment</h3>
@@ -47,7 +50,7 @@ export default function StockAdjustment() {
 							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
-						<Add dataSource={dataSource} />
+						<CreateAdjustmentVoucher dataSource={dataSource} />
 					</Space>
 				</Col>
 			</Row>
@@ -56,7 +59,8 @@ export default function StockAdjustment() {
 	);
 }
 
-const AdjustmentVoucher = () => {
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
+const StockAdjustmentModal = () => {
 	const dataSource = [
 		{
 			key: "1",
@@ -93,7 +97,7 @@ const AdjustmentVoucher = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
@@ -110,23 +114,18 @@ const AdjustmentVoucher = () => {
 					<a>Delete</a>
 				</Button>
 			</Space>
-			<Modal
-				title="Adjustment Voucher"
-				visible={visible}
-				onCancel={handleCancel}
-				footer={null}
-			>
+			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
+				{/* // TODO: use description component */}
 				<p>Submitted By : </p>
 				<p>Date Submitted : </p>
 				<p>Issued On : </p>
-
 				<Table columns={columns} dataSource={dataSource} pagination={false} />
 			</Modal>
 		</div>
 	);
 };
 
-const Add = ({ dataSource, handleDataChange }) => {
+const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
 
@@ -140,6 +139,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(false);
 	};
 
+	// TODO: get all item set to select
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -158,9 +158,8 @@ const Add = ({ dataSource, handleDataChange }) => {
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Add
+				Create Adjustment Voucher
 			</Button>
-
 			<Modal
 				title="Create Supplier"
 				visible={visible}
@@ -190,7 +189,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Form.Item label="Reason : ">
 						<TextArea rows={4} placeholder="Reason..." />
 					</Form.Item>
@@ -199,3 +197,4 @@ const Add = ({ dataSource, handleDataChange }) => {
 		</>
 	);
 };
+// TODO: add Add Item modal

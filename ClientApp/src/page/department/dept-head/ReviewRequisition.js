@@ -38,7 +38,6 @@ export default function ReviewRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -77,11 +76,9 @@ export default function ReviewRequisition() {
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ReviewRequisitionModal = () => {
-	const itemData = [];
-
-	const reqColumns = [
+const ReviewRequisitionModal = ({ text, record }) => {
+	const [dataSource, setDataSource] = useState([]);
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -103,6 +100,22 @@ const ReviewRequisitionModal = () => {
 		// TODO: call review requisition get status from button key (ToUppercase)
 		setVisible(false);
 	};
+	useEffect(() => {
+		console.log(text);
+		setDataSource(
+			text.action.reduce((rows, requisitionItem) => {
+				return [
+					...rows,
+					{
+						key: requisitionItem.itemId,
+						itemDescription: requisitionItem.item.description,
+						qty: requisitionItem.need,
+					},
+				];
+			}, [])
+		);
+		setStatus(text.status[0]);
+	}, []);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -113,7 +126,7 @@ const ReviewRequisitionModal = () => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={
-					status === "APPLIED"
+					status === "Applied"
 						? [
 								<Button key="reject" type="danger" onClick={handleReview}>
 									Reject
@@ -131,8 +144,7 @@ const ReviewRequisitionModal = () => {
 				<Descriptions>
 					<Descriptions.Item label="Requested Date"></Descriptions.Item>
 				</Descriptions>
-				<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
-				{status === "APPROVED" ? (
+				{status === "Approved" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Approved By"></Descriptions.Item>
@@ -142,7 +154,7 @@ const ReviewRequisitionModal = () => {
 						</Descriptions>
 					</>
 				) : null}
-				{status === "REJECTED" ? (
+				{status === "Rejected" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Rejected By"></Descriptions.Item>
@@ -155,6 +167,12 @@ const ReviewRequisitionModal = () => {
 						</Descriptions>
 					</>
 				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);
