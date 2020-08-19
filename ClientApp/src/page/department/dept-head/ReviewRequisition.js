@@ -6,7 +6,6 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
 			title: "Requested By",
@@ -24,7 +23,7 @@ export default function ReviewRequisition() {
 			title: "Action",
 			key: "action",
 			render: (text, record) => (
-				<ViewRequisition text={text} record={record}></ViewRequisition>
+				<ReviewRequisitionModal text={text} record={record}></ReviewRequisitionModal>
 			),
 		},
 	];
@@ -77,7 +76,9 @@ export default function ReviewRequisition() {
 		</Space>
 	);
 }
-const ViewRequisition = () => {
+
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
+const ReviewRequisitionModal = () => {
 	const itemData = [];
 
 	const reqColumns = [
@@ -95,10 +96,11 @@ const ViewRequisition = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = () => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	const handleReview = (e) => {
+		// TODO: call review requisition get status from button key (ToUppercase)
 		setVisible(false);
 	};
 	return (
@@ -109,15 +111,14 @@ const ViewRequisition = () => {
 			<Modal
 				title="View Requisition"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={
 					status === "APPLIED"
 						? [
-								<Button key="reject" type="danger" onClick={handleCancel}>
+								<Button key="reject" type="danger" onClick={handleReview}>
 									Reject
 								</Button>,
-								<Button key="approve" type="primary" onClick={handleOk}>
+								<Button key="approve" type="primary" onClick={handleReview}>
 									Approve
 								</Button>,
 						  ]
