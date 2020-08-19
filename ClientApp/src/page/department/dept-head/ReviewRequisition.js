@@ -1,6 +1,7 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Error from "../../component/Error";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
@@ -22,7 +23,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <ReviewRequisitionModal text={text}></ReviewRequisitionModal>,
+			render: (text) => <ReviewRequisitionModal text={text} />,
 		},
 	];
 
@@ -48,14 +49,13 @@ export default function ReviewRequisition() {
 											: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
 					);
 				}
 			})
-
 			.catch(function (error) {
 				console.log(error);
 			});
@@ -75,7 +75,10 @@ export default function ReviewRequisition() {
 }
 
 const ReviewRequisitionModal = ({ text }) => {
+	const requisition = text.action;
 	const [dataSource, setDataSource] = useState([]);
+	const [visible, setVisible] = useState(false);
+	const [status, setStatus] = useState("");
 	const columns = [
 		{
 			title: "Item Description",
@@ -86,22 +89,31 @@ const ReviewRequisitionModal = ({ text }) => {
 			dataIndex: "qty",
 		},
 	];
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
+
 	const showModal = () => {
 		setVisible(true);
 	};
 	const hideModal = () => {
 		setVisible(false);
 	};
-	const handleReview = (e) => {
-		// TODO: call review requisition get status from button key (ToUppercase)
+	const handleReview = (reviewResult) => {
+		axios
+			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (!result.success) Error(result.message);
+			});
 		setVisible(false);
 	};
 	useEffect(() => {
-		console.log(text);
+		console.log(requisition);
 		setDataSource(
-			text.action.reduce((rows, requisitionItem) => {
+			requisition.requisitionItems.reduce((rows, requisitionItem) => {
 				return [
 					...rows,
 					{
@@ -126,10 +138,18 @@ const ReviewRequisitionModal = ({ text }) => {
 				footer={
 					status === "Applied"
 						? [
-								<Button key="reject" type="danger" onClick={handleReview}>
+								<Button
+									key="reject"
+									type="danger"
+									onClick={() => handleReview("REJECTED")}
+								>
 									Reject
 								</Button>,
-								<Button key="approve" type="primary" onClick={handleReview}>
+								<Button
+									key="approve"
+									type="primary"
+									onClick={() => handleReview("APPROVED")}
+								>
 									Approve
 								</Button>,
 						  ]
@@ -137,31 +157,45 @@ const ReviewRequisitionModal = ({ text }) => {
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Requested By"></Descriptions.Item>
+					<Descriptions.Item label="Requested By">
+						{requisition.requestedBy === null ? "" : requisition.requestedBy.name}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Requested Date"></Descriptions.Item>
+					<Descriptions.Item label="Requested Date">
+						{requisition.requestedOn}
+					</Descriptions.Item>
 				</Descriptions>
 				{status === "Approved" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Approved By"></Descriptions.Item>
+							<Descriptions.Item label="Approved By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Approved Date"></Descriptions.Item>
+							<Descriptions.Item label="Approved Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
 				{status === "Rejected" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Rejected By"></Descriptions.Item>
+							<Descriptions.Item label="Rejected By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Rejected Date"></Descriptions.Item>
+							<Descriptions.Item label="Rejected Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Rejected Reason"></Descriptions.Item>
+							<Descriptions.Item label="Rejected Reason">
+								{requisition.comment}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
