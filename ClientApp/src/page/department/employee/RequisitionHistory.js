@@ -6,6 +6,7 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Requested Date",
@@ -39,6 +40,7 @@ export default function RequisitionHistory() {
 	];
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -66,15 +68,17 @@ export default function RequisitionHistory() {
 											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -87,28 +91,30 @@ export default function RequisitionHistory() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				loading={loading}
 			/>
 		</Space>
 	);
 }
 
 const RequisitionModal = ({ text }) => {
-	console.log(text);
+	const requisition = text.action;
+	console.log("RequisitionModal -> requisition", requisition);
 	const [dataSource] = useState(
-		text.action.reduce((rows, requisition) => {
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [
 				...rows,
 				{
-					key: requisition.itemId,
-					itemDescription: requisition.item.description,
-					requestedQty: requisition.need,
-					receivedQty: requisition.actual,
-					unfulfilledQty: requisition.need - requisition.actual,
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					requestedQty: requisitionItem.need,
+					receivedQty: requisitionItem.actual,
+					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
 				},
 			];
 		}, [])
 	);
-	const [status] = useState(text.status[0]);
+	const [status] = useState(requisition.status[0]);
 	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
@@ -143,7 +149,9 @@ const RequisitionModal = ({ text }) => {
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Collection Point"></Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
@@ -156,8 +164,14 @@ const RequisitionModal = ({ text }) => {
 				/>
 				{status === "Delivered" ? (
 					<Descriptions>
-						<Descriptions.Item label="Delivered by:"></Descriptions.Item>
-						<Descriptions.Item label="Delivered date:"></Descriptions.Item>
+						<Descriptions.Item label="Delivered by:">
+							{requisition.acknowledgedBy === null
+								? ""
+								: requisition.acknowledgedBy.name}
+						</Descriptions.Item>
+						<Descriptions.Item label="Delivered date:">
+							{requisition.acknowledgedOn}
+						</Descriptions.Item>
 					</Descriptions>
 				) : null}
 			</Modal>
