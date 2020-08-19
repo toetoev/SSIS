@@ -201,6 +201,18 @@ const ReviewRequisitionModal = ({ text }) => {
 						</Descriptions>
 					</>
 				) : null}
+				{status === "DELIVERED" ? (
+					<Descriptions>
+						<Descriptions.Item label="Delivered by:">
+							{requisition.acknowledgedBy === null
+								? ""
+								: requisition.acknowledgedBy.name}
+						</Descriptions.Item>
+						<Descriptions.Item label="Delivered date:">
+							{requisition.acknowledgedOn}
+						</Descriptions.Item>
+					</Descriptions>
+				) : null}
 				<Table
 					dataSource={dataSource}
 					columns={columns}

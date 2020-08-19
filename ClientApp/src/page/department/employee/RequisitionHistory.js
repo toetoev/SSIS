@@ -99,7 +99,6 @@ export default function RequisitionHistory() {
 
 const RequisitionModal = ({ text }) => {
 	const requisition = text.action;
-	console.log("RequisitionModal -> requisition", requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [
