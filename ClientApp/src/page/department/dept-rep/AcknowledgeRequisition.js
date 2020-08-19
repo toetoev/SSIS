@@ -99,7 +99,6 @@ export default function AcknowledgeRequisition() {
 
 const AcknowledgementModal = ({ text }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, acknowledge) => {
 			return [
