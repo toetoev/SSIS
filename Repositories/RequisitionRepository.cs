@@ -23,7 +23,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status)
         {
-            return await _dbContext.Requisitions.Where(r => r.Status == status).ToListAsync();
+            return await _dbContext.Requisitions.Where(r => r.Status == status).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
         }
 
         public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses)
