@@ -66,7 +66,7 @@ export default function RequisitionHistory() {
 											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
@@ -93,9 +93,10 @@ export default function RequisitionHistory() {
 }
 
 const RequisitionModal = ({ text }) => {
-	console.log(text);
+	const requisition = text.action;
+	console.log(requisition);
 	const [dataSource] = useState(
-		text.action.reduce((rows, requisition) => {
+		requisition.requisitionItems.reduce((rows, requisition) => {
 			return [
 				...rows,
 				{
@@ -108,6 +109,8 @@ const RequisitionModal = ({ text }) => {
 			];
 		}, [])
 	);
+
+	console.log(requisition);
 	const [status] = useState(text.status[0]);
 	const [visible, setVisible] = useState(false);
 	const columns = [
@@ -143,7 +146,7 @@ const RequisitionModal = ({ text }) => {
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Collection Point"></Descriptions.Item>
+					<Descriptions.Item label="Collection Point">{requisition.department.collectionPointId}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>

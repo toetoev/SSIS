@@ -1,5 +1,7 @@
 import { Button, Checkbox, Descriptions, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
 
 export const Todo = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -7,38 +9,66 @@ export const Todo = () => {
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
-			key: "departmentName",
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			key: "requestedBy",
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			key: "requestedDate",
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
-			key: "collectionPoint",
 		},
 		{
-			title: "Details",
-			dataIndex: "action",
+			title: "Action",
 			key: "action",
-			render: () => <TodoModal />,
+			render: (text) => <TodoModal text={text} />,
 		},
 		{
 			title: "Select",
 			dataIndex: "select",
 			key: "select",
-			render: () => <Checkbox />,
+			render: (text) => <Checkbox text={text} />,
 		},
 	];
-	// TODO: call RequisitionController Get Requisition By Status, then set to table
-	useEffect(() => {}, []);
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition/APPLIED", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									departmentName: requisition.departmentName,
+									requestedBy: requisition.requestedBy.name,
+									requestedDate: requisition.requestedOn,
+									collectionPoint: requisition.department.collectionPointId,
+									action: requisition,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<Row>
 			<Space direction="vertical" style={{ width: "100%" }}>
@@ -55,9 +85,20 @@ const CreateRetrieval = () => {
 	return <Button type="primary">Create Retrieval</Button>;
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const TodoModal = () => {
-	const itemData = [];
+const TodoModal = ({ text }) => {
+	const requisition = text.action;
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, todos) => {
+			return [
+				...rows,
+				{
+					key: todos.itemId,
+					itemDescription: todos.item.description,
+					qty: todos.need,
+				},
+			];
+		}, [])
+	);
 
 	const columns = [
 		{
@@ -78,6 +119,7 @@ const TodoModal = () => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -85,13 +127,15 @@ const TodoModal = () => {
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Collection Point">Collection Point</Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
 				<Table
-					dataSource={itemData}
+					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}

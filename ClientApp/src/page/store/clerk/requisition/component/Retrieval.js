@@ -1,33 +1,23 @@
 import { Button, Form, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
 export const Retrieval = () => {
 	const [form] = Form.useForm();
-
-	const dataSource = [
-		{
-			key: "1",
-			processedBy: "Meka",
-			createdOn: "18-8-2020",
-		},
-	];
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
 			title: "Processed By",
 			dataIndex: "processedBy",
-			key: "processedBy",
 		},
 		{
 			title: "Created On",
 			dataIndex: "createdOn",
-			key: "createdOn",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
 			render: () => <RetrievalModal />,
 		},
@@ -35,10 +25,15 @@ export const Retrieval = () => {
 	// TODO: call RequisitionController Get Requisition By Status, then set to table
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item")
+			.get("https://localhost:5001/api/requisition/PROCESSING_RETRIEVAL", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
+					console.log(result);
 				}
 			})
 			.catch(function (error) {

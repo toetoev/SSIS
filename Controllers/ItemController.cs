@@ -19,6 +19,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult GetAllItems()
         {
             return Ok(_itemService.GetAllItems().Result);

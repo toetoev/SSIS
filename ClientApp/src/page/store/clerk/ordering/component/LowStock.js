@@ -1,4 +1,4 @@
-import { Button, Form, InputNumber, Modal, Table } from "antd";
+import { Button, Form, InputNumber, Modal, Table, Descriptions } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -56,8 +56,44 @@ export const LowStock = () => {
 			render: () => <LowStockModal />,
 		},
 	];
-	// TODO: ItemController GetLowStockItems
-	useEffect(() => {}, []);
+	// TODO: ItemController GetLowStockItems //no supplier info
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item/low-stock", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					console.log(result);
+					setDataSource(
+						result.data.reduce((rows, items) => {
+							return [
+								...rows,
+								{
+									key : items.id,
+									category : items.categoryName,
+									bin : items.bin,
+									description : items.description,
+									uom : items.uoM,
+									reorderLevel : items.reorderLevel,
+									reorderQuantity : items.reorderQty,
+									stock : items.stock,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return <Table columns={columns} dataSource={dataSource} />;
 };
 
@@ -188,13 +224,36 @@ const Details = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				{/* // TODO: use description */}
-				<p>Supplier Name : ALPHA Office Supplies</p>
-				<p>Contact Name : Ms Irene Tan</p>
-				<p>Phone No : 85303054</p>
-				<p>Fax No : 85303054</p>
-				<p>GST Registration No : MR-8500440-2</p>
-				<p>Address : Blk 1128, #02-1108 Ang Mo Kio Street 62Singapore 622262</p>
+				<Descriptions>
+					<Descriptions.Item label="Supplier Name">
+						
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Contact Name">
+
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Phone No">
+						
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Fax No">
+						
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="GST Registration No">
+						
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Address">
+						
+					</Descriptions.Item>
+				</Descriptions>
 
 				<Table
 					title={() => "Items : "}

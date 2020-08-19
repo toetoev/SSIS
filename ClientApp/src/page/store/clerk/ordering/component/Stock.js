@@ -1,24 +1,10 @@
-import React, { useEffect, useState } from "react";
-
 import { Table } from "antd";
+import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
 
 export const Stock = () => {
-	const [dataSource, setDataSource] = useState([
-		{
-			key: "1",
-			category: "Clip",
-			description: "Clip...",
-			reorderQuantity: "2",
-			reorderLevel: "1",
-			stock: "1",
-			supplier1: "ALPHA",
-			supplier2: "BETA",
-			supplier3: "GAMA",
-			action: "action",
-			bin: "P39",
-			uom: "Box",
-		},
-	]);
+	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{
 			title: "Category",
@@ -59,7 +45,42 @@ export const Stock = () => {
 	const handleDataChange = (data) => {
 		setDataSource(data);
 	};
-	// TODO: call get all items
-	useEffect(() => {}, []);
+	
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, items) => {
+							return [
+								...rows,
+								{
+									key : items.id,
+									category : items.categoryName,
+									bin : items.bin,
+									description : items.description,
+									uom : items.uoM,
+									reorderLevel : items.reorderLevel,
+									reorderQuantity : items.reorderQty,
+									stock : items.stock,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return <Table columns={columns} dataSource={dataSource} />;
 };
