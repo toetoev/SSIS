@@ -96,10 +96,11 @@ const ViewRequisition = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = () => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	const handleReview = (e) => {
+		// TODO: call review requisition get status from button key (ToUppercase)
 		setVisible(false);
 	};
 	return (
@@ -110,15 +111,14 @@ const ViewRequisition = () => {
 			<Modal
 				title="View Requisition"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={
 					status === "APPLIED"
 						? [
-								<Button key="reject" type="danger" onClick={handleCancel}>
+								<Button key="reject" type="danger" onClick={handleReview}>
 									Reject
 								</Button>,
-								<Button key="approve" type="primary" onClick={handleOk}>
+								<Button key="approve" type="primary" onClick={handleReview}>
 									Approve
 								</Button>,
 						  ]
