@@ -1,4 +1,4 @@
-import { Button, Checkbox, Descriptions, Form, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
@@ -196,19 +196,6 @@ const AcknowledgementModal = ({ text }) => {
 					scroll={{ y: 100 }}
 					pagination={false}
 				/>
-				{/* // TODO: test conditional rendering */}
-				{status === "PENDING_COLLECTION" ? (
-					<>
-						<Form.Item
-							label="Do you want to re-order the unfulfilled items?"
-							name="checkbox-group"
-						>
-							<Checkbox value="A" style={{ lineHeight: "32px" }}>
-								Yes
-							</Checkbox>
-						</Form.Item>
-					</>
-				) : null}
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>

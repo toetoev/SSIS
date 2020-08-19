@@ -6,6 +6,7 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Requested Date",
@@ -39,6 +40,7 @@ export default function RequisitionHistory() {
 	];
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -72,9 +74,11 @@ export default function RequisitionHistory() {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -87,6 +91,7 @@ export default function RequisitionHistory() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				loading={loading}
 			/>
 		</Space>
 	);
@@ -94,24 +99,21 @@ export default function RequisitionHistory() {
 
 const RequisitionModal = ({ text }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
-		requisition.requisitionItems.reduce((rows, requisition) => {
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [
 				...rows,
 				{
-					key: requisition.itemId,
-					itemDescription: requisition.item.description,
-					requestedQty: requisition.need,
-					receivedQty: requisition.actual,
-					unfulfilledQty: requisition.need - requisition.actual,
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					requestedQty: requisitionItem.need,
+					receivedQty: requisitionItem.actual,
+					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
 				},
 			];
 		}, [])
 	);
-
-	console.log(requisition);
-	const [status] = useState(text.status[0]);
+	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
@@ -146,8 +148,55 @@ const RequisitionModal = ({ text }) => {
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Collection Point">{requisition.department.collectionPointId}</Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
+				{status === "APPROVED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Approved By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Approved Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				{status === "REJECTED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Rejected By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Rejected Reason">
+								{requisition.comment}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				{status === "DELIVERED" ? (
+					<Descriptions>
+						<Descriptions.Item label="Delivered by:">
+							{requisition.acknowledgedBy === null
+								? ""
+								: requisition.acknowledgedBy.name}
+						</Descriptions.Item>
+						<Descriptions.Item label="Delivered date:">
+							{requisition.acknowledgedOn}
+						</Descriptions.Item>
+					</Descriptions>
+				) : null}
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
@@ -157,12 +206,6 @@ const RequisitionModal = ({ text }) => {
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>
-				{status === "Delivered" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:"></Descriptions.Item>
-						<Descriptions.Item label="Delivered date:"></Descriptions.Item>
-					</Descriptions>
-				) : null}
 			</Modal>
 		</div>
 	);

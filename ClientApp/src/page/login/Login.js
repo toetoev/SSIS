@@ -1,6 +1,7 @@
 import "./Login.css";
 
 import { Button, Form, Input, Radio } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
 import DeptRole from "../../constant/DeptRole";
@@ -9,14 +10,19 @@ import StoreRole from "../../constant/StoreRole";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-// TODO: style the page
 export default function Login() {
 	let history = useHistory();
-
 	const [nameOrEmail, setNameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("");
 
+	const layout = {
+		labelCol: { span: 8 },
+		wrapperCol: { span: 16 },
+	};
+	const tailLayout = {
+		wrapperCol: { span: 24 },
+	};
 	const handleSubmit = () => {
 		axios
 			.post("https://localhost:5001/api/auth", {
@@ -30,6 +36,7 @@ export default function Login() {
 				if (result.success) {
 					localStorage.setItem("ACCESS_TOKEN", result.data.accessToken);
 					localStorage.setItem("ROLE", result.data.role);
+					localStorage.setItem("NAME", result.data.name);
 					directToHomePageBasedOnRole();
 				} else {
 					Error(result.message);
@@ -79,11 +86,9 @@ export default function Login() {
 
 	return (
 		<div className="login-box-body login-box">
-			<p className="login-box-msg">Sign in - Logic University</p>
-			{/* // TODO: change form layout */}
+			<h3 className="login-box-msg">SSIS - Logic University</h3>
 			<Form onFinish={handleSubmit}>
 				<Form.Item
-					label="Name / Email: "
 					name="nameOrEmail"
 					rules={[
 						{
@@ -92,10 +97,14 @@ export default function Login() {
 						},
 					]}
 				>
-					<Input onChange={(e) => setNameOrEmail(e.target.value)} />
+					<Input
+						prefix={<UserOutlined className="site-form-item-icon" />}
+						type="text"
+						placeholder="Name / Email"
+						onChange={(e) => setNameOrEmail(e.target.value)}
+					/>
 				</Form.Item>
 				<Form.Item
-					label="Password: "
 					name="password"
 					rules={[
 						{
@@ -104,10 +113,14 @@ export default function Login() {
 						},
 					]}
 				>
-					<Input.Password onChange={(e) => setPassword(e.target.value)} />
+					<Input
+						prefix={<LockOutlined className="site-form-item-icon" />}
+						type="password"
+						placeholder="Password"
+						onChange={(e) => setPassword(e.target.value)}
+					/>
 				</Form.Item>
 				<Form.Item
-					label="Role: "
 					name="role"
 					rules={[
 						{
@@ -116,13 +129,24 @@ export default function Login() {
 						},
 					]}
 				>
-					<Radio.Group onChange={(e) => setRole(e.target.value)} value={setRole}>
-						<Radio value={"STORE"}>Store</Radio>
-						<Radio value={"DEPARTMENT"}>Department</Radio>
+					<Radio.Group
+						onChange={(e) => setRole(e.target.value)}
+						value={setRole}
+						style={{ width: "100%" }}
+					>
+						<Radio.Button value={"STORE"} style={{ width: "50%", textAlign: "center" }}>
+							Store
+						</Radio.Button>
+						<Radio.Button
+							value={"DEPARTMENT"}
+							style={{ width: "50%", textAlign: "center" }}
+						>
+							Department
+						</Radio.Button>
 					</Radio.Group>
 				</Form.Item>
-				<Form.Item>
-					<Button type="primary" htmlType="submit">
+				<Form.Item {...tailLayout}>
+					<Button type="primary" htmlType="submit" style={{ width: "100%" }}>
 						Sign in
 					</Button>
 				</Form.Item>
