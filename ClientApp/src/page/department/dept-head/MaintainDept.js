@@ -56,6 +56,7 @@ export default function MaintainDept() {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					setDeptRepOptions(
 						result.data.reduce(
