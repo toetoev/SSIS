@@ -1,35 +1,11 @@
-import {
-	Button,
-	Checkbox,
-	Col,
-	Descriptions,
-	Form,
-	Input,
-	Modal,
-	Row,
-	Space,
-	Table,
-	Tabs,
-} from "antd";
+import { Button, Checkbox, Descriptions, Form, Input, Modal, Space, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
 export default function Requisition() {
-	//const [dataSource, setDataSource] = useState([]);
-	const { Search } = Input;
+	const [dataSource, setDataSource] = useState([]);
 	const { TabPane } = Tabs;
-
-	const dataSource = [
-		{
-			key: "1",
-			departmentName: "",
-			requestedBy: "",
-			requestedDate: "",
-			collectionPoint: "",
-			action: "action",
-		},
-	];
 
 	const columns = [
 		{
@@ -69,21 +45,7 @@ export default function Requisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Requisitions</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
-				<Col>
-					<Space>
-						<Search
-							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
-							style={{ width: 200 }}
-						/>
-
-						<Button type="primary">Create Retrieval</Button>
-					</Space>
-				</Col>
-			</Row>
-
-			<Tabs defaultActiveKey="To-Do" type="card">
+			<Tabs defaultActiveKey="To-Do" type="card" tabBarExtraContent={<Operations />}>
 				<TabPane tab="To-Do" key="To-Do">
 					<Table columns={columns} dataSource={dataSource} />
 				</TabPane>
@@ -104,10 +66,23 @@ export default function Requisition() {
 	);
 }
 
+const Operations = () => {
+	const { Search } = Input;
+	return (
+		<Space>
+			<Search
+				placeholder="input search text"
+				onSearch={(value) => console.log(value)}
+				style={{ width: 200 }}
+			/>
+			<Button type="primary">Create Retrieval</Button>
+		</Space>
+	);
+};
 const ViewRequisition = () => {
 	const itemData = [];
 
-	const reqColumns = [
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -148,7 +123,7 @@ const ViewRequisition = () => {
 				</Descriptions>
 				<Table
 					dataSource={itemData}
-					columns={reqColumns}
+					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}
 				/>
