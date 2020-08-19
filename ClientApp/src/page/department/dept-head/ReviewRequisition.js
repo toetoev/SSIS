@@ -22,9 +22,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ReviewRequisitionModal text={text} record={record}></ReviewRequisitionModal>
-			),
+			render: (text) => <ReviewRequisitionModal text={text}></ReviewRequisitionModal>,
 		},
 	];
 
@@ -76,12 +74,9 @@ export default function ReviewRequisition() {
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ReviewRequisitionModal = (text, record) => {
+const ReviewRequisitionModal = ({ text }) => {
 	const [dataSource, setDataSource] = useState([]);
-	const itemData = [];
-	console.log(text);
-	const reqColumns = [
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -91,7 +86,6 @@ const ReviewRequisitionModal = (text, record) => {
 			dataIndex: "qty",
 		},
 	];
-
 	const [visible, setVisible] = useState(false);
 	const [status, setStatus] = useState("");
 	const showModal = () => {
@@ -104,25 +98,22 @@ const ReviewRequisitionModal = (text, record) => {
 		// TODO: call review requisition get status from button key (ToUppercase)
 		setVisible(false);
 	};
-
 	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/requisition", {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setDataSource(result.data);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+		console.log(text);
+		setDataSource(
+			text.action.reduce((rows, requisitionItem) => {
+				return [
+					...rows,
+					{
+						key: requisitionItem.itemId,
+						itemDescription: requisitionItem.item.description,
+						qty: requisitionItem.need,
+					},
+				];
+			}, [])
+		);
+		setStatus(text.status[0]);
 	}, []);
-	console.log(dataSource);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -133,7 +124,7 @@ const ReviewRequisitionModal = (text, record) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={
-					status === "APPLIED"
+					status === "Applied"
 						? [
 								<Button key="reject" type="danger" onClick={handleReview}>
 									Reject
@@ -145,25 +136,23 @@ const ReviewRequisitionModal = (text, record) => {
 						: null
 				}
 			>
-
 				<Descriptions>
-					<Descriptions.Item label="Requested By" name="requestedBy">{status}</Descriptions.Item>
+					<Descriptions.Item label="Requested By"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Date"></Descriptions.Item>
 				</Descriptions>
-				<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
-				{status === "APPROVED" ? (
+				{status === "Approved" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Approved By">{dataSource.requestedOn}</Descriptions.Item>
+							<Descriptions.Item label="Approved By"></Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
 							<Descriptions.Item label="Approved Date"></Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
-				{status === "REJECTED" ? (
+				{status === "Rejected" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Rejected By"></Descriptions.Item>
@@ -176,6 +165,12 @@ const ReviewRequisitionModal = (text, record) => {
 						</Descriptions>
 					</>
 				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);
