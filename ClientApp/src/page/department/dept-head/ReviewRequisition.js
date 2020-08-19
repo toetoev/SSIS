@@ -38,7 +38,6 @@ export default function ReviewRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -78,9 +77,10 @@ export default function ReviewRequisition() {
 }
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ReviewRequisitionModal = () => {
+const ReviewRequisitionModal = (text, record) => {
+	const [dataSource, setDataSource] = useState([]);
 	const itemData = [];
-
+	console.log(text);
 	const reqColumns = [
 		{
 			title: "Item Description",
@@ -91,6 +91,7 @@ const ReviewRequisitionModal = () => {
 			dataIndex: "qty",
 		},
 	];
+
 	const [visible, setVisible] = useState(false);
 	const [status, setStatus] = useState("");
 	const showModal = () => {
@@ -103,6 +104,25 @@ const ReviewRequisitionModal = () => {
 		// TODO: call review requisition get status from button key (ToUppercase)
 		setVisible(false);
 	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDataSource(result.data);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+	console.log(dataSource);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -125,8 +145,9 @@ const ReviewRequisitionModal = () => {
 						: null
 				}
 			>
+
 				<Descriptions>
-					<Descriptions.Item label="Requested By"></Descriptions.Item>
+					<Descriptions.Item label="Requested By" name="requestedBy">{status}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Date"></Descriptions.Item>
@@ -135,7 +156,7 @@ const ReviewRequisitionModal = () => {
 				{status === "APPROVED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Approved By"></Descriptions.Item>
+							<Descriptions.Item label="Approved By">{dataSource.requestedOn}</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
 							<Descriptions.Item label="Approved Date"></Descriptions.Item>
