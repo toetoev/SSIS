@@ -5,6 +5,7 @@ import { Layout } from "antd";
 import Logout from "../../component/Logout";
 import MaintainSupplier from "./MaintainSupplier";
 import React from "react";
+import Sidebar from "../../component/Sidebar";
 import StationeryCatalogue from "./StationeryCatalogue";
 import StockAdjustment from "./StockAdjustment";
 
@@ -27,16 +28,16 @@ export default function Manager() {
 				<Sider width={200} className="site-layout-background">
 					<Switch>
 						<Route exact path={`${path}`}>
-							<Dashboard></Dashboard>
+							<Sidebar items={items}></Sidebar>
 						</Route>
 						<Route path={`${path}/stationary-catalogue`}>
-							<StationeryCatalogue></StationeryCatalogue>
+							<Sidebar items={items}></Sidebar>
 						</Route>
 						<Route path={`${path}/supplier`}>
-							<MaintainSupplier></MaintainSupplier>
+							<Sidebar items={items}></Sidebar>
 						</Route>
 						<Route path={`${path}/stock-adjustment`}>
-							<StockAdjustment></StockAdjustment>
+							<Sidebar items={items}></Sidebar>
 						</Route>
 					</Switch>
 				</Sider>
