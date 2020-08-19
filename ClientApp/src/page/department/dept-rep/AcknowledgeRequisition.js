@@ -5,7 +5,6 @@ import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
-	// TODO: call RequisitionController Get Requisition By Role (Employee will return all history)
 	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
@@ -36,9 +35,7 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ViewAcknowledgement text={text} record={record}></ViewAcknowledgement>
-			),
+			render: (text, record) => <AcknowledgementModal text={text} record={record} />,
 		},
 	];
 
@@ -97,7 +94,8 @@ export default function AcknowledgeRequisition() {
 	);
 }
 
-const ViewAcknowledgement = ({ text, record }) => {
+// TODO: Modal display: add props for passing detailed data into component, then set to the field
+const AcknowledgementModal = ({ text, record }) => {
 	console.log(text.action);
 	console.log(record);
 	const requisitionData = [];
@@ -126,13 +124,13 @@ const ViewAcknowledgement = ({ text, record }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	const handleAcknowledge = (e) => {
+		// TODO: call UpdateRequisitionStatus
 		setVisible(false);
 	};
-
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -141,15 +139,18 @@ const ViewAcknowledgement = ({ text, record }) => {
 			<Modal
 				title="View Requisition"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-								<Button key="cancel" type="danger" onClick={handleCancel}>
-									Back
+								<Button key="cancel" type="danger" onClick={hideModal}>
+									Cancel
 								</Button>,
-								<Button key="acknowledge" type="primary" onClick={handleOk}>
+								<Button
+									key="acknowledge"
+									type="primary"
+									onClick={handleAcknowledge}
+								>
 									Acknowledge
 								</Button>,
 						  ]

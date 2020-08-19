@@ -34,9 +34,7 @@ export default function RequisitionHistory() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ViewAcknowledgement text={text} record={record}></ViewAcknowledgement>
-			),
+			render: (text, record) => <RequisitionModal text={text} record={record} />,
 		},
 	];
 
@@ -96,8 +94,7 @@ export default function RequisitionHistory() {
 }
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-
-const ViewAcknowledgement = ({ text, record }) => {
+const RequisitionModal = ({ text, record }) => {
 	console.log(text.action);
 	console.log(record);
 	const requisitionData = [];
@@ -126,7 +123,7 @@ const ViewAcknowledgement = ({ text, record }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 	return (
@@ -134,12 +131,7 @@ const ViewAcknowledgement = ({ text, record }) => {
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Modal
-				title="Requisition Details"
-				visible={visible}
-				onCancel={handleCancel}
-				footer={null}
-			>
+			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
 					<Descriptions.Item label="Collection Point"></Descriptions.Item>
 				</Descriptions>

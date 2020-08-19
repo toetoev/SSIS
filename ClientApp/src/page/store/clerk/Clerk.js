@@ -3,9 +3,9 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import Dashboard from "../Dashboard";
 import { Layout } from "antd";
 import Logout from "../../component/Logout";
-import Ordering from "./Ordering";
+import Ordering from "./ordering/Ordering";
 import React from "react";
-import Requisition from "./Requisition";
+import Requisition from "./requisition/Requisition";
 import Sidebar from "../../component/Sidebar";
 import StockAdjustment from "./StockAdjustment";
 
@@ -18,7 +18,6 @@ export default function Clerk() {
 		{ to: `${path}/ordering`, title: "Ordering" },
 		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
 	];
-
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
