@@ -1,7 +1,7 @@
 import { Button, Form, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
-export default ReadyForDelivery = () => {
+export const ReadyForDelivery = () => {
 	const [form] = Form.useForm();
 
 	const dataSource = [];

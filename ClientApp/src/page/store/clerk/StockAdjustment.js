@@ -1,20 +1,10 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Space, Table, InputNumber } from "antd";
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
 export default function StockAdjustment() {
-	//const [dataSource, setDataSource] = useState([]);
-	const dataSource = [
-		{
-			key: "1",
-			submittedOn: "09-09-2020",
-			submittedBy: "09-09-2020",
-			authorizedBy: "Meka",
-			status: "Applied",
-			action: "action",
-		},
-	];
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
@@ -49,25 +39,19 @@ export default function StockAdjustment() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Stock Adjustment</h3>
-			<Row
-				justify="space-between"
-				style={{ float: "right" }}
-			>
+			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={value => console.log(value)}
+							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
 						<Add dataSource={dataSource} />
 					</Space>
 				</Col>
 			</Row>
-			<Table
-				columns={columns}
-				dataSource={dataSource}
-			/>
+			<Table columns={columns} dataSource={dataSource} />
 		</Space>
 	);
 }
@@ -106,8 +90,6 @@ const AdjustmentVoucher = () => {
 	];
 
 	const [visible, setVisible] = useState(false);
-	//const [status, setStatus] = useState("PENDING_COLLECTION");
-
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -138,7 +120,7 @@ const AdjustmentVoucher = () => {
 				<p>Date Submitted : </p>
 				<p>Issued On : </p>
 
-				<Table columns={columns} dataSource={dataSource} pagination={false}/>
+				<Table columns={columns} dataSource={dataSource} pagination={false} />
 			</Modal>
 		</div>
 	);
@@ -152,9 +134,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -166,7 +146,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-
 				}
 			})
 			.catch(function (error) {
@@ -196,10 +175,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form
-					form={form}
-					layout="vertical"
-				>
+				<Form form={form} layout="vertical">
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item label="Item Description : ">

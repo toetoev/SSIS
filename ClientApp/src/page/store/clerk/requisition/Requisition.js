@@ -3,7 +3,7 @@ import { Input, Space, Tabs } from "antd";
 import { Completed } from "./component/Completed";
 import { Disbursement } from "./component/Disbursement";
 import React from "react";
-import { ReadyForDelivery } from "./component/ReadyForDeliveryModal";
+import { ReadyForDelivery } from "./component/ReadyForDelivery";
 import { Retrieval } from "./component/Retrieval";
 import { Todo } from "./component/Todo";
 
@@ -22,6 +22,7 @@ export default function Requisition() {
 				<TabPane tab="Disbursement" key="Disbursement">
 					<Disbursement />
 				</TabPane>
+				ReadyForDelivery
 				<TabPane tab="Ready for Delivery" key="RFD">
 					<ReadyForDelivery />
 				</TabPane>
