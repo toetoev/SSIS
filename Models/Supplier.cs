@@ -18,7 +18,6 @@ namespace SSIS.Models
         public string GST { get; set; }
         public string Address { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
     }
 }
