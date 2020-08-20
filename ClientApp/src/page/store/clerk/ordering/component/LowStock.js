@@ -1,7 +1,6 @@
 import { Button, Descriptions, Form, InputNumber, Modal, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export const LowStock = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -108,7 +107,7 @@ export const LowStock = () => {
 			dataSource={dataSource}
 			scroll={{ y: 400 }}
 			pagination={false}
-			size="middle"
+			size="small"
 		/>
 	);
 };
