@@ -1,47 +1,38 @@
-import { Button, Checkbox, Descriptions, Modal, Row, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Success from "../../../../component/Success";
 import axios from "axios";
 
-export const Todo = () => {
+export const Todo = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
-			key: "departmentName",
-			sorter: true,
+			sorter: (a, b) => a - b,
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			key: "requestedBy",
 			sorter: true,
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			key: "requestedDate",
 			sorter: true,
 		},
 		{
 			title: "Collection Point",
-			key: "collectionPoint",
+			dataIndex: "collectionPoint",
 			sorter: true,
 		},
 		{
 			title: "Action",
 			key: "action",
 			render: (text) => <TodoModal text={text} />,
-		},
-		{
-			title: "Select",
-			dataIndex: "select",
-			key: "select",
-			render: (text) => <Checkbox text={text} />,
 		},
 	];
 
@@ -74,14 +65,14 @@ export const Todo = () => {
 							];
 						}, [])
 					);
-					setLoading(false);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 	const handleRowSelection = (selectedRowKeys, selectedRows) => {
 		setSelectedRowKeys(selectedRowKeys);
 	};
@@ -95,19 +86,25 @@ export const Todo = () => {
 					loading={loading}
 					rowSelection={{
 						onChange: handleRowSelection,
+						selectedRowKeys: selectedRowKeys,
 					}}
+					size="middle"
 				/>
 				<Row justify="end">
-					<CreateRetrieval selectedRowKeys={selectedRowKeys}></CreateRetrieval>
+					<CreateRetrieval
+						selectedRowKeys={selectedRowKeys}
+						setLoading={setLoading}
+						setSelectedRowKeys={setSelectedRowKeys}
+					></CreateRetrieval>
 				</Row>
 			</Space>
 		</Row>
 	);
 };
 
-const CreateRetrieval = ({ selectedRowKeys }) => {
+const CreateRetrieval = ({ selectedRowKeys, setLoading, setSelectedRowKeys }) => {
 	const handleCreateRetrieval = () => {
-		/*axios
+		axios
 			.post("https://localhost:5001/api/retrieval", selectedRowKeys, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
@@ -117,11 +114,13 @@ const CreateRetrieval = ({ selectedRowKeys }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					Success("Done creating retrieval list", () => window.location.reload(false));
+					Success("Done creating retrieval list");
+					setSelectedRowKeys([]);
+					setLoading(true);
 				} else {
 					Error(result.message);
 				}
-			});*/
+			});
 	};
 	return (
 		<Button type="primary" onClick={handleCreateRetrieval}>
@@ -144,6 +143,7 @@ const TodoModal = ({ text }) => {
 			];
 		}, [])
 	);
+	const [visible, setVisible] = useState(false);
 	const columns = [
 		{
 			title: "Item Description",
@@ -154,7 +154,6 @@ const TodoModal = ({ text }) => {
 			dataIndex: "qty",
 		},
 	];
-	const [visible, setVisible] = useState(false);
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -181,6 +180,7 @@ const TodoModal = ({ text }) => {
 					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}
+					size="small"
 				/>
 			</Modal>
 		</div>

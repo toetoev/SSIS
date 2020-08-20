@@ -1,6 +1,6 @@
-import { Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import { Table } from "antd";
 import axios from "axios";
 
 export const Stock = () => {
@@ -45,7 +45,7 @@ export const Stock = () => {
 	const handleDataChange = (data) => {
 		setDataSource(data);
 	};
-	
+
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item", {
@@ -62,14 +62,14 @@ export const Stock = () => {
 							return [
 								...rows,
 								{
-									key : items.id,
-									category : items.categoryName,
-									bin : items.bin,
-									description : items.description,
-									uom : items.uoM,
-									reorderLevel : items.reorderLevel,
-									reorderQuantity : items.reorderQty,
-									stock : items.stock,
+									key: items.id,
+									category: items.categoryName,
+									bin: items.bin,
+									description: items.description,
+									uom: items.uoM,
+									reorderLevel: items.reorderLevel,
+									reorderQuantity: items.reorderQty,
+									stock: items.stock,
 								},
 							];
 						}, [])
@@ -82,5 +82,7 @@ export const Stock = () => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} />;
+	return (
+		<Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} pagination={false} />
+	);
 };

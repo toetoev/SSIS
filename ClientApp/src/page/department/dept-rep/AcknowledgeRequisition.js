@@ -6,7 +6,8 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -35,12 +36,11 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <AcknowledgementModal text={text} />,
+			render: (text) => <AcknowledgementModal text={text} setLoading={setLoading} />,
 		},
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -73,8 +73,8 @@ export default function AcknowledgeRequisition() {
 							];
 						}, [])
 					);
-					setLoading(false);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
@@ -97,9 +97,8 @@ export default function AcknowledgeRequisition() {
 	);
 }
 
-const AcknowledgementModal = ({ text }) => {
+const AcknowledgementModal = ({ text, setLoading }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, acknowledge) => {
 			return [
@@ -114,8 +113,9 @@ const AcknowledgementModal = ({ text }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(text.status[0]);
+	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -150,7 +150,7 @@ const AcknowledgementModal = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) window.location.reload(false);
+				if (result.success) setLoading(true);
 				else Error(result.message);
 			});
 		setVisible(false);
@@ -190,28 +190,28 @@ const AcknowledgementModal = ({ text }) => {
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
-				<Table
-					dataSource={dataSource}
-					columns={columns}
-					scroll={{ y: 100 }}
-					pagination={false}
-				/>
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Delivered by">
+							<Descriptions.Item label="Received by">
 								{requisition.acknowledgedBy === null
 									? ""
 									: requisition.acknowledgedBy.name}
 							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Delivered date">
+							<Descriptions.Item label="Received date">
 								{requisition.acknowledgedOn}
 							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);

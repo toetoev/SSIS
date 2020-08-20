@@ -4,33 +4,41 @@ import { default as React, useEffect, useState } from "react";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: true,
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
+			sorter: true,
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
+			sorter: true,
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: true,
 		},
 		{
 			title: "Action",
@@ -40,7 +48,6 @@ export default function RequisitionHistory() {
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -81,7 +88,7 @@ export default function RequisitionHistory() {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
@@ -89,15 +96,17 @@ export default function RequisitionHistory() {
 			<Table
 				dataSource={dataSource}
 				columns={columns}
-				pagination={{ pageSize: 50 }}
+				pagination={false}
 				scroll={{ y: 500 }}
 				loading={loading}
+				size="middle"
 			/>
 		</Space>
 	);
 }
 
 const RequisitionModal = ({ text }) => {
+	console.log(text);
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -115,6 +124,7 @@ const RequisitionModal = ({ text }) => {
 	);
 	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -205,6 +215,7 @@ const RequisitionModal = ({ text }) => {
 					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}
+					size="small"
 				/>
 			</Modal>
 		</div>

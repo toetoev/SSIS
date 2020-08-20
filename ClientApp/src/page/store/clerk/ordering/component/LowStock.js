@@ -1,4 +1,4 @@
-import { Button, Form, InputNumber, Modal, Table, Descriptions } from "antd";
+import { Button, Descriptions, Form, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -13,41 +13,49 @@ export const LowStock = () => {
 			title: "Category",
 			dataIndex: "category",
 			key: "category",
+			sorter: (a, b) => a.categoryName - b.categoryName,
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
 			key: "description",
+			sorter: (a, b) => a.description - b.description,
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
 			key: "reorderLevel",
+			sorter: true,
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
 			key: "reorderQuantity",
+			sorter: true,
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
 			key: "stock",
+			sorter: true,
 		},
 		{
 			title: "Supplier 1",
 			dataIndex: "supplier1",
 			key: "supplier1",
+			sorter: true,
 		},
 		{
 			title: "Supplier 2",
 			dataIndex: "supplier2",
 			key: "supplier2",
+			sorter: true,
 		},
 		{
 			title: "Supplier 3",
 			dataIndex: "supplier3",
 			key: "supplier3",
+			sorter: true,
 		},
 		{
 			title: "Action",
@@ -74,14 +82,14 @@ export const LowStock = () => {
 							return [
 								...rows,
 								{
-									key : items.id,
-									category : items.categoryName,
-									bin : items.bin,
-									description : items.description,
-									uom : items.uoM,
-									reorderLevel : items.reorderLevel,
-									reorderQuantity : items.reorderQty,
-									stock : items.stock,
+									key: items.id,
+									category: items.categoryName,
+									bin: items.bin,
+									description: items.description,
+									uom: items.uoM,
+									reorderLevel: items.reorderLevel,
+									reorderQuantity: items.reorderQty,
+									stock: items.stock,
 								},
 							];
 						}, [])
@@ -94,7 +102,9 @@ export const LowStock = () => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} />;
+	return (
+		<Table columns={columns} dataSource={dataSource} scroll={{ y: 400 }} pagination={false} />
+	);
 };
 
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
@@ -225,34 +235,22 @@ const Details = ({ dataSource, handleDataChange }) => {
 				]}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Supplier Name">
-						
-					</Descriptions.Item>
+					<Descriptions.Item label="Supplier Name"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Contact Name">
-
-					</Descriptions.Item>
+					<Descriptions.Item label="Contact Name"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Phone No">
-						
-					</Descriptions.Item>
+					<Descriptions.Item label="Phone No"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Fax No">
-						
-					</Descriptions.Item>
+					<Descriptions.Item label="Fax No"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="GST Registration No">
-						
-					</Descriptions.Item>
+					<Descriptions.Item label="GST Registration No"></Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Address">
-						
-					</Descriptions.Item>
+					<Descriptions.Item label="Address"></Descriptions.Item>
 				</Descriptions>
 
 				<Table

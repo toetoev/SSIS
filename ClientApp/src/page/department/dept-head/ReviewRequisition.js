@@ -7,7 +7,8 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested By",
@@ -24,12 +25,11 @@ export default function ReviewRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <ReviewRequisitionModal text={text} />,
+			render: (text) => <ReviewRequisitionModal text={text} setLoading={setLoading} />,
 		},
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -56,14 +56,14 @@ export default function ReviewRequisition() {
 							];
 						}, [])
 					);
-					setLoading(false);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
@@ -79,7 +79,7 @@ export default function ReviewRequisition() {
 	);
 }
 
-const ReviewRequisitionModal = ({ text }) => {
+const ReviewRequisitionModal = ({ text, setLoading }) => {
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -123,7 +123,7 @@ const ReviewRequisitionModal = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) window.location.reload(false);
+				if (result.success) setLoading(true);
 				else Error(result.message);
 			});
 		setVisible(false);

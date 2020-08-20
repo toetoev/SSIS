@@ -28,7 +28,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses)
         {
-            return await _dbContext.Requisitions.Where(r => r.DepartmentName == deptName && requisitionStatuses.Contains(r.Status)).ToListAsync();
+            return await _dbContext.Requisitions.Where(r => r.DepartmentName == deptName && requisitionStatuses.Contains(r.Status)).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
         }
 
         public async Task<Requisition> GetRequisitionById(Guid requisitionId)
@@ -41,9 +41,30 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId)
+        public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId)
         {
-            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId).OrderBy(r => r.RequestedOn).ToListAsync();
+            // return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId).OrderBy(r => r.RequestedOn).ToListAsync();
+            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId && r.RequisitionItems.Any(ri => ri.ItemId == itemId)).Select(r => new Requisition(
+                r.Id,
+                r.RequestedOn,
+                r.ReviewedOn,
+                r.Comment,
+                r.AcknowledgedOn,
+                r.Status,
+                r.DepartmentName,
+                r.Department,
+                r.RequestedByEmail,
+                r.RequestedBy,
+                r.ReviewedByEmail,
+                r.ReviewedBy,
+                r.AcknowledgedByEmail,
+                r.AcknowledgedBy,
+                r.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList(),
+                r.RetrievalId
+                // take only the non-deleted children:
+            )).ToListAsync();
+            // keep only those parents that have any non-deleted Children:
+            // .Where(r => r.Children.Any());
         }
     }
 }

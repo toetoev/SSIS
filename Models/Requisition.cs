@@ -10,6 +10,27 @@ namespace SSIS.Models
     [ToString]
     public class Requisition
     {
+        public Requisition() { }
+        public Requisition(Guid id, DateTime requestedOn, DateTime? reviewedOn, string comment, DateTime? acknowledgedOn, RequisitionStatus status, string departmentName, Department department, string requestedByEmail, DeptStaff requestedBy, string reviewedByEmail, DeptStaff reviewedBy, string acknowledgedByEmail, DeptStaff acknowledgedBy, ICollection<RequisitionItem> requisitionItems, Guid? retrievalId)
+        {
+            Id = id;
+            RequestedOn = requestedOn;
+            ReviewedOn = reviewedOn;
+            Comment = comment;
+            AcknowledgedOn = acknowledgedOn;
+            Status = status;
+            DepartmentName = departmentName;
+            Department = department;
+            RequestedByEmail = requestedByEmail;
+            RequestedBy = requestedBy;
+            ReviewedByEmail = reviewedByEmail;
+            ReviewedBy = reviewedBy;
+            AcknowledgedByEmail = acknowledgedByEmail;
+            AcknowledgedBy = acknowledgedBy;
+            RetrievalId = retrievalId;
+            RequisitionItems = requisitionItems;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

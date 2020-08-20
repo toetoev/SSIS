@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace SSIS.Models
 {
@@ -16,6 +17,8 @@ namespace SSIS.Models
         public string Fax { get; set; }
         public string GST { get; set; }
         public string Address { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
     }
 }
