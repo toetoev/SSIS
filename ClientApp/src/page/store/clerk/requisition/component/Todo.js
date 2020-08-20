@@ -45,6 +45,7 @@ export const Todo = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {

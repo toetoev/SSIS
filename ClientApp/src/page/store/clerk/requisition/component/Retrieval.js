@@ -120,7 +120,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 				<InputNumber
 					min={1}
 					max={record.needed}
-					defaultValue={text.totalQtyRetrieved === -1 ? null : record.retrieved}
+					defaultValue={record.retrieved === -1 ? null : record.retrieved}
 					onChange={(val) => onChange(val, record)}
 				/>
 			),

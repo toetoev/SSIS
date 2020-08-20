@@ -103,7 +103,6 @@ namespace SSIS.Services
                 }
             }
             return new ApiResponse { Success = true, Data = await _retrievalRepository.UpdateRetrieval() };
-
         }
     }
 }
