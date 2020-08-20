@@ -3,7 +3,7 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
-export const Completed = () => {
+export const Completed = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const [form] = Form.useForm();
 
@@ -70,7 +70,7 @@ export const Completed = () => {
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 
-const CompletedModal = ({text}) => {
+const CompletedModal = ({ text }) => {
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -80,8 +80,8 @@ const CompletedModal = ({text}) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					uom: requisitionItem.item.uoM,
-					needed:requisitionItem.need , 
-					actual:requisitionItem.actual,
+					needed: requisitionItem.need,
+					actual: requisitionItem.actual,
 				},
 			];
 		}, [])

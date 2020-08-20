@@ -189,7 +189,10 @@ namespace SSIS.Databases
             }
             _dbContext.SaveChanges();
         }
-
+        private Supplier GetSupplierByName(string name)
+        {
+            return _dbContext.Suppliers.Where(s => s.Name == name).Single();
+        }
         private void SeedCategory()
         {
             string[] categories = {

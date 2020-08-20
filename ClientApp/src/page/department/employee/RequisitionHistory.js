@@ -7,7 +7,7 @@ import toTitleCase from "../../../util/toTitleCase";
 // TODO: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	// TODO: make sorter work
 	const columns = [
 		{
@@ -48,7 +48,6 @@ export default function RequisitionHistory() {
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -89,7 +88,7 @@ export default function RequisitionHistory() {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">

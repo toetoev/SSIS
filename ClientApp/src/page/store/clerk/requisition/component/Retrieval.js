@@ -1,16 +1,16 @@
-import { Button, Form, Modal, Row, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
+import { Button, Modal, Row, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
 
+import Confirm from "../../../../component/Confirm";
+import Error from "../../../../component/Error";
 import axios from "axios";
 
-export const Retrieval = () => {
-	const [form] = Form.useForm();
+export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
-			title: "Processed By",
-			dataIndex: "processedBy",
+			title: "Created By",
+			dataIndex: "createdBy",
 		},
 		{
 			title: "Created On",
@@ -19,59 +19,67 @@ export const Retrieval = () => {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <RetrievalModal text={text}/>,
+			render: (text) => <RetrievalModal text={text} setLoading={setLoading} />,
 		},
 	];
 
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/requisition/PROCESSING_RETRIEVAL", {
+			.get("https://localhost:5001/api/retrieval", {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 				},
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log("Retrieval -> result", result);
 				if (result.success) {
 					setDataSource(
-						result.data.reduce((rows, requisition) => {
+						result.data.reduce((rows, retrieval) => {
 							return [
 								...rows,
 								{
-									key: requisition.id,
-									//not sure what to put in this
-									processedBy: requisition.requestedBy.name,
-									createdOn: requisition.requestedOn,
-									action: requisition,
+									key: retrieval.id,
+									createdBy: retrieval.createdBy.name,
+									createdOn: retrieval.createdOn,
+									action: retrieval,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
-	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+	return (
+		<Table
+			columns={columns}
+			dataSource={dataSource}
+			pagination={false}
+			loading={loading}
+			size="middle"
+		/>
+	);
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const RetrievalModal = ({text}) => {
-	const requisition = text.action;
-	console.log(requisition);
+const RetrievalModal = ({ text, setLoading }) => {
+	const retrieval = text.action;
 	const [dataSource] = useState(
-		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+		retrieval.retrievalItems.reduce((rows, retrievalItem) => {
 			return [
 				...rows,
 				{
-					key: requisitionItem.itemId,
-					bin: requisitionItem.item.bin,
-					itemDescription: requisitionItem.item.description,
-					needed: requisitionItem.need,
-					//this one should be update
-					retrieved : requisitionItem.actual,
+					key: retrievalItem.itemId,
+					bin: retrievalItem.item.bin,
+					itemDescription: retrievalItem.item.description,
+					needed: retrievalItem.totalQtyNeeded,
+					// TODO: this one should be update
+					retrieved: retrievalItem.totalQtyRetrieved,
 				},
 			];
 		}, [])
@@ -97,7 +105,6 @@ const RetrievalModal = ({text}) => {
 	];
 
 	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -105,7 +112,22 @@ const RetrievalModal = ({text}) => {
 		setVisible(false);
 	};
 	// TODO: call deleteRetrieval
-	const handleDelete = (e) => {};
+	const handleDelete = (e) => {
+		Confirm("Are you sure about deleting the retrieval list?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/retrieval/" + retrieval.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
 
 	// TODO: call UpdateRetrievalActualQuantity
 	const handleConfirm = (e) => {
@@ -121,22 +143,26 @@ const RetrievalModal = ({text}) => {
 					Delete
 				</Button>
 			</Space>
-
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
-				<Table
-					dataSource={dataSource}
-					columns={reqColumns}
-					pagination={false}
-					scroll={{ y: 100 }}
-				/>
-				<Row justify="end">
-					<Space>
-						<Button type="secondary">Print</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</Space>
-				</Row>
+				<Space direction="vertical">
+					<Row>
+						<Table
+							dataSource={dataSource}
+							columns={reqColumns}
+							pagination={false}
+							scroll={{ y: 300 }}
+							size="small"
+						/>
+					</Row>
+					<Row justify="end">
+						<Space>
+							<Button type="secondary">Print</Button>
+							<Button type="primary" onClick={handleConfirm}>
+								Confirm
+							</Button>
+						</Space>
+					</Row>
+				</Space>
 			</Modal>
 		</div>
 	);

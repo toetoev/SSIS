@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
-export const Disbursement = () => {
+export const Disbursement = ({ loading, setLoading }) => {
 	const [form] = Form.useForm();
 	const [dataSource, setDataSource] = useState([]);
 
@@ -32,7 +32,7 @@ export const Disbursement = () => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);	
+				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -57,7 +57,7 @@ export const Disbursement = () => {
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 // TODO: Modal display: add props for passing detailed data into component, then set to the field
-const DisburseModal = ({text}) => {
+const DisburseModal = ({ text }) => {
 	const requisition = text.action;
 	console.log(requisition);
 	const [dataSource] = useState(
@@ -69,7 +69,7 @@ const DisburseModal = ({text}) => {
 					//department: requisitionItem.name,
 					//requestedBy: requisitionItem.requestedBy.name,
 					//requestedDate: requisitionItem.requestedOn,
-					neededAmount:requisitionItem.need,
+					neededAmount: requisitionItem.need,
 					actualAmount: requisitionItem.actual,
 				},
 			];
@@ -117,7 +117,7 @@ const DisburseModal = ({text}) => {
 			</Button>
 			<Modal title="" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
-					dataSource ={dataSource}
+					dataSource={dataSource}
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}

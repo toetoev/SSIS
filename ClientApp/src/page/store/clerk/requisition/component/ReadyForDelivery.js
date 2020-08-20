@@ -3,7 +3,7 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
-export const ReadyForDelivery = () => {
+export const ReadyForDelivery = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const [form] = Form.useForm();
 
@@ -31,7 +31,7 @@ export const ReadyForDelivery = () => {
 		{
 			title: "Disbursement List",
 			key: "action",
-			render:  (text) => <ReadyForDeliveryModal text={text} />,
+			render: (text) => <ReadyForDeliveryModal text={text} />,
 		},
 	];
 	// TODO: call RequisitionController Get Requisition By Status, then set to table
@@ -76,7 +76,7 @@ export const ReadyForDelivery = () => {
 	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };
 
-const ReadyForDeliveryModal = ({text}) => {
+const ReadyForDeliveryModal = ({ text }) => {
 	const requisition = text.action;
 	console.log(requisition);
 	const [dataSource] = useState(
@@ -87,8 +87,8 @@ const ReadyForDeliveryModal = ({text}) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					uom: requisitionItem.item.uoM,
-					needed:requisitionItem.need , 
-					actual:requisitionItem.actual,
+					needed: requisitionItem.need,
+					actual: requisitionItem.actual,
 				},
 			];
 		}, [])

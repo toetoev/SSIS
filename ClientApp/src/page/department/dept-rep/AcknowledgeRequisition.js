@@ -6,7 +6,7 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	// TODO: make sorter work
 	const columns = [
 		{
@@ -36,12 +36,11 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <AcknowledgementModal text={text} />,
+			render: (text) => <AcknowledgementModal text={text} setLoading={setLoading} />,
 		},
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/requisition", {
 				headers: {
@@ -74,8 +73,8 @@ export default function AcknowledgeRequisition() {
 							];
 						}, [])
 					);
-					setLoading(false);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
@@ -98,7 +97,7 @@ export default function AcknowledgeRequisition() {
 	);
 }
 
-const AcknowledgementModal = ({ text }) => {
+const AcknowledgementModal = ({ text, setLoading }) => {
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, acknowledge) => {
@@ -151,7 +150,7 @@ const AcknowledgementModal = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) window.location.reload(false);
+				if (result.success) setLoading(true);
 				else Error(result.message);
 			});
 		setVisible(false);
