@@ -217,7 +217,7 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				<Table
 					dataSource={dataSource}
 					columns={columns}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					pagination={false}
 					size="small"
 				/>

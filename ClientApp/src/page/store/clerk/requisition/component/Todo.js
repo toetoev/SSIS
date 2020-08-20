@@ -1,8 +1,7 @@
 import { Button, Descriptions, Modal, Row, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
-import Success from "../../../../component/Success";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
+import Success from "../../../../component/Success";
 
 export const Todo = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -179,7 +178,7 @@ const TodoModal = ({ text }) => {
 					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					size="small"
 				/>
 			</Modal>

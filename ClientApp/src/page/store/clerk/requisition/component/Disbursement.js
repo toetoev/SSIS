@@ -1,7 +1,6 @@
 import { Button, Form, InputNumber, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export const Disbursement = ({ loading, setLoading }) => {
 	const [form] = Form.useForm();
@@ -193,7 +192,7 @@ const DisburseModal = ({ text, setLoading }) => {
 							dataSource={dataSource}
 							columns={columns}
 							pagination={false}
-							scroll={{ y: 100 }}
+							scroll={{ y: 400 }}
 							size="small"
 						/>
 					</Row>

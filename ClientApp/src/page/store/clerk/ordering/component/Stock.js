@@ -1,7 +1,6 @@
-import { default as React, useEffect, useState } from "react";
-
 import { Table } from "antd";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
 
 export const Stock = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -86,7 +85,7 @@ export const Stock = () => {
 		<Table
 			columns={columns}
 			dataSource={dataSource}
-			scroll={{ y: 500 }}
+			scroll={{ y: 400 }}
 			pagination={false}
 			size="small"
 		/>

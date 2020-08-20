@@ -81,7 +81,7 @@ export default function AcknowledgeRequisition() {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
@@ -188,9 +188,6 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 						{requisition.department.collectionPointId}
 					</Descriptions.Item>
 				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Requested Items"></Descriptions.Item>
-				</Descriptions>
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
@@ -207,10 +204,13 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 						</Descriptions>
 					</>
 				) : null}
+				<Descriptions>
+					<Descriptions.Item label="Requested Items"></Descriptions.Item>
+				</Descriptions>
 				<Table
 					dataSource={dataSource}
 					columns={columns}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					pagination={false}
 					size="small"
 				/>

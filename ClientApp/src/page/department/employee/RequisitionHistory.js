@@ -1,7 +1,6 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
 import toTitleCase from "../../../util/toTitleCase";
 
 // TODO: add search bar
@@ -214,7 +213,7 @@ const RequisitionModal = ({ text }) => {
 					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					size="small"
 				/>
 			</Modal>

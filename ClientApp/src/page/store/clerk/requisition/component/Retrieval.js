@@ -1,9 +1,8 @@
 import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
-import axios from "axios";
 
 export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -194,7 +193,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 							dataSource={dataSource}
 							columns={columns}
 							pagination={false}
-							scroll={{ y: 300 }}
+							scroll={{ y: 400 }}
 							size="small"
 						/>
 					</Row>
