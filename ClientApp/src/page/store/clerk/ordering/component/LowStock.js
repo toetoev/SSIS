@@ -1,12 +1,9 @@
-import { Button, Descriptions, Form, InputNumber, Modal, Table } from "antd";
+import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-export const LowStock = () => {
+export const LowStock = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 	const columns = [
 		{
 			title: "Category",
@@ -39,31 +36,12 @@ export const LowStock = () => {
 			sorter: true,
 		},
 		{
-			title: "Supplier 1",
-			dataIndex: "supplier1",
-			key: "supplier1",
-			sorter: true,
-		},
-		{
-			title: "Supplier 2",
-			dataIndex: "supplier2",
-			key: "supplier2",
-			sorter: true,
-		},
-		{
-			title: "Supplier 3",
-			dataIndex: "supplier3",
-			key: "supplier3",
-			sorter: true,
-		},
-		{
 			title: "Action",
 			dataIndex: "action",
 			key: "action",
 			render: () => <LowStockModal />,
 		},
 	];
-	// TODO: ItemController GetLowStockItems //no supplier info
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item/low-stock", {
@@ -94,16 +72,18 @@ export const LowStock = () => {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Table
 			columns={columns}
+			loading={loading}
 			dataSource={dataSource}
 			scroll={{ y: 400 }}
 			pagination={false}
@@ -112,9 +92,8 @@ export const LowStock = () => {
 	);
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const LowStockModal = ({ dataSource, handleDataChange }) => {
-	const [form] = Form.useForm();
+// TODO: SupplierTenderController GetSupplierItemById
+const LowStockModal = ({ setLoading }) => {
 	const [visible, setVisible] = useState(false);
 
 	const orderData = [
@@ -138,9 +117,9 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 			render: () => <InputNumber placeholder="20" />,
 		},
 		{
-			title: "Action",
-			dataIndex: "action",
-			key: "action",
+			title: "View Supplier Details",
+			dataIndex: "details",
+			key: "details",
 			render: () => <Details />,
 		},
 	];
@@ -149,13 +128,15 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	// TODO: call createOrder
-	const handleSubmit = () => {};
-
 	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: call createOrder
+	const handleSubmit = () => {
+		setVisible(true);
+		setLoading(true);
+	};
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -174,15 +155,7 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical">
-					<p>Date : </p>
-					<Table
-						columns={columns}
-						dataSource={orderData}
-						pagination={false}
-						size="small"
-					/>
-				</Form>
+				<Table columns={columns} dataSource={orderData} pagination={false} size="small" />
 			</Modal>
 		</>
 	);
