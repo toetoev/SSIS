@@ -49,10 +49,10 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDeptHeadEmail(delegatedByEmail) };
         }
 
-        public async Task<ApiResponse> UpdateDelegation(Delegation delegation)
+        public async Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail)
         {
-            DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedByEmail);
-            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegation.DelegatedByEmail, delegation.StartDate);
+            DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegatedByEmail);
+            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
             if (delegationFromRepo != null)
             {
                 DeptStaff delegatedTo = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedToEmail);
@@ -73,7 +73,7 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Cannot find the delegation" };
             }
         }
-        public async Task<ApiResponse> DeleteDelegation(string delegatedByEmail, DateTime startDate)
+        public async Task<ApiResponse> DeleteDelegation(DateTime startDate, string delegatedByEmail)
         {
             Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, startDate);
             if (delegationFromRepo != null)
