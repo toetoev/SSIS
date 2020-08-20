@@ -1,12 +1,14 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Error from "../../component/Error";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested By",
@@ -23,9 +25,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ViewRequisition text={text} record={record}></ViewRequisition>
-			),
+			render: (text) => <ReviewRequisitionModal text={text} setLoading={setLoading} />,
 		},
 	];
 
@@ -39,33 +39,37 @@ export default function ReviewRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
 								...rows,
 								{
 									key: requisition.id,
-									requestedBy: requisition.requestedByEmail,
+									requestedBy:
+										requisition.requestedBy === null
+											? ""
+											: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
 			<h3>Review Requisitions</h3>
 			<Table
+				loading={loading}
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
@@ -74,10 +78,24 @@ export default function ReviewRequisition() {
 		</Space>
 	);
 }
-const ViewRequisition = () => {
-	const itemData = [];
 
-	const reqColumns = [
+const ReviewRequisitionModal = ({ text, setLoading }) => {
+	const requisition = text.action;
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					qty: requisitionItem.need,
+				},
+			];
+		}, [])
+	);
+	const [visible, setVisible] = useState(false);
+	const [status] = useState(requisition.status);
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -87,15 +105,27 @@ const ViewRequisition = () => {
 			dataIndex: "qty",
 		},
 	];
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
+
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = () => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+
+	const handleReview = (reviewResult) => {
+		axios
+			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) setLoading(true);
+				else Error(result.message);
+			});
 		setVisible(false);
 	};
 	return (
@@ -106,15 +136,22 @@ const ViewRequisition = () => {
 			<Modal
 				title="View Requisition"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={
 					status === "APPLIED"
 						? [
-								<Button key="reject" type="danger" onClick={handleCancel}>
+								<Button
+									key="reject"
+									type="danger"
+									onClick={() => handleReview("REJECTED")}
+								>
 									Reject
 								</Button>,
-								<Button key="approve" type="primary" onClick={handleOk}>
+								<Button
+									key="approve"
+									type="primary"
+									onClick={() => handleReview("APPROVED")}
+								>
 									Approve
 								</Button>,
 						  ]
@@ -122,35 +159,66 @@ const ViewRequisition = () => {
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Requested By"></Descriptions.Item>
+					<Descriptions.Item label="Requested By">
+						{requisition.requestedBy === null ? "" : requisition.requestedBy.name}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Requested Date"></Descriptions.Item>
+					<Descriptions.Item label="Requested Date">
+						{requisition.requestedOn}
+					</Descriptions.Item>
 				</Descriptions>
-				<Table dataSource={itemData} columns={reqColumns} scroll={{ y: 100 }} />
 				{status === "APPROVED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Approved By"></Descriptions.Item>
+							<Descriptions.Item label="Approved By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Approved Date"></Descriptions.Item>
+							<Descriptions.Item label="Approved Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
 				{status === "REJECTED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Rejected By"></Descriptions.Item>
+							<Descriptions.Item label="Rejected By">
+								{requisition.reviewedBy === null ? "" : requisition.reviewedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Rejected Date"></Descriptions.Item>
+							<Descriptions.Item label="Rejected Date">
+								{requisition.reviewedOn}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Rejected Reason"></Descriptions.Item>
+							<Descriptions.Item label="Rejected Reason">
+								{requisition.comment}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
+				{status === "DELIVERED" ? (
+					<Descriptions>
+						<Descriptions.Item label="Delivered by:">
+							{requisition.acknowledgedBy === null
+								? ""
+								: requisition.acknowledgedBy.name}
+						</Descriptions.Item>
+						<Descriptions.Item label="Delivered date:">
+							{requisition.acknowledgedOn}
+						</Descriptions.Item>
+					</Descriptions>
+				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);

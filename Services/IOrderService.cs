@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SSIS.Models;
 using SSIS.Payloads;
 
-namespace SSIS.Controllers
+namespace SSIS.Services
 {
     public interface IOrderService
     {

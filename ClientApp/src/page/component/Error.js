@@ -1,7 +1,6 @@
-import { Modal } from "antd";
-const Error = (title, content) => {
-	Modal.error({
-		title: title,
+import { message } from "antd";
+const Error = (content) => {
+	message.error({
 		content: content,
 	});
 };

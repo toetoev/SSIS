@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.Models;
+using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -18,6 +20,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult GetAll()
         {
             return Ok(_orderService.GetAllOrders().Result);
@@ -37,7 +40,7 @@ namespace SSIS.Controllers
             return Ok(_orderService.ReceiveOrder(orderId, orderItems, receivedByEmail).Result);
         }
 
-        [HttpDelete("{orderId")]
+        [HttpDelete("{orderId}")]
         public IActionResult DeleteOrder([FromRoute] Guid orderId)
         {
             return Ok(_orderService.DeleteOrder(orderId).Result);

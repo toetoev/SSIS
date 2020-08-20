@@ -2,12 +2,12 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import Dashboard from "../Dashboard";
 import { Layout } from "antd";
-import Logout from "../../component/Logout";
+import { Navbar } from "../../component/Navbar";
+import Ordering from "./ordering/Ordering";
 import React from "react";
+import Requisition from "./requisition/Requisition";
 import Sidebar from "../../component/Sidebar";
-import StockAdjustment from "./StockAjustment";
-import StockList from "./StockList";
-import RequisitionList from "./RequisitionList";
+import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
 export default function Clerk() {
@@ -15,18 +15,30 @@ export default function Clerk() {
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/requisition`, title: "Requisitions" },
-		{ to: `${path}/stocklist`, title: "Ordering" },
-		{ to: `${path}/stockadjustment`, title: "Stock Adjustment" },
+		{ to: `${path}/ordering`, title: "Ordering" },
+		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
 	];
-
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
-				<Logout></Logout>
+				<Navbar></Navbar>
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/requisition`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/ordering`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/stock-adjustment`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"
@@ -36,18 +48,20 @@ export default function Clerk() {
 						minHeight: 280,
 					}}
 				>
-					<Route exact path={`${path}`}>
-						<Dashboard></Dashboard>
-					</Route>
-					<Route path={`${path}/requisition`}>
-						<RequisitionList></RequisitionList>
-					</Route>
-					<Route path={`${path}/stocklist`}>
-						<StockList></StockList>
-					</Route>
-					<Route path={`${path}/stockadjustment`}>
-						<StockAdjustment></StockAdjustment>
-					</Route>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Dashboard></Dashboard>
+						</Route>
+						<Route path={`${path}/requisition`}>
+							<Requisition></Requisition>
+						</Route>
+						<Route path={`${path}/ordering`}>
+							<Ordering></Ordering>
+						</Route>
+						<Route path={`${path}/stock-adjustment`}>
+							<StockAdjustment></StockAdjustment>
+						</Route>
+					</Switch>
 				</Content>
 			</Layout>
 		</Layout>

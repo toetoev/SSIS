@@ -1,7 +1,7 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import { Layout } from "antd";
-import Logout from "../../component/Logout";
+import { Navbar } from "../../component/Navbar";
 import React from "react";
 import RequisitionHistory from "./RequisitionHistory";
 import Sidebar from "../../component/Sidebar";
@@ -18,7 +18,7 @@ export default function Employee() {
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
-				<Logout></Logout>
+				<Navbar></Navbar>
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">

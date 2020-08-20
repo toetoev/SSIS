@@ -1,6 +1,6 @@
-import { Modal } from "antd";
+import { message } from "antd";
 const Success = (msg) => {
-	Modal.success({
+	message.success({
 		content: msg,
 	});
 };

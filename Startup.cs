@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,20 +50,33 @@ namespace SSIS
 
             services.AddScoped<DataInitializer>();
 
+            services.AddScoped<IAdjustmentItemService, AdjustmentItemService>();
+            services.AddScoped<IAdjustmentService, AdjustmentService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IDelegationService, DelegationService>();
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
-            services.AddScoped<IRequisitionService, RequisitionService>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IRequisitionItemService, RequisitionItemService>();
+            services.AddScoped<IRequisitionService, RequisitionService>();
+            services.AddScoped<IRetrievalItemService, RetrievalItemService>();
             services.AddScoped<IRetrievalService, RetrievalService>();
+            services.AddScoped<ISupplierService, SupplierService>();
 
+            services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDelegationRepository, DelegationRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
-            services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
-            services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
+            services.AddScoped<IRequisitionRepository, RequisitionRepository>();
+            services.AddScoped<IRetrievalItemRepository, RetrievalItemRepository>();
             services.AddScoped<IRetrievalRepository, RetrievalRepository>();
+            services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

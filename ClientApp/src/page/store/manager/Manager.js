@@ -2,8 +2,8 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import Dashboard from "../Dashboard";
 import { Layout } from "antd";
-import Logout from "../../component/Logout";
 import MaintainSupplier from "./MaintainSupplier";
+import { Navbar } from "../../component/Navbar";
 import React from "react";
 import Sidebar from "../../component/Sidebar";
 import StationeryCatalogue from "./StationeryCatalogue";
@@ -22,11 +22,24 @@ export default function Manager() {
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
-				<Logout></Logout>
+				<Navbar></Navbar>
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">
-					<Sidebar items={items}></Sidebar>
+					<Switch>
+						<Route exact path={`${path}`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/stationary-catalogue`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/supplier`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+						<Route path={`${path}/stock-adjustment`}>
+							<Sidebar items={items}></Sidebar>
+						</Route>
+					</Switch>
 				</Sider>
 				<Content
 					className="site-layout-background"

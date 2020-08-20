@@ -37,6 +37,7 @@ export default function SubmitRequisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
+			{/* // TODO: recommendation */}
 			<Row justify="space-between">
 				<Col>
 					<Space>
@@ -49,7 +50,7 @@ export default function SubmitRequisition() {
 					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} pagination={false} />
 			<Row justify="end">
 				<Space>
 					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>
@@ -70,6 +71,28 @@ const Add = ({ dataSource, handleDataChange }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemOptions(
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	const handleSubmit = () => {
 		form.validateFields()
@@ -107,27 +130,9 @@ const Add = ({ dataSource, handleDataChange }) => {
 		if (val.item) setItem(val.item);
 	};
 
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setItemOptions(
-						result.data.reduce((options, item) => {
-							return [...options, { label: item.description, value: item.id }];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
-
 	return (
 		<>
-			<Button type="secondary" onClick={showModal}>
+			<Button type="primary" onClick={showModal}>
 				Add
 			</Button>
 			<Modal
@@ -204,11 +209,11 @@ const Submit = ({ dataSource, handleDataChange }) => {
 						handleDataChange([]);
 						Success("Requisition Applied Successfully");
 					} else {
-						Error(result.message, "");
+						Error(result.message);
 					}
 				});
 		} else {
-			Error("", "Please choose some items before submit");
+			Error("Please choose some items before submit");
 		}
 	};
 	return (

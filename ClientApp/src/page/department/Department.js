@@ -1,5 +1,3 @@
-import "../../css/dashboard.css";
-
 import { Switch, useRouteMatch } from "react-router-dom";
 
 import DeptHead from "./dept-head/DeptHead";
@@ -10,7 +8,7 @@ import { PrivateRoute } from "../../component/PrivateRoute";
 import React from "react";
 
 export default function Department() {
-	let { path } = useRouteMatch();
+	const { path } = useRouteMatch();
 	return (
 		<Switch>
 			<PrivateRoute

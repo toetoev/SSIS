@@ -1,13 +1,13 @@
-import { Button, Checkbox, Descriptions, Form, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
-	// TODO: call RequisitionController Get Requisition By Role (Employee will return all history)
 	const [dataSource, setDataSource] = useState([]);
-
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -36,9 +36,7 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => (
-				<ViewAcknowledgement text={text} record={record}></ViewAcknowledgement>
-			),
+			render: (text) => <AcknowledgementModal text={text} setLoading={setLoading} />,
 		},
 	];
 
@@ -52,7 +50,6 @@ export default function AcknowledgeRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -60,20 +57,28 @@ export default function AcknowledgeRequisition() {
 								{
 									key: requisition.id,
 									requestedDate: requisition.requestedOn,
-									reviewedBy: requisition.reviewedByEmail,
+									reviewedBy:
+										requisition.reviewedBy === null
+											? ""
+											: requisition.reviewedBy.name,
 									reviewedDate: requisition.reviewedOn,
-									acknowledgedBy: requisition.acknowledgedByEmail,
+									acknowledgedBy:
+										requisition.acknowledgedBy === null
+											? ""
+											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -82,6 +87,7 @@ export default function AcknowledgeRequisition() {
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
 			<Table
+				loading={loading}
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
@@ -91,12 +97,26 @@ export default function AcknowledgeRequisition() {
 	);
 }
 
-const ViewAcknowledgement = ({ text, record }) => {
-	console.log(text.action);
-	console.log(record);
-	const requisitionData = [];
-
-	const requisitionColumns = [
+const AcknowledgementModal = ({ text, setLoading }) => {
+	const requisition = text.action;
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, acknowledge) => {
+			return [
+				...rows,
+				{
+					key: acknowledge.itemId,
+					itemDescription: acknowledge.item.description,
+					requestedQty: acknowledge.need,
+					receivedQty: acknowledge.actual,
+					unfulfilledQty: acknowledge.need - acknowledge.actual,
+				},
+			];
+		}, [])
+	);
+	const [status] = useState(requisition.status);
+	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -114,16 +134,25 @@ const ViewAcknowledgement = ({ text, record }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
-
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-	const handleCancel = (e) => {
+	const handleAcknowledge = (e) => {
+		axios
+			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) setLoading(true);
+				else Error(result.message);
+			});
 		setVisible(false);
 	};
 
@@ -135,15 +164,18 @@ const ViewAcknowledgement = ({ text, record }) => {
 			<Modal
 				title="View Requisition"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-								<Button key="cancel" type="danger" onClick={handleCancel}>
-									Back
+								<Button key="cancel" type="danger" onClick={hideModal}>
+									Cancel
 								</Button>,
-								<Button key="acknowledge" type="primary" onClick={handleOk}>
+								<Button
+									key="acknowledge"
+									type="primary"
+									onClick={handleAcknowledge}
+								>
 									Acknowledge
 								</Button>,
 						  ]
@@ -151,41 +183,35 @@ const ViewAcknowledgement = ({ text, record }) => {
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Collection Date"></Descriptions.Item>
-				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Collection Point"></Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
-				<Table
-					dataSource={requisitionData}
-					columns={requisitionColumns}
-					scroll={{ y: 100 }}
-				/>
-				{status === "PENDING_COLLECTION" ? (
-					<>
-						<Form.Item
-							label="Do you want to re-order the unfulfilled items?"
-							name="checkbox-group"
-						>
-							<Checkbox value="A" style={{ lineHeight: "32px" }}>
-								Yes
-							</Checkbox>
-						</Form.Item>
-					</>
-				) : null}
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Delivered by"></Descriptions.Item>
+							<Descriptions.Item label="Received by">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Delivered date"></Descriptions.Item>
+							<Descriptions.Item label="Received date">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
 						</Descriptions>
 					</>
 				) : null}
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 100 }}
+					pagination={false}
+				/>
 			</Modal>
 		</div>
 	);

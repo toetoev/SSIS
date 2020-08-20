@@ -103,11 +103,15 @@ namespace SSIS.Services
                     if (deptStaff.Role == DeptRole.DeptHead && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
                     {
                         requisition.Status = status;
+                        requisition.ReviewedBy = deptStaff;
+                        requisition.ReviewedOn = DateTime.Now;
                         return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
                     }
                     if (deptStaff.Role == DeptRole.DeptRep && requisition.Status == RequisitionStatus.PENDING_COLLECTION && status == RequisitionStatus.DELIVERED)
                     {
                         requisition.Status = status;
+                        requisition.AcknowledgedBy = deptStaff;
+                        requisition.AcknowledgedOn = DateTime.Now;
                         foreach (var requisitionItem in requisition.RequisitionItems)
                         {
                             Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);
