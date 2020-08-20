@@ -150,7 +150,6 @@ const RetrievalModal = ({ text, setLoading }) => {
 	};
 
 	const handleConfirm = (e) => {
-		console.log(dataSource.forEach((i) => console.log(i.retrieved)));
 		let data = [];
 		dataSource.forEach((item) => {
 			if (item.retrieved != -1)

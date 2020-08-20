@@ -19,7 +19,7 @@ export const Disbursement = ({ loading, setLoading }) => {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <DisburseModal text={text} />,
+			render: (text) => <DisburseModal text={text} setLoading={setLoading} />,
 		},
 	];
 	useEffect(() => {
@@ -31,6 +31,7 @@ export const Disbursement = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log("Disbursement -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, retrieval) => {
@@ -56,7 +57,7 @@ export const Disbursement = ({ loading, setLoading }) => {
 
 	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };
-const DisburseModal = ({ text }) => {
+const DisburseModal = ({ text, setLoading }) => {
 	const retrieval = text.action;
 	const [visible, setVisible] = useState(false);
 	const onChange = (val, row) => {
@@ -108,8 +109,36 @@ const DisburseModal = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call DisburseRequisition
 	const handleConfirm = (e) => {
+		console.log(dataSource);
+		let data = [];
+		dataSource.forEach((item) => {
+			if (item.actualAmount != -1)
+				data = [
+					...data,
+					{
+						requisitionId: item.key.split(" ")[0],
+						itemId: item.key.split(" ")[1],
+						actual: item.actualAmount,
+					},
+				];
+		});
+		console.log(data);
+		if (data.length === dataSource.length) {
+			axios
+				.put("https://localhost:5001/api/requisitionItem/", data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) setLoading(true);
+					else Error(result.message);
+				});
+			setVisible(false);
+		} else Error("Please enter disbursed quantity for all the items");
 		setVisible(false);
 	};
 	useEffect(() => {
@@ -130,7 +159,7 @@ const DisburseModal = ({ text }) => {
 							return [
 								...rows,
 								{
-									key: requisition.id,
+									key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
 									department: requisition.department.name,
 									requestedBy: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,

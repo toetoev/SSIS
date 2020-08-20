@@ -103,7 +103,13 @@ export const LowStock = () => {
 	}, []);
 
 	return (
-		<Table columns={columns} dataSource={dataSource} scroll={{ y: 400 }} pagination={false} />
+		<Table
+			columns={columns}
+			dataSource={dataSource}
+			scroll={{ y: 400 }}
+			pagination={false}
+			size="middle"
+		/>
 	);
 };
 
@@ -171,7 +177,12 @@ const LowStockModal = ({ dataSource, handleDataChange }) => {
 			>
 				<Form form={form} layout="vertical">
 					<p>Date : </p>
-					<Table columns={columns} dataSource={orderData} pagination={false} />
+					<Table
+						columns={columns}
+						dataSource={orderData}
+						pagination={false}
+						size="small"
+					/>
 				</Form>
 			</Modal>
 		</>
@@ -258,6 +269,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 					columns={columns}
 					dataSource={dataSource}
 					pagination={false}
+					size="small"
 				/>
 			</Modal>
 		</>

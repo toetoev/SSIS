@@ -92,6 +92,7 @@ export default function AcknowledgeRequisition() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				size="middle"
 			/>
 		</Space>
 	);
@@ -211,6 +212,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 					columns={columns}
 					scroll={{ y: 100 }}
 					pagination={false}
+					size="small"
 				/>
 			</Modal>
 		</div>

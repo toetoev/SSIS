@@ -71,7 +71,7 @@ export default function StockAdjustment() {
 					</Space>
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
 }
@@ -136,7 +136,7 @@ const StockAdjustmentModal = () => {
 				<p>Submitted By : </p>
 				<p>Date Submitted : </p>
 				<p>Issued On : </p>
-				<Table columns={columns} dataSource={dataSource} pagination={false} />
+				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</div>
 	);

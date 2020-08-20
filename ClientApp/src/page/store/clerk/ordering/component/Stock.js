@@ -83,6 +83,12 @@ export const Stock = () => {
 	}, []);
 
 	return (
-		<Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} pagination={false} />
+		<Table
+			columns={columns}
+			dataSource={dataSource}
+			scroll={{ y: 500 }}
+			pagination={false}
+			size="small"
+		/>
 	);
 };
