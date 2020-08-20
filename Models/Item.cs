@@ -10,7 +10,7 @@ namespace SSIS.Models
 {
     public class Item
     {
-        public Item(string bin, string description, string uoM, int reorderLevel, int reorderQty, Category category)
+        public Item(string bin, string description, string uoM, int reorderLevel, int reorderQty, int stock, Category category)
         {
             Id = Guid.NewGuid();
             Bin = bin;
@@ -18,6 +18,7 @@ namespace SSIS.Models
             UoM = uoM;
             ReorderLevel = reorderLevel;
             ReorderQty = reorderQty;
+            Stock = stock;
             Category = category;
         }
         public Item() { }

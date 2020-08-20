@@ -1,4 +1,4 @@
-import { Button, Modal, Row, Space, Table } from "antd";
+import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../../../component/Confirm";
@@ -32,7 +32,6 @@ export const Retrieval = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Retrieval -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, retrieval) => {
@@ -69,7 +68,19 @@ export const Retrieval = ({ loading, setLoading }) => {
 
 const RetrievalModal = ({ text, setLoading }) => {
 	const retrieval = text.action;
-	const [dataSource] = useState(
+	const [visible, setVisible] = useState(false);
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].retrieved = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const [dataSource, setDataSource] = useState(
 		retrieval.retrievalItems.reduce((rows, retrievalItem) => {
 			return [
 				...rows,
@@ -77,15 +88,15 @@ const RetrievalModal = ({ text, setLoading }) => {
 					key: retrievalItem.itemId,
 					bin: retrievalItem.item.bin,
 					itemDescription: retrievalItem.item.description,
+					stock: retrievalItem.item.stock,
 					needed: retrievalItem.totalQtyNeeded,
-					// TODO: this one should be update
 					retrieved: retrievalItem.totalQtyRetrieved,
 				},
 			];
 		}, [])
 	);
 
-	const reqColumns = [
+	const columns = [
 		{
 			title: "Bin",
 			dataIndex: "bin",
@@ -95,23 +106,32 @@ const RetrievalModal = ({ text, setLoading }) => {
 			dataIndex: "itemDescription",
 		},
 		{
+			title: "Item Stock",
+			dataIndex: "stock",
+		},
+		{
 			title: "Amount Needed",
 			dataIndex: "needed",
 		},
 		{
 			title: "Retrieved Amount",
 			dataIndex: "retrieved",
+			render: (text, record) => (
+				<InputNumber
+					min={1}
+					max={record.needed}
+					defaultValue={text.totalQtyRetrieved === -1 ? null : record.retrieved}
+					onChange={(val) => onChange(val, record)}
+				/>
+			),
 		},
 	];
-
-	const [visible, setVisible] = useState(false);
 	const showModal = () => {
 		setVisible(true);
 	};
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call deleteRetrieval
 	const handleDelete = (e) => {
 		Confirm("Are you sure about deleting the retrieval list?", "", () => {
 			axios
@@ -129,9 +149,28 @@ const RetrievalModal = ({ text, setLoading }) => {
 		});
 	};
 
-	// TODO: call UpdateRetrievalActualQuantity
 	const handleConfirm = (e) => {
-		setVisible(false);
+		console.log(dataSource.forEach((i) => console.log(i.retrieved)));
+		let data = [];
+		dataSource.forEach((item) => {
+			if (item.retrieved != -1)
+				data = [...data, { itemId: item.key, totalQtyRetrieved: item.retrieved }];
+		});
+		if (data.length === dataSource.length) {
+			axios
+				.put("https://localhost:5001/api/retrieval/" + retrieval.id, data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) setLoading(true);
+					else Error(result.message);
+				});
+			setVisible(false);
+		} else Error("Please enter retrieved quantity for all the items");
 	};
 	return (
 		<div>
@@ -143,12 +182,18 @@ const RetrievalModal = ({ text, setLoading }) => {
 					Delete
 				</Button>
 			</Space>
-			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
+			<Modal
+				title="Requisition Details"
+				visible={visible}
+				onCancel={hideModal}
+				footer={null}
+				width="600px"
+			>
 				<Space direction="vertical">
 					<Row>
 						<Table
 							dataSource={dataSource}
-							columns={reqColumns}
+							columns={columns}
 							pagination={false}
 							scroll={{ y: 300 }}
 							size="small"

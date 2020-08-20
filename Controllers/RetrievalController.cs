@@ -43,7 +43,7 @@ namespace SSIS.Controllers
             return Ok(_retrievalService.DeleteRetrieval(retrievalId).Result);
         }
 
-        [HttpPost("{retrievalId}")]
+        [HttpPut("{retrievalId}")]
         [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult UpdateRetrievalActualQuantity([FromRoute] Guid retrievalId, [FromBody] List<RetrievalItem> retrievalItems)
         {

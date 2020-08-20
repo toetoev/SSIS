@@ -12,24 +12,21 @@ export const Todo = ({ loading, setLoading }) => {
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
-			key: "departmentName",
 			sorter: (a, b) => a - b,
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			key: "requestedBy",
 			sorter: true,
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			key: "requestedDate",
 			sorter: true,
 		},
 		{
 			title: "Collection Point",
-			key: "collectionPoint",
+			dataIndex: "collectionPoint",
 			sorter: true,
 		},
 		{

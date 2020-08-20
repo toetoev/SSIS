@@ -99,6 +99,7 @@ export default function RequisitionHistory() {
 				pagination={false}
 				scroll={{ y: 500 }}
 				loading={loading}
+				size="middle"
 			/>
 		</Space>
 	);
@@ -214,6 +215,7 @@ const RequisitionModal = ({ text }) => {
 					columns={columns}
 					pagination={false}
 					scroll={{ y: 100 }}
+					size="small"
 				/>
 			</Modal>
 		</div>
