@@ -75,15 +75,12 @@ export default function MaintainSupplier() {
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Supplier List</h3>
 
-			<Row
-				justify="space-between"
-				style={{ float: "right" }}
-			>
+			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={value => console.log(value)}
+							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
 						<Add dataSource={dataSource} />
@@ -91,7 +88,7 @@ export default function MaintainSupplier() {
 				</Col>
 			</Row>
 
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
 }
@@ -104,9 +101,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -118,7 +113,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-
 				}
 			})
 			.catch(function (error) {
@@ -148,10 +142,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form
-					form={form}
-					layout="vertical"
-				>
+				<Form form={form} layout="vertical">
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item label="Supplier Name">
@@ -215,16 +206,14 @@ const Details = ({ text }) => {
 			title: "Unit Of Measurement",
 			dataIndex: "uom",
 			key: "uom",
-		}
+		},
 	];
 
 	const showModal = () => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -251,9 +240,7 @@ const Details = ({ text }) => {
 
 	return (
 		<>
-			<Button onClick={showModal}>
-				View
-			</Button>
+			<Button onClick={showModal}>View</Button>
 
 			<Modal
 				title="Stationery Details"

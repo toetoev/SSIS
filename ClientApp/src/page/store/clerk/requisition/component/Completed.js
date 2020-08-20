@@ -67,7 +67,7 @@ export const Completed = ({ loading, setLoading }) => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };
 
 const CompletedModal = ({ text }) => {
@@ -125,6 +125,7 @@ const CompletedModal = ({ text }) => {
 					columns={reqColumns}
 					pagination={false}
 					scroll={{ y: 100 }}
+					size="small"
 				/>
 			</Modal>
 		</div>

@@ -1,8 +1,8 @@
 import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
-import axios from "axios";
 import Confirm from "../../../../component/Confirm";
+import axios from "axios";
 
 export const Order = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -67,7 +67,7 @@ export const Order = () => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} />;
+	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
 const Receive = ({ dataSource, handleDataChange }) => {

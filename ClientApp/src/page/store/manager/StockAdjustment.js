@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, Input, Modal, Row, Space, Table } from "antd";
 import React, { useState } from "react";
 
 export default function StockAdjustment() {
@@ -54,7 +54,7 @@ export default function StockAdjustment() {
 				style={{ width: 200, float: "right", marginBottom: 16 }}
 			/>
 
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</>
 	);
 }
@@ -125,13 +125,13 @@ const AdjustmentVoucher = () => {
 				<p>Date Submitted : </p>
 				<p>Issued On : </p>
 
-				<Table columns={columns} dataSource={dataSource} />
+				<Table columns={columns} dataSource={dataSource} size="small" />
 
 				<Row>
 					<Col
 						span={24}
 						style={{
-							textAlign: 'right',
+							textAlign: "right",
 						}}
 					>
 						<Space>

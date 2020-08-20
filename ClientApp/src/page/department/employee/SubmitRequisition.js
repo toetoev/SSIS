@@ -50,7 +50,7 @@ export default function SubmitRequisition() {
 					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} pagination={false} />
+			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
 				<Space>
 					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>

@@ -77,6 +77,7 @@ export default function ReviewRequisition() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				size="middle"
 			/>
 		</Space>
 	);
@@ -219,8 +220,9 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				<Table
 					dataSource={dataSource}
 					columns={columns}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					pagination={false}
+					size="small"
 				/>
 			</Modal>
 		</div>

@@ -1,9 +1,8 @@
 import { Button, Form, Radio, Row, Select, Space } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 import Error from "./../../component/Error";
 import Success from "./../../component/Success";
-import axios from "axios";
 
 export default function MaintainDept() {
 	const [form] = Form.useForm();
@@ -56,7 +55,6 @@ export default function MaintainDept() {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDeptRepOptions(
 						result.data.reduce(

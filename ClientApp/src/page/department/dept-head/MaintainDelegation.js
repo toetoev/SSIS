@@ -55,7 +55,7 @@ export default function MaintainDelegation() {
 			<Row justify="end">
 				<Add />
 			</Row>
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
 }

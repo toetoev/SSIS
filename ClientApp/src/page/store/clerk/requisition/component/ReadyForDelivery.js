@@ -25,10 +25,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			dataIndex: "collectionPoint",
 		},
 		{
-			title: "Collection Date",
-			dataIndex: "collectionDate",
-		},
-		{
 			title: "Disbursement List",
 			key: "action",
 			render: (text) => <ReadyForDeliveryModal text={text} />,
@@ -73,7 +69,7 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };
 
 const ReadyForDeliveryModal = ({ text }) => {
@@ -87,7 +83,7 @@ const ReadyForDeliveryModal = ({ text }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					uom: requisitionItem.item.uoM,
-					needed: requisitionItem.need,
+					need: requisitionItem.need,
 					actual: requisitionItem.actual,
 				},
 			];
@@ -103,11 +99,11 @@ const ReadyForDeliveryModal = ({ text }) => {
 			dataIndex: "uom",
 		},
 		{
-			title: "Amount Needed",
-			dataIndex: "needed",
+			title: "Need",
+			dataIndex: "need",
 		},
 		{
-			title: "Actual Amount",
+			title: "Actual",
 			dataIndex: "actual",
 		},
 	];
@@ -119,31 +115,28 @@ const ReadyForDeliveryModal = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call DisburseRequisition
-	const handleDisburse = (e) => {
-		setVisible(false);
-	};
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Button type="danger">Delete</Button>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
-				<Table
-					dataSource={dataSource}
-					columns={reqColumns}
-					pagination={false}
-					scroll={{ y: 100 }}
-				/>
-				<Row justify="end">
-					<Space>
-						<Button type="secondary">Print</Button>
-						<Button type="primary" onClick={handleDisburse}>
-							Update
-						</Button>
-					</Space>
-				</Row>
+				<Space direction="vertical">
+					<Row>
+						<Table
+							dataSource={dataSource}
+							columns={reqColumns}
+							pagination={false}
+							scroll={{ y: 300 }}
+							size="small"
+						/>
+					</Row>
+					<Row justify="end">
+						<Space>
+							<Button type="primary">Print</Button>
+						</Space>
+					</Row>
+				</Space>
 			</Modal>
 		</div>
 	);
