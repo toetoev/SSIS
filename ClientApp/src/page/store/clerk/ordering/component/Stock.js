@@ -1,9 +1,11 @@
+import { default as React, useEffect, useState } from "react";
+
 import { Table } from "antd";
 import axios from "axios";
-import { default as React, useEffect, useState } from "react";
 
 export const Stock = () => {
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Category",
@@ -46,6 +48,7 @@ export const Stock = () => {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/item", {
 				headers: {
@@ -74,9 +77,10 @@ export const Stock = () => {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
@@ -85,6 +89,7 @@ export const Stock = () => {
 		<Table
 			columns={columns}
 			dataSource={dataSource}
+			loading={loading}
 			scroll={{ y: 400 }}
 			pagination={false}
 			size="small"

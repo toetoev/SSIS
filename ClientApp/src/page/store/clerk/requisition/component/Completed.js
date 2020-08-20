@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Table } from "antd";
+import { Button, Form, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
@@ -115,10 +115,12 @@ const CompletedModal = ({ text }) => {
 	};
 	return (
 		<div>
-			<Button type="primary" onClick={showModal}>
-				View
-			</Button>
-			<Button type="danger">Delete</Button>
+			<Space>
+				<Button type="primary" onClick={showModal}>
+					View
+				</Button>
+				<Button type="danger">Delete</Button>
+			</Space>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
 					dataSource={dataSource}
