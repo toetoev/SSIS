@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SSIS.Databases;
+using SSIS.Models;
 using SSIS.Repositories;
 using SSIS.Services;
 
@@ -26,6 +27,14 @@ namespace SSIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var MailSettings =
+                Configuration.GetSection("MailSettings").
+            Get<MailSettings>();
+            services.AddSingleton(MailSettings);
+
+            services.AddControllers();
+
             // services.AddCors();
             services.AddControllers().AddNewtonsoftJson();
 
@@ -74,9 +83,21 @@ namespace SSIS
             services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IRetrievalItemRepository, RetrievalItemRepository>();
-            services.AddScoped<IRetrievalRepository, RetrievalRepository>();
+            services.AddScoped<IRetrievalRepository, RetrievalRepository>(); <<
+            <<
+            <<
+            <
+            Updated upstream
             services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
-            services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>(); ==
+            ==
+            ==
+            =
+            services.AddScoped<IMailService, MailService>(); >>
+            >>
+            >>
+            >
+            Stashed changes
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,7 +137,7 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            // dataInitializer.Seed();
+            //dataInitializer.Seed();
         }
     }
 }

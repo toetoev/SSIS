@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MimeKit;
 using SSIS.Databases;
 using SSIS.Models;
 using SSIS.Payloads;
@@ -15,17 +16,29 @@ namespace SSIS.Services
         private readonly IRequisitionRepository _requisitionRepository;
         private readonly IItemRepository _itemRepository;
 
+        private readonly MailSettings _mailSettings;
+        private readonly IMailService _mailService;
+
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository)
+            IItemRepository itemRepository, MailSettings mailSettings, IMailService mailService)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
+            _mailSettings = mailSettings;
+            _mailService = mailService;
+
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
         {
+            MailRequest message = new MailRequest();
+            message.Sender = new MailboxAddress(_mailSettings.Sender);
+            message.Receiver = new MailboxAddress(_mailSettings.Receiver);
+            message.Subject = "Welcome";
+            message.Content = "Hello World!";
+            var mimeMessage = _mailService.CreateMessage(message);
             DeptStaff requestedBy = await _deptStaffRepository.GetDeptStaffByEmail(email);
             Requisition requisition = new Requisition
             {
@@ -46,6 +59,7 @@ namespace SSIS.Services
             }
             requisition.RequisitionItems = requisitionItems;
             await _requisitionRepository.CreateRequisition(requisition);
+            await _mailService.sendEmailAsync(mimeMessage, _mailSettings);
             return new ApiResponse { Success = true };
         }
 

@@ -42,6 +42,7 @@ namespace SSIS.Models
         [ForeignKey("RetrievalId")]
         public Guid? RetrievalId { get; set; }
 
+        [JsonIgnore]
         public virtual Retrieval Retrieval { get; set; }
     }
 }
