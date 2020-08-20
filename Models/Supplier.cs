@@ -17,7 +17,5 @@ namespace SSIS.Models
         public string Fax { get; set; }
         public string GST { get; set; }
         public string Address { get; set; }
-
-        public virtual ICollection<SupplyTenderItem> SupplyTenderItems { get; set; }
     }
 }

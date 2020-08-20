@@ -30,7 +30,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			render: (text) => <ReadyForDeliveryModal text={text} />,
 		},
 	];
-	// TODO: call RequisitionController Get Requisition By Status, then set to table
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/requisition/PENDING_COLLECTION", {

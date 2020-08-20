@@ -1,6 +1,7 @@
 import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+
+import axios from "axios";
 
 export const LowStock = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -51,9 +52,7 @@ export const LowStock = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
-					console.log(result);
 					setDataSource(
 						result.data.reduce((rows, items) => {
 							return [
@@ -92,7 +91,7 @@ export const LowStock = ({ loading, setLoading }) => {
 	);
 };
 
-// TODO: SupplierTenderController GetSupplierItemById
+// TODO: SupplierTenderController GetSupplierTenderByItemId
 const LowStockModal = ({ setLoading }) => {
 	const [visible, setVisible] = useState(false);
 
@@ -190,7 +189,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(false);
 	};
 
-	// TODO: call get supplier by id
+	// TODO: call SupplierController get supplier by id
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
