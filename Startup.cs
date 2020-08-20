@@ -116,7 +116,7 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            //dataInitializer.Seed();
+            // dataInitializer.Seed();
         }
     }
 }
