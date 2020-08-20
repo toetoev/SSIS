@@ -4,20 +4,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function StationeryCatalogue() {
-	//const [dataSource, setDataSource] = useState([]);
+	const [dataSource, setDataSource] = useState([]);
 	const { Search } = Input;
-
-	const dataSource = [
-		{
-			key: "1",
-			category: "Clip",
-			description: "Clip...",
-			uom: "A3",
-			reorderQuantity: "2",
-			reorderLevel: "1",
-			action: "action",
-		},
-	];
 
 	const columns = [
 		{
@@ -70,6 +58,36 @@ export default function StationeryCatalogue() {
 			},
 		};
 	}*/
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>

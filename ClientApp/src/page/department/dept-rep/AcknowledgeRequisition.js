@@ -7,31 +7,37 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
+
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: true,
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
+			sorter: true,
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
+			sorter: true,
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: true,
 		},
 		{
 			title: "Action",
