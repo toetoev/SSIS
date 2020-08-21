@@ -10,17 +10,14 @@ export default function MaintainSupplier() {
 		{
 			title: "Supplier Name",
 			dataIndex: "supplierName",
-			key: "supplierName",
 		},
 		{
 			title: "Contact Name",
 			dataIndex: "contactName",
-			key: "contactName",
 		},
 		{
 			title: "Phone No",
 			dataIndex: "phone",
-			key: "phone",
 		},
 		{
 			title: "Action",

@@ -31,7 +31,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
-        [Authorize(Roles = StoreRole.Clerk)]
+        [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
         public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
         {
             string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;

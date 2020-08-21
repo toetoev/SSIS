@@ -25,14 +25,14 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        [Authorize(Roles = StoreRole.Manager)]
+        [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
         public IActionResult GetAllSuppliers()
         {
             return Ok(_supplierService.GetAllSuppliers().Result);
         }
 
         [HttpGet("{supplierId}")]
-        [Authorize(Roles = StoreRole.Manager)]
+        [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
         public IActionResult GetSupplierById([FromRoute] Guid supplierId)
         {
             return Ok(_supplierService.GetSupplierById(supplierId).Result);
