@@ -7,7 +7,7 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
