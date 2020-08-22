@@ -5,7 +5,7 @@ const toTitleCase = (string) => {
 	}
 	sentence[sentence.length - 1] =
 		sentence[sentence.length - 1][0].toUpperCase() + sentence[sentence.length - 1].slice(1);
-	return sentence;
+	return sentence.join("");
 };
 
 export default toTitleCase;

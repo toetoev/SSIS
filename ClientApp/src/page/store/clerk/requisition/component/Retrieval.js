@@ -1,59 +1,101 @@
-import { Button, Form, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
+import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Confirm from "../../../../component/Confirm";
+import Error from "../../../../component/Error";
 
-export const Retrieval = () => {
-	const [form] = Form.useForm();
-
-	const dataSource = [
-		{
-			key: "1",
-			processedBy: "Meka",
-			createdOn: "18-8-2020",
-		},
-	];
-
+export const Retrieval = ({ loading, setLoading }) => {
+	const [dataSource, setDataSource] = useState([]);
 	const columns = [
 		{
-			title: "Processed By",
-			dataIndex: "processedBy",
-			key: "processedBy",
+			title: "Created By",
+			dataIndex: "createdBy",
 		},
 		{
 			title: "Created On",
 			dataIndex: "createdOn",
-			key: "createdOn",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
-			render: () => <RetrievalModal />,
+			render: (text) => <RetrievalModal text={text} setLoading={setLoading} />,
 		},
 	];
-	// TODO: call RequisitionController Get Requisition By Status, then set to table
+
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item")
+			.get("https://localhost:5001/api/retrieval", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, retrieval) => {
+							return [
+								...rows,
+								{
+									key: retrieval.id,
+									createdBy: retrieval.createdBy.name,
+									createdOn: retrieval.createdOn,
+									action: retrieval,
+								},
+							];
+						}, [])
+					);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
-	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+	return (
+		<Table
+			columns={columns}
+			dataSource={dataSource}
+			pagination={false}
+			loading={loading}
+			size="middle"
+		/>
+	);
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const RetrievalModal = () => {
-	const itemData = [];
+const RetrievalModal = ({ text, setLoading }) => {
+	const retrieval = text.action;
+	const [visible, setVisible] = useState(false);
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].retrieved = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const [dataSource, setDataSource] = useState(
+		retrieval.retrievalItems.reduce((rows, retrievalItem) => {
+			return [
+				...rows,
+				{
+					key: retrievalItem.itemId,
+					bin: retrievalItem.item.bin,
+					itemDescription: retrievalItem.item.description,
+					stock: retrievalItem.item.stock,
+					needed: retrievalItem.totalQtyNeeded,
+					retrieved: retrievalItem.totalQtyRetrieved,
+				},
+			];
+		}, [])
+	);
 
-	const reqColumns = [
+	const columns = [
 		{
 			title: "Bin",
 			dataIndex: "bin",
@@ -63,29 +105,70 @@ const RetrievalModal = () => {
 			dataIndex: "itemDescription",
 		},
 		{
+			title: "Item Stock",
+			dataIndex: "stock",
+		},
+		{
 			title: "Amount Needed",
 			dataIndex: "needed",
 		},
 		{
 			title: "Retrieved Amount",
 			dataIndex: "retrieved",
+			render: (text, record) => (
+				<InputNumber
+					min={1}
+					max={record.needed}
+					defaultValue={record.retrieved === -1 ? null : record.retrieved}
+					onChange={(val) => onChange(val, record)}
+				/>
+			),
 		},
 	];
-
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call deleteRetrieval
-	const handleDelete = (e) => {};
+	const handleDelete = (e) => {
+		Confirm("Are you sure about deleting the retrieval list?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/retrieval/" + retrieval.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
 
-	// TODO: call UpdateRetrievalActualQuantity
 	const handleConfirm = (e) => {
-		setVisible(false);
+		let data = [];
+		dataSource.forEach((item) => {
+			if (item.retrieved != -1)
+				data = [...data, { itemId: item.key, totalQtyRetrieved: item.retrieved }];
+		});
+		if (data.length === dataSource.length) {
+			axios
+				.put("https://localhost:5001/api/retrieval/" + retrieval.id, data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) setLoading(true);
+					else Error(result.message);
+				});
+			setVisible(false);
+		} else Error("Please enter retrieved quantity for all the items");
 	};
 	return (
 		<div>
@@ -97,22 +180,32 @@ const RetrievalModal = () => {
 					Delete
 				</Button>
 			</Space>
-
-			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
-				<Table
-					dataSource={itemData}
-					columns={reqColumns}
-					pagination={false}
-					scroll={{ y: 100 }}
-				/>
-				<Row justify="end">
-					<Space>
-						<Button type="secondary">Print</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</Space>
-				</Row>
+			<Modal
+				title="Requisition Details"
+				visible={visible}
+				onCancel={hideModal}
+				footer={null}
+				width="600px"
+			>
+				<Space direction="vertical">
+					<Row>
+						<Table
+							dataSource={dataSource}
+							columns={columns}
+							pagination={false}
+							scroll={{ y: 400 }}
+							size="small"
+						/>
+					</Row>
+					<Row justify="end">
+						<Space>
+							<Button type="secondary">Print</Button>
+							<Button type="primary" onClick={handleConfirm}>
+								Confirm
+							</Button>
+						</Space>
+					</Row>
+				</Space>
 			</Modal>
 		</div>
 	);

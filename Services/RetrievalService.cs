@@ -53,7 +53,7 @@ namespace SSIS.Services
             }
             foreach (var itemId in totalItemQty.Keys)
             {
-                retrievalItems.Add(new RetrievalItem { ItemId = itemId, TotalQtyNeeded = totalItemQty[itemId] });
+                retrievalItems.Add(new RetrievalItem { ItemId = itemId, TotalQtyNeeded = totalItemQty[itemId], TotalQtyRetrieved = -1 });
             }
             Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
@@ -62,7 +62,6 @@ namespace SSIS.Services
         public async Task<ApiResponse> DeleteRetrieval(Guid retrievalId)
         {
             Retrieval retrieval = await _retrievalRepository.GetRetrievalById(retrievalId);
-
             if (retrieval != null)
             {
                 foreach (var requisition in retrieval.Requisitions)
@@ -72,7 +71,7 @@ namespace SSIS.Services
                 }
                 return new ApiResponse { Success = true, Data = await _retrievalRepository.DeleteRetrieval(retrieval) };
             }
-            return new ApiResponse { Success = false, Message = "Could not find the retrieval to delete" };
+            return new ApiResponse { Success = false, Message = "Cannot find the retrieval to delete" };
         }
 
         public async Task<ApiResponse> GetAllRetrievalsByCurrentStaff(string currentStaffEmail)
@@ -104,7 +103,6 @@ namespace SSIS.Services
                 }
             }
             return new ApiResponse { Success = true, Data = await _retrievalRepository.UpdateRetrieval() };
-
         }
     }
 }

@@ -1,10 +1,11 @@
 import { Button, Form, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 
-export const ReadyForDelivery = () => {
+import axios from "axios";
+
+export const ReadyForDelivery = ({ loading, setLoading }) => {
+	const [dataSource, setDataSource] = useState([]);
 	const [form] = Form.useForm();
-
-	const dataSource = [];
 
 	const columns = [
 		{
@@ -24,40 +25,84 @@ export const ReadyForDelivery = () => {
 			dataIndex: "collectionPoint",
 		},
 		{
-			title: "Collection Date",
-			dataIndex: "collectionDate",
-		},
-		{
 			title: "Disbursement List",
-			dataIndex: "action",
 			key: "action",
-			render: () => <ReadyForDeliveryModal />,
+			render: (text) => <ReadyForDeliveryModal text={text} />,
 		},
 	];
-	// TODO: call RequisitionController Get Requisition By Status, then set to table
-	useEffect(() => {}, []);
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition/PENDING_COLLECTION", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									departmentName: requisition.department.name,
+									requestedBy:
+										requisition.requestedBy === null
+											? ""
+											: requisition.requestedBy.name,
+									requestedDate: requisition.requestedOn,
+									collectionPoint: requisition.department.collectionPointId,
+									//what field is it?
+									//collectionDate: requisition.department.collectionDate,
+									action: requisition,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const ReadyForDeliveryModal = () => {
-	const itemData = [];
+const ReadyForDeliveryModal = ({ text }) => {
+	const requisition = text.action;
+	console.log(requisition);
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, requisitionItem) => {
+			return [
+				...rows,
+				{
+					key: requisitionItem.itemId,
+					itemDescription: requisitionItem.item.description,
+					uom: requisitionItem.item.uoM,
+					need: requisitionItem.need,
+					actual: requisitionItem.actual,
+				},
+			];
+		}, [])
+	);
 	const reqColumns = [
 		{
 			title: "Stationary Description",
-			dataIndex: "bin",
-		},
-		{
-			title: "UoM",
 			dataIndex: "itemDescription",
 		},
 		{
-			title: "Amount Needed",
-			dataIndex: "needed",
+			title: "UoM",
+			dataIndex: "uom",
 		},
 		{
-			title: "Actual Amount",
+			title: "Need",
+			dataIndex: "need",
+		},
+		{
+			title: "Actual",
 			dataIndex: "actual",
 		},
 	];
@@ -69,31 +114,28 @@ const ReadyForDeliveryModal = () => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call DisburseRequisition
-	const handleDisburse = (e) => {
-		setVisible(false);
-	};
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Button type="danger">Delete</Button>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
-				<Table
-					dataSource={itemData}
-					columns={reqColumns}
-					pagination={false}
-					scroll={{ y: 100 }}
-				/>
-				<Row justify="end">
-					<Space>
-						<Button type="secondary">Print</Button>
-						<Button type="primary" onClick={handleDisburse}>
-							Update
-						</Button>
-					</Space>
-				</Row>
+				<Space direction="vertical">
+					<Row>
+						<Table
+							dataSource={dataSource}
+							columns={reqColumns}
+							pagination={false}
+							scroll={{ y: 300 }}
+							size="small"
+						/>
+					</Row>
+					<Row justify="end">
+						<Space>
+							<Button type="primary">Print</Button>
+						</Space>
+					</Row>
+				</Space>
 			</Modal>
 		</div>
 	);

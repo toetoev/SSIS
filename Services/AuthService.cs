@@ -48,7 +48,7 @@ namespace SSIS.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(token);
 
-            return new ApiResponse { Success = true, Data = new { accessToken, role = userFromRepo.Role } };;
+            return new ApiResponse { Success = true, Data = new { accessToken, role = userFromRepo.Role, name = userFromRepo.Name } };;
         }
     }
 }

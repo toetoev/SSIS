@@ -10,7 +10,7 @@ namespace SSIS.Databases
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RequisitionItem>().HasKey(ri => new { ri.ItemId, ri.RequisitionId });
-            modelBuilder.Entity<SupplyTenderItem>().HasKey(sti => new { sti.ItemId, sti.SupplierId });
+            modelBuilder.Entity<SupplierTenderItem>().HasKey(sti => new { sti.ItemId, sti.SupplierId });
             modelBuilder.Entity<RetrievalItem>().HasKey(ri => new { ri.ItemId, ri.RetrievalId });
             modelBuilder.Entity<AdjustmentItem>().HasKey(ai => new { ai.ItemId, ai.AdjustmentId });
             modelBuilder.Entity<OrderItem>().HasKey(oi => new { oi.ItemId, oi.OrderId });
@@ -35,7 +35,7 @@ namespace SSIS.Databases
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<SupplyTenderItem> SupplyTenderItems { get; set; }
+        public DbSet<SupplierTenderItem> SupplyTenderItems { get; set; }
         public DbSet<Retrieval> Retrievals { get; set; }
         public DbSet<RetrievalItem> RetrievalItems { get; set; }
         public DbSet<Adjustment> Adjustments { get; set; }

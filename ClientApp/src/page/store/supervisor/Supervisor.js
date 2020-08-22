@@ -2,7 +2,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 
 import Dashboard from "../Dashboard";
 import { Layout } from "antd";
-import Logout from "../../component/Logout";
+import { Navbar } from "../../component/Navbar";
 import React from "react";
 import Sidebar from "../../component/Sidebar";
 import StockAdjustment from "./StockAdjustment";
@@ -18,7 +18,7 @@ export default function Supervisor() {
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
-				<Logout></Logout>
+				<Navbar></Navbar>
 			</Header>
 			<Layout>
 				<Sider width={200} className="site-layout-background">

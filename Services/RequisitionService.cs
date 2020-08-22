@@ -43,6 +43,7 @@ namespace SSIS.Services
                 if (requisitionItem.Need < 1)
                     return new ApiResponse { Success = false, Message = "Item requested should at least have one" };
                 requisitionItem.RequisitionId = requisition.Id;
+                requisitionItem.Actual = -1;
             }
             requisition.RequisitionItems = requisitionItems;
             await _requisitionRepository.CreateRequisition(requisition);
@@ -75,21 +76,9 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByStatus(status) };
         }
 
-        public async Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId, string email)
+        public async Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId)
         {
-            List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId);
-            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
-            foreach (var requisition in requisitions)
-            {
-                if (requisition != null)
-                {
-                    if (deptStaff.Email == requisition.Retrieval.CreatedByEmail)
-                    {
-                        requisition.RequisitionItems = requisition.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList();
-                    }
-                }
-            }
-            return new ApiResponse { Success = true, Data = requisitions };
+            return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId, itemId) };
         }
 
         public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email)
@@ -103,11 +92,15 @@ namespace SSIS.Services
                     if (deptStaff.Role == DeptRole.DeptHead && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
                     {
                         requisition.Status = status;
+                        requisition.ReviewedBy = deptStaff;
+                        requisition.ReviewedOn = DateTime.Now;
                         return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
                     }
                     if (deptStaff.Role == DeptRole.DeptRep && requisition.Status == RequisitionStatus.PENDING_COLLECTION && status == RequisitionStatus.DELIVERED)
                     {
                         requisition.Status = status;
+                        requisition.AcknowledgedBy = deptStaff;
+                        requisition.AcknowledgedOn = DateTime.Now;
                         foreach (var requisitionItem in requisition.RequisitionItems)
                         {
                             Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);

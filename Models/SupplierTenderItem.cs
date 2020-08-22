@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace SSIS.Models
 {
-    public class SupplyTenderItem
+    public class SupplierTenderItem
     {
         [Key]
         public Guid ItemId { get; set; }
@@ -15,9 +15,9 @@ namespace SSIS.Models
 
         [Range(1, 3)]
         public int Priority { get; set; }
+
         public virtual Item Item { get; set; }
 
-        [JsonIgnore]
         public virtual Supplier Supplier { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Descriptions, Form, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
@@ -6,7 +6,8 @@ import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-
+	const [loading, setLoading] = useState(true);
+	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -35,7 +36,7 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text, record) => <AcknowledgementModal text={text} record={record} />,
+			render: (text) => <AcknowledgementModal text={text} setLoading={setLoading} />,
 		},
 	];
 
@@ -49,7 +50,6 @@ export default function AcknowledgeRequisition() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result.data);
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
 							return [
@@ -68,39 +68,56 @@ export default function AcknowledgeRequisition() {
 											: requisition.acknowledgedBy.name,
 									acknowledgedDate: requisition.acknowledgedOn,
 									status: toTitleCase(requisition.status),
-									action: requisition.requisitionItems,
+									action: requisition,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
 			<Table
+				loading={loading}
 				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				size="middle"
 			/>
 		</Space>
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const AcknowledgementModal = ({ text, record }) => {
-	console.log(text.action);
-	console.log(record);
-	const requisitionData = [];
-
-	const requisitionColumns = [
+const AcknowledgementModal = ({ text, setLoading }) => {
+	const requisition = text.action;
+	const [dataSource] = useState(
+		requisition.requisitionItems.reduce((rows, acknowledge) => {
+			return [
+				...rows,
+				{
+					key: acknowledge.itemId,
+					itemDescription: acknowledge.item.description,
+					requestedQty: acknowledge.need,
+					receivedQty: acknowledge.actual,
+					unfulfilledQty: acknowledge.need - acknowledge.actual,
+				},
+			];
+		}, [])
+	);
+	const [status] = useState(requisition.status);
+	const [visible, setVisible] = useState(false);
+	// TODO: conditional render column based on status
+	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "itemDescription",
@@ -118,9 +135,6 @@ const AcknowledgementModal = ({ text, record }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
-
-	const [visible, setVisible] = useState(false);
-	const [status, setStatus] = useState("");
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -128,9 +142,21 @@ const AcknowledgementModal = ({ text, record }) => {
 		setVisible(false);
 	};
 	const handleAcknowledge = (e) => {
-		// TODO: call UpdateRequisitionStatus
+		axios
+			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) setLoading(true);
+				else Error(result.message);
+			});
 		setVisible(false);
 	};
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
@@ -158,41 +184,36 @@ const AcknowledgementModal = ({ text, record }) => {
 				}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Collection Date"></Descriptions.Item>
+					<Descriptions.Item label="Collection Point">
+						{requisition.department.collectionPointId}
+					</Descriptions.Item>
 				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Collection Point"></Descriptions.Item>
-				</Descriptions>
+				{status === "DELIVERED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Received by">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Received date">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
 				</Descriptions>
 				<Table
-					dataSource={requisitionData}
-					columns={requisitionColumns}
-					scroll={{ y: 100 }}
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{ y: 400 }}
+					pagination={false}
+					size="small"
 				/>
-				{status === "PENDING_COLLECTION" ? (
-					<>
-						<Form.Item
-							label="Do you want to re-order the unfulfilled items?"
-							name="checkbox-group"
-						>
-							<Checkbox value="A" style={{ lineHeight: "32px" }}>
-								Yes
-							</Checkbox>
-						</Form.Item>
-					</>
-				) : null}
-				{status === "DELIVERED" ? (
-					<>
-						<Descriptions>
-							<Descriptions.Item label="Delivered by"></Descriptions.Item>
-						</Descriptions>
-						<Descriptions>
-							<Descriptions.Item label="Delivered date"></Descriptions.Item>
-						</Descriptions>
-					</>
-				) : null}
 			</Modal>
 		</div>
 	);

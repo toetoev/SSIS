@@ -1,7 +1,8 @@
 import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 
 import Confirm from "../../../../component/Confirm";
+import axios from "axios";
 
 export const Order = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -46,8 +47,27 @@ export const Order = () => {
 		},
 	];
 	// TODO: call get all order
-	useEffect(() => {}, []);
-	return <Table columns={columns} dataSource={dataSource} />;
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/order", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					console.log(result);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
+	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
 const Receive = ({ dataSource, handleDataChange }) => {
