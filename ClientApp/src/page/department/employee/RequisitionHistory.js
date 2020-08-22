@@ -1,23 +1,25 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+
+import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
 // TODO: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
+	// TODO: make sorter work all field
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedBy, b.reviewedBy),
 		},
 		{
 			title: "Reviewed Date",
@@ -88,7 +90,6 @@ export default function RequisitionHistory() {
 				console.log(error);
 			});
 	}, [loading]);
-
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
@@ -194,16 +195,20 @@ const RequisitionModal = ({ text }) => {
 					</>
 				) : null}
 				{status === "DELIVERED" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:">
-							{requisition.acknowledgedBy === null
-								? ""
-								: requisition.acknowledgedBy.name}
-						</Descriptions.Item>
-						<Descriptions.Item label="Delivered date:">
-							{requisition.acknowledgedOn}
-						</Descriptions.Item>
-					</Descriptions>
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Received by">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Received date">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
 				) : null}
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>

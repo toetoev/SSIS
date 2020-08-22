@@ -3,22 +3,22 @@ import { default as React, useEffect, useState } from "react";
 
 import Error from "../../component/Error";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-
 	const columns = [
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Status",
