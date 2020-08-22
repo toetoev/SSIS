@@ -24,10 +24,10 @@ export default function DeptHead() {
 			<Layout>
 				<Sider width={200} className="site-layout-background">
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/maintain-department`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
-						<Route path={`${path}/requisition`}>
+						<Route exact path={`${path}`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
 						<Route path={`${path}/delegation`}>
