@@ -12,8 +12,8 @@ const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
 	const items = [
-		{ to: `${path}`, title: "Maintain Department" },
-		{ to: `${path}/requisition`, title: "Review Requisition" },
+		{ to: `${path}/maintain-department`, title: "Maintain Department" },
+		{ to: `${path}`, title: "Review Requisition" },
 		{ to: `${path}/delegation`, title: "Delegation" },
 	];
 	return (
@@ -44,10 +44,10 @@ export default function DeptHead() {
 					}}
 				>
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/maintain-department`}>
 							<MaintainDept></MaintainDept>
 						</Route>
-						<Route path={`${path}/requisition`}>
+						<Route exact path={`${path}`}>
 							<ReviewRequisition></ReviewRequisition>
 						</Route>
 						<Route path={`${path}/delegation`}>
