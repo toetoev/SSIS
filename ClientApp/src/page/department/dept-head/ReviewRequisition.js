@@ -8,22 +8,23 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
 
 	const columns = [
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
