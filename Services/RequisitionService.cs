@@ -13,15 +13,17 @@ namespace SSIS.Services
     {
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IRequisitionRepository _requisitionRepository;
+        private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
+            _retrievalRepository = retrievalRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -103,7 +105,7 @@ namespace SSIS.Services
                         requisition.AcknowledgedBy = deptStaff;
                         requisition.AcknowledgedOn = DateTime.Now;
                         if (requisition.Retrieval.Requisitions.All(r => r.Status == RequisitionStatus.DELIVERED))
-                            requisition.RetrievalId = null;
+                            await _retrievalRepository.DeleteRetrieval(requisition.Retrieval);
                         foreach (var requisitionItem in requisition.RequisitionItems)
                         {
                             Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);

@@ -121,7 +121,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
 	// TODO: conditional render column based on status
 	const columns = [
@@ -150,16 +150,22 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	};
 	const handleAcknowledge = (e) => {
 		axios
-			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
+			.put(
+				`https://localhost:5001/api/requisition/${requisition.id}`,
+				{ status: "DELIVERED" },
+				{
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				}
+			)
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus("DELIVERED");
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
