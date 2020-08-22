@@ -237,3 +237,6 @@ _Pvt_Extensions
 # Database migration
 **/Migrations
 command.txt
+Startup.cs
+Startup.cs
+Startup.cs
