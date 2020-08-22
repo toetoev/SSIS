@@ -1,16 +1,4 @@
-import {
-	Button,
-	Col,
-	Descriptions,
-	Divider,
-	Form,
-	Input,
-	Modal,
-	Row,
-	Select,
-	Space,
-	Table,
-} from "antd";
+import { Button, Col, Descriptions, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
@@ -40,7 +28,7 @@ export default function StockAdjustment() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <AdjustmentModal text={text} />,
+			render: (text) => <AdjustmentDetailsModal text={text} />,
 		},
 	];
 
@@ -101,7 +89,7 @@ export default function StockAdjustment() {
 	);
 }
 
-const AdjustmentModal = ({ text }) => {
+const AdjustmentDetailsModal = ({ text }) => {
 	const stocks = text.action;
 	const [dataSource] = useState(
 		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
@@ -170,12 +158,10 @@ const AdjustmentModal = ({ text }) => {
 		</div>
 	);
 };
-// TODO: remarks to reason for each item
+
 const CreateAdjustmentVoucher = () => {
-	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	const [remarks, setRemarks] = useState("");
 	const columns = [
 		{
 			title: "Item Description",
@@ -184,6 +170,10 @@ const CreateAdjustmentVoucher = () => {
 		{
 			title: "Quantity Adjusted",
 			dataIndex: "adjustedQty",
+		},
+		{
+			title: "Adjust Reason",
+			dataIndex: "reason",
 		},
 		{
 			title: "Action",
@@ -203,7 +193,8 @@ const CreateAdjustmentVoucher = () => {
 	const showModal = () => {
 		setVisible(true);
 	};
-	// TODO: create adjustment
+
+	// TODO: create adjustment post List<AdjustmentItem> itemId, adjustedQty, reason
 	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
@@ -250,12 +241,6 @@ const CreateAdjustmentVoucher = () => {
 						pagination={false}
 						size="middle"
 					/>
-					<Divider dashed />
-					<Input
-						placeholder="Remarks (Optional)"
-						value={remarks}
-						onChange={(e) => setRemarks(e.target.value)}
-					/>
 				</Space>
 			</Modal>
 		</>
@@ -266,13 +251,12 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 	const [form] = Form.useForm();
 	const [item, setItem] = useState("");
 	const [adjustedQty, setAdjustedQty] = useState(0);
+	const [reason, setReason] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [itemOptions, setItemOptions] = useState([]);
-
 	const showModal = () => {
 		setVisible(true);
 	};
-
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item", {
@@ -295,32 +279,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 			});
 	}, []);
 
-	const handleSubmit = () => {
-		form.validateFields()
-			.then((val) => {
-				if (dataSource.find((val) => val.key === item)) {
-					handleDataChange(
-						dataSource.map((val) => {
-							if (val.key === item) {
-								val.adjustedQty = val.adjustedQty + adjustedQty;
-							}
-							return val;
-						})
-					);
-				} else {
-					handleDataChange([
-						...dataSource,
-						{
-							key: item,
-							description: itemOptions.find((val) => val.value === item).label,
-							adjustedQty: adjustedQty,
-						},
-					]);
-				}
-				setVisible(false);
-			})
-			.catch((err) => {});
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -329,6 +288,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 	const onValuesChange = (val) => {
 		if (val.adjustedQty) setAdjustedQty(Number(val.adjustedQty));
 		if (val.item) setItem(val.item);
+		if (val.reason) setReason(val.reason);
 	};
 	return (
 		<>
@@ -336,7 +296,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 				Add
 			</Button>
 			<Modal
-				title="Stationery Catalogue"
+				title="Add Adjustment Item"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}
@@ -370,6 +330,15 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 						]}
 					>
 						<Input type="number" placeholder="0" />
+					</Form.Item>
+					<Form.Item
+						name="reason"
+						label="Adjust Reason : "
+						rules={[
+							{ required: true, message: "Please record the reason for adjustment" },
+						]}
+					>
+						<Input type="text" />
 					</Form.Item>
 				</Form>
 			</Modal>

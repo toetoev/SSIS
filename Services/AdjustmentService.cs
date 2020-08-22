@@ -31,14 +31,17 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
-        public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, Adjustment adjustment)
+        public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems)
         {
             StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(submittedByEmail);
-            adjustment.Id = Guid.NewGuid();
-            adjustment.SubmittedBy = submittedBy;
-            adjustment.SubmittedOn = DateTime.Now;
-            adjustment.Status = AdjustmentStatus.APPLIED;
-            foreach (var adjustmentItem in adjustment.AdjustmentItems)
+            Adjustment adjustment = new Adjustment
+            {
+                Id = Guid.NewGuid(),
+                SubmittedOn = DateTime.Now,
+                SubmittedBy = submittedBy,
+                Status = AdjustmentStatus.APPLIED
+            };
+            foreach (var adjustmentItem in adjustmentItems)
             {
                 Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
                 if (itemFromRepo != null)
@@ -53,6 +56,7 @@ namespace SSIS.Services
                 else
                     return new ApiResponse { Success = false, Message = "Some items do not exist" };
             }
+            adjustment.AdjustmentItems = adjustmentItems;
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.CreateAdjustment(adjustment) };
         }
 
