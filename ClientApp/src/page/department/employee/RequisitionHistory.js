@@ -84,12 +84,11 @@ export default function RequisitionHistory() {
 				}
 				setLoading(false);
 			})
-
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
 			});
-	}, [loading]);
+	}, []);
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
