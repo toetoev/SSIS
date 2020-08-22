@@ -30,6 +30,8 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.GetAllAdjustments().Result);
         }
 
+        // TODO: GetAdjustmentByStoreStaff [Manager, Supervisor] return according to total price $250
+
         [HttpPost("")]
         [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
         public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
@@ -47,10 +49,11 @@ namespace SSIS.Controllers
         }
 
         [HttpDelete("{adjustmentId}")]
-        [Authorize(Roles = StoreRole.Manager + "," + StoreRole.Supervisor)]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult DeleteAdjustment([FromRoute] Guid adjustmentId)
         {
-            return Ok(_adjustmentService.DeleteAdjustment(adjustmentId).Result);
+            string deletedByemail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.DeleteAdjustment(adjustmentId, deletedByemail).Result);
         }
     }
 }

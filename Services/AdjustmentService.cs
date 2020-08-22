@@ -66,6 +66,7 @@ namespace SSIS.Services
             StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (adjustmentFromRepo != null && adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
             {
+                // TODO: check voucher price by role
                 bool itemsValid = true;
                 foreach (var adjustmentItem in adjustmentFromRepo.AdjustmentItems)
                 {
@@ -94,12 +95,24 @@ namespace SSIS.Services
             return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };
         }
 
-        public async Task<ApiResponse> DeleteAdjustment(Guid adjustmentId)
+        public async Task<ApiResponse> DeleteAdjustment(Guid adjustmentId, string deletedByemail)
         {
             Adjustment adjustmentFromRepo = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
+            StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(deletedByemail);
             if (adjustmentFromRepo != null)
             {
-                return new ApiResponse { Success = true, Data = await _adjustmentRepository.DeleteAdjustment(adjustmentFromRepo) };
+                if (adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
+                {
+                    if (adjustmentFromRepo.SubmittedByEmail == storeStaffFromRepo.Email)
+                        return new ApiResponse { Success = true, Data = await _adjustmentRepository.DeleteAdjustment(adjustmentFromRepo) };
+                    else
+                        return new ApiResponse { Success = false, Message = "Cannot delete other people's voucher" };
+                }
+                else if (adjustmentFromRepo.Status == AdjustmentStatus.ISSUED)
+                    return new ApiResponse { Success = false, Message = "Cannot delete issued voucher" };
+                else
+                    return new ApiResponse { Success = false, Message = "Cannot delete rejected voucher" };
+
             }
             else
                 return new ApiResponse { Success = false, Message = "Cannot find adjustment to delete" };
