@@ -99,7 +99,7 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 		}, [])
 	);
 	const [visible, setVisible] = useState(false);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
 	const [rejectReason, setRejectReason] = useState("");
 	const columns = [
 		{
@@ -136,8 +136,10 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus(reviewResult);
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
