@@ -11,31 +11,25 @@ export default function StationeryCatalogue() {
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "UOM",
 			dataIndex: "uom",
-			key: "uom",
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
 			render: () => (
 				<Space>

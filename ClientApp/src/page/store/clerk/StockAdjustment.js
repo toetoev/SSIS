@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table, Descriptions } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -11,28 +11,23 @@ export default function StockAdjustment() {
 		{
 			title: "Submitted On",
 			dataIndex: "submittedOn",
-			key: "submittedOn",
 		},
 		{
 			title: "Submitted By",
 			dataIndex: "submittedBy",
-			key: "submittedBy",
 		},
 		{
 			title: "Authorized By",
 			dataIndex: "authorizedBy",
-			key: "authorizedBy",
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			key: "status",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
-			render: StockAdjustmentModal,
+			render: (text) => <StockAdjustmentModal text={text} />,
 		},
 	];
 
@@ -48,6 +43,22 @@ export default function StockAdjustment() {
 				const result = res.data;
 				if (result.success) {
 					console.log(result);
+
+					setDataSource(
+						result.data.reduce((rows, stocks) => {
+							return [
+								...rows,
+								{
+									key: stocks.id,
+									submittedOn: stocks.submittedOn,
+									submittedBy: stocks.submittedBy.name,
+									//authorizedBy: stocks.requestedOn,
+									status: stocks.status,
+									action: stocks,
+								},
+							];
+						}, [])
+					);
 				}
 			})
 
@@ -76,37 +87,39 @@ export default function StockAdjustment() {
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const StockAdjustmentModal = () => {
-	const dataSource = [
-		{
-			key: "1",
-			category: "File",
-			description: "File-Brown w/o Logo",
-			quantityAdjusted: "-6",
-			reason: "Broken Item",
-		},
-	];
+const StockAdjustmentModal = ({ text }) => {
+	const stocks = text.action;
+	const [dataSource] = useState(
+		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
+			return [
+				...rows,
+				{
+					key: adjustmentItems.adjustmentId,
+					category: adjustmentItems.item.categoryName,
+					description: adjustmentItems.item.description,
+					quantityAdjusted: adjustmentItems.adjustedQty,
+					reason: adjustmentItems.reason,
+				},
+			];
+		}, [])
+	);
+
 	const columns = [
 		{
 			title: "Item Category",
 			dataIndex: "category",
-			key: "category",
 		},
 		{
 			title: "Item Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "Quantity Adjusted",
 			dataIndex: "quantityAdjusted",
-			key: "quantityAdjusted",
 		},
 		{
 			title: "Reason",
 			dataIndex: "reason",
-			key: "reason",
 		},
 	];
 
@@ -132,10 +145,21 @@ const StockAdjustmentModal = () => {
 				</Button>
 			</Space>
 			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
-				{/* // TODO: use description component */}
-				<p>Submitted By : </p>
-				<p>Date Submitted : </p>
-				<p>Issued On : </p>
+				<Descriptions>
+					<Descriptions.Item label="Submitted By ">
+						{stocks.submittedBy.name}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Date Submitted">
+						{stocks.submittedOn}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Issued On">
+						{stocks.issuedOn}
+					</Descriptions.Item>
+				</Descriptions>
 				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</div>
@@ -145,24 +169,37 @@ const StockAdjustmentModal = () => {
 const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
+	const [itemOptions, setItemOptions] = useState([]);
 
 	const showModal = () => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
 
-	// TODO: get all item set to select
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item")
+			.get("https://localhost:5001/api/item", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
+					setItemOptions(
+						result.data.reduce(
+							(options, itemDescription) => [
+								...options,
+								{ label: itemDescription.description, value: itemDescription.description },
+							],
+							[]
+						)
+					);
 				}
 			})
 			.catch(function (error) {
@@ -191,12 +228,17 @@ const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
+				<Button 
+					style={{float: "right"}}
+					type="primary">
+					Add More
+				</Button>
+				
 				<Form form={form} layout="vertical">
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Item Description : ">
-								<Select placeholder="Pilot pencil">
-									<Select.Option value="demo">Demo</Select.Option>
+							<Form.Item name="itemDescription" label="Item Description : ">
+								<Select placeholder="Select Item" options={itemOptions}>
 								</Select>
 							</Form.Item>
 						</Col>
