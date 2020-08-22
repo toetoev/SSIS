@@ -11,5 +11,8 @@ namespace SSIS.Repositories
         Task<bool> SupplierExist(Guid supplierId);
         Task<Supplier> GetSupplierById(Guid supplierId);
         Task<List<Supplier>> GetAll();
+        Task<int> CreateSupplier(Supplier supplier);
+        Task<int> UpdateSupplier();
+       
     }
 }

@@ -11,5 +11,7 @@ namespace SSIS.Services
     {
         Task<ApiResponse> GetAllSuppliers();
         Task<ApiResponse> GetSupplierById(Guid supplierId);
+        Task<ApiResponse> CreateSupplier(Supplier supplier);
+       Task<ApiResponse> UpdateSupplier(Guid supplierId)
     }
 }

@@ -31,5 +31,17 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Suppliers.AnyAsync(s => s.Id == supplierId);
         }
+
+        public async Task<int> CreateSupplier(Supplier supplier)
+        {
+            _dbContext.Add(supplier);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateSupplier()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+
     }
 }

@@ -42,5 +42,7 @@ namespace SSIS.Repositories
             DeptStaff deptStaffFromRepo = await _dbContext.DeptStaffs.Where(ds => ds.Email == deptStaff).SingleAsync();
             return deptStaffFromRepo.Department.CollectionPointId;
         }
+
+       
     }
 }

@@ -37,5 +37,19 @@ namespace SSIS.Controllers
         {
             return Ok(_supplierService.GetSupplierById(supplierId).Result);
         }
+
+        [HttpPost("")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult CreateSupplier([FromBody] Supplier supplier)
+        {
+            return Ok(_supplierService.CreateSupplier(supplier).Result);
+        }
+
+        [HttpPost("")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult UpdateDeptRep([FromBody] Guid supplierId)
+        {
+            return Ok(_supplierService.UpdateSupplier(supplierId).Result);
+        }
     }
 }
