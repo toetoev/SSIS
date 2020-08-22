@@ -10,6 +10,7 @@ import Sidebar from "../../component/Sidebar";
 import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
+// IMPROVE: make default page to be requisition
 export default function Clerk() {
 	let { path } = useRouteMatch();
 	const items = [

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
-// TODO: search bar
+// IMPROVE: search bar
 export const Disbursement = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: sorter
+	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Retrieved Item",

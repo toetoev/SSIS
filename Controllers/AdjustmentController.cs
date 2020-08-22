@@ -46,7 +46,7 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.ReviewAdjustment(adjustmentId, status, email).Result);
         }
 
-        [HttpDelete("{adjustmentId")]
+        [HttpDelete("{adjustmentId}")]
         [Authorize(Roles = StoreRole.Manager + "," + StoreRole.Supervisor)]
         public IActionResult DeleteAdjustment([FromRoute] Guid adjustmentId)
         {

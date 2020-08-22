@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function SubmitRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: add sorter to all field
+	// IMPROVE: add sorter to all field
 	const columns = [
 		{
 			title: "Product Description",

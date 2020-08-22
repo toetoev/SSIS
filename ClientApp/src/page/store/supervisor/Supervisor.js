@@ -8,7 +8,7 @@ import Sidebar from "../../component/Sidebar";
 import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
-
+// IMPROVE: make default page to be stock adjustment
 export default function Supervisor() {
 	let { path } = useRouteMatch();
 	const items = [

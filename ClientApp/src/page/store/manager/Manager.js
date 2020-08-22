@@ -10,7 +10,6 @@ import StationeryCatalogue from "./StationeryCatalogue";
 import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
-
 export default function Manager() {
 	let { path } = useRouteMatch();
 	const items = [

@@ -4,11 +4,11 @@ import { default as React, useEffect, useState } from "react";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
-// TODO: add search bar
+// IMPROVE: add search bar
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
+	// IMPROVE: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
@@ -123,7 +123,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	);
 	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
-	// TODO: conditional render column based on status
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
