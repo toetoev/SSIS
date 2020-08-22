@@ -1,8 +1,9 @@
 import { Button, Form, Radio, Row, Select, Space } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+
 import Error from "./../../component/Error";
 import Success from "./../../component/Success";
+import axios from "axios";
 
 export default function MaintainDept() {
 	const [form] = Form.useForm();
@@ -22,7 +23,7 @@ export default function MaintainDept() {
 	const collectionPointOptions = [
 		"Stationery Store - Administration Building (9:00 AM)",
 		"Management School (11:00 AM)",
-		"Management School (11:00 AM)",
+		"Medical School (9:30 AM)",
 		"Engineering School (11:00 AM)",
 		"Science School (9:30 AM)",
 		"University Hospital (11:00 AM)",
@@ -122,7 +123,7 @@ export default function MaintainDept() {
 				<Form.Item name="collectionPoint" label="Collection Point:" labelAlign="left">
 					<Radio.Group>
 						{collectionPointOptions.map((val) => (
-							<Radio style={radioStyle} value={val}>
+							<Radio style={radioStyle} value={val} key={val}>
 								{val}
 							</Radio>
 						))}

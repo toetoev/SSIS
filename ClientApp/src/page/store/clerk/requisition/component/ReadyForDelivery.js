@@ -1,12 +1,12 @@
-import { Button, Form, Modal, Row, Space, Table } from "antd";
+import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
+// IMPROVE: search bar
 export const ReadyForDelivery = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	const [form] = Form.useForm();
-
+	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Department Name",
@@ -54,8 +54,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 											: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
-									//what field is it?
-									//collectionDate: requisition.department.collectionDate,
 									action: requisition,
 								},
 							];

@@ -1,6 +1,19 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
+import {
+	Button,
+	Col,
+	Descriptions,
+	Divider,
+	Form,
+	Input,
+	Modal,
+	Row,
+	Select,
+	Space,
+	Table,
+} from "antd";
 import React, { useEffect, useState } from "react";
 
+import Confirm from "../../component/Confirm";
 import axios from "axios";
 
 export default function StockAdjustment() {
@@ -11,32 +24,27 @@ export default function StockAdjustment() {
 		{
 			title: "Submitted On",
 			dataIndex: "submittedOn",
-			key: "submittedOn",
 		},
 		{
 			title: "Submitted By",
 			dataIndex: "submittedBy",
-			key: "submittedBy",
 		},
 		{
 			title: "Authorized By",
 			dataIndex: "authorizedBy",
-			key: "authorizedBy",
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			key: "status",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
-			render: StockAdjustmentModal,
+			render: (text) => <AdjustmentModal text={text} />,
 		},
 	];
 
-	// TODO: call get all adjustment
+	// TODO: call get all adjustment (test after create adjustment)
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/adjustment", {
@@ -48,6 +56,21 @@ export default function StockAdjustment() {
 				const result = res.data;
 				if (result.success) {
 					console.log(result);
+					setDataSource(
+						result.data.reduce((rows, stocks) => {
+							return [
+								...rows,
+								{
+									key: stocks.id,
+									submittedOn: stocks.submittedOn,
+									submittedBy: stocks.submittedBy.name,
+									//authorizedBy: stocks.requestedOn,
+									status: stocks.status,
+									action: stocks,
+								},
+							];
+						}, [])
+					);
 				}
 			})
 
@@ -67,49 +90,51 @@ export default function StockAdjustment() {
 							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
-						<CreateAdjustmentVoucher dataSource={dataSource} />
 					</Space>
 				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Row justify="end">
+				<CreateAdjustmentVoucher dataSource={dataSource} />
+			</Row>
 		</Space>
 	);
 }
 
-// TODO: Modal display: add props for passing detailed data into component, then set to the field
-const StockAdjustmentModal = () => {
-	const dataSource = [
-		{
-			key: "1",
-			category: "File",
-			description: "File-Brown w/o Logo",
-			quantityAdjusted: "-6",
-			reason: "Broken Item",
-		},
-	];
+const AdjustmentModal = ({ text }) => {
+	const stocks = text.action;
+	const [dataSource] = useState(
+		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
+			return [
+				...rows,
+				{
+					key: adjustmentItems.adjustmentId,
+					category: adjustmentItems.item.categoryName,
+					description: adjustmentItems.item.description,
+					quantityAdjusted: adjustmentItems.adjustedQty,
+					reason: adjustmentItems.reason,
+				},
+			];
+		}, [])
+	);
 	const columns = [
 		{
 			title: "Item Category",
 			dataIndex: "category",
-			key: "category",
 		},
 		{
 			title: "Item Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "Quantity Adjusted",
 			dataIndex: "quantityAdjusted",
-			key: "quantityAdjusted",
 		},
 		{
 			title: "Reason",
 			dataIndex: "reason",
-			key: "reason",
 		},
 	];
-
 	const [visible, setVisible] = useState(false);
 	const showModal = () => {
 		setVisible(true);
@@ -117,68 +142,83 @@ const StockAdjustmentModal = () => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-
+	const handleDelete = () => {};
 	return (
 		<div>
 			<Space>
-				<Button>
-					<a onClick={showModal}>View</a>
-				</Button>
-				<Button type="primary">
-					<a>Edit</a>
-				</Button>
-				<Button type="danger">
-					<a>Delete</a>
+				<Button onClick={showModal}>View</Button>
+				<Button type="danger" onClick={handleDelete}>
+					Delete
 				</Button>
 			</Space>
 			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
-				{/* // TODO: use description component */}
-				<p>Submitted By : </p>
-				<p>Date Submitted : </p>
-				<p>Issued On : </p>
+				<Descriptions>
+					<Descriptions.Item label="Submitted By ">
+						{stocks.submittedBy.name}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Date Submitted">
+						{stocks.submittedOn}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Issued On">{stocks.issuedOn}</Descriptions.Item>
+				</Descriptions>
 				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</div>
 	);
 };
 
-const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
+const CreateAdjustmentVoucher = () => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
+	const [dataSource, setDataSource] = useState([]);
+	const [remarks, setRemarks] = useState("");
+	const columns = [
+		{
+			title: "Item Description",
+			dataIndex: "description",
+		},
+		{
+			title: "Quantity Adjusted",
+			dataIndex: "adjustedQty",
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: (text) => (
+				<Space>
+					<DeleteAdjustmentItem
+						dataSource={dataSource}
+						handleDataChange={handleDataChange}
+						text={text}
+					></DeleteAdjustmentItem>
+				</Space>
+			),
+		},
+	];
 
 	const showModal = () => {
 		setVisible(true);
 	};
-
+	// TODO: create adjustment
 	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-
-	// TODO: get all item set to select
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
-
-	const { TextArea } = Input;
-
+	const handleDataChange = (data) => {
+		setDataSource(data);
+	};
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
 				Create Adjustment Voucher
 			</Button>
 			<Modal
-				title="Create Supplier"
+				title="Create Adjustment Voucher"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}
@@ -191,27 +231,173 @@ const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical">
-					<Row justify="space-between">
-						<Col span={11}>
-							<Form.Item label="Item Description : ">
-								<Select placeholder="Pilot pencil">
-									<Select.Option value="demo">Demo</Select.Option>
-								</Select>
-							</Form.Item>
-						</Col>
-						<Col span={11}>
-							<Form.Item label="Quantity Adjusted : ">
-								<InputNumber placeholder="0" />
-							</Form.Item>
-						</Col>
+				<Space direction="vertical" style={{ width: "100%" }}>
+					<Row justify="end">
+						<Space>
+							<ClearAdjustmentItems
+								dataSource={dataSource}
+								handleDataChange={handleDataChange}
+							></ClearAdjustmentItems>
+							<AddAdjustmentItem
+								dataSource={dataSource}
+								handleDataChange={handleDataChange}
+							/>
+						</Space>
 					</Row>
-					<Form.Item label="Reason : ">
-						<TextArea rows={4} placeholder="Reason..." />
+					<Table
+						columns={columns}
+						dataSource={dataSource}
+						pagination={false}
+						size="middle"
+					/>
+					<Divider dashed />
+					<Input
+						placeholder="Remarks (Optional)"
+						value={remarks}
+						onChange={(e) => setRemarks(e.target.value)}
+					/>
+				</Space>
+			</Modal>
+		</>
+	);
+};
+
+const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
+	const [form] = Form.useForm();
+	const [item, setItem] = useState("");
+	const [adjustedQty, setAdjustedQty] = useState(0);
+	const [visible, setVisible] = useState(false);
+	const [itemOptions, setItemOptions] = useState([]);
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/item", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemOptions(
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
+	const handleSubmit = () => {
+		form.validateFields()
+			.then((val) => {
+				if (dataSource.find((val) => val.key === item)) {
+					handleDataChange(
+						dataSource.map((val) => {
+							if (val.key === item) {
+								val.adjustedQty = val.adjustedQty + adjustedQty;
+							}
+							return val;
+						})
+					);
+				} else {
+					handleDataChange([
+						...dataSource,
+						{
+							key: item,
+							description: itemOptions.find((val) => val.value === item).label,
+							adjustedQty: adjustedQty,
+						},
+					]);
+				}
+				setVisible(false);
+			})
+			.catch((err) => {});
+	};
+
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
+
+	const onValuesChange = (val) => {
+		if (val.adjustedQty) setAdjustedQty(Number(val.adjustedQty));
+		if (val.item) setItem(val.item);
+	};
+	return (
+		<>
+			<Button type="primary" onClick={showModal}>
+				Add
+			</Button>
+			<Modal
+				title="Stationery Catalogue"
+				visible={visible}
+				onOk={handleSubmit}
+				onCancel={handleCancel}
+				footer={[
+					<Button key="cancel" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit}>
+						Submit
+					</Button>,
+				]}
+			>
+				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item
+						name="item"
+						label="Item Description : "
+						rules={[{ required: true, message: "Please choose one item" }]}
+					>
+						<Select options={itemOptions} style={{ width: "100%" }}></Select>
+					</Form.Item>
+					<Form.Item
+						name="adjustedQty"
+						label="Quantity Adjusted: "
+						rules={[
+							{
+								required: true,
+								type: "number",
+								transform: (val) => Number(val),
+								message: "Please input a number",
+							},
+						]}
+					>
+						<Input type="number" placeholder="0" />
 					</Form.Item>
 				</Form>
 			</Modal>
 		</>
 	);
 };
-// TODO: add Add Item modal
+
+const DeleteAdjustmentItem = ({ dataSource, handleDataChange, text }) => {
+	const handleDelete = () => {
+		Confirm("Are you sure delete the item?", "", () =>
+			handleDataChange(dataSource.filter((val) => val.key !== text.key))
+		);
+	};
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Delete
+		</Button>
+	);
+};
+
+const ClearAdjustmentItems = ({ dataSource, handleDataChange }) => {
+	const handleClick = () => {
+		if (dataSource.length > 0)
+			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
+	};
+	return (
+		<Button type="danger" onClick={handleClick}>
+			Clear
+		</Button>
+	);
+};

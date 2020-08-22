@@ -1,11 +1,14 @@
 import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
+import axios from "axios";
 
+// IMPROVE: search bar
 export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
+	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Created By",

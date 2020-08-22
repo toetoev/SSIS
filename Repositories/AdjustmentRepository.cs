@@ -41,5 +41,11 @@ namespace SSIS.Repositories
         {
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<int> DeleteAdjustment(Adjustment adjustment)
+        {
+            _dbContext.Remove(adjustment);
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

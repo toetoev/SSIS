@@ -38,9 +38,8 @@ export const LowStock = ({ loading, setLoading }) => {
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
-			render: () => <LowStockModal />,
+			render: (text) => <LowStockModal text={text}/>,
 		},
 	];
 	useEffect(() => {
@@ -66,6 +65,7 @@ export const LowStock = ({ loading, setLoading }) => {
 									reorderLevel: items.reorderLevel,
 									reorderQuantity: items.reorderQty,
 									stock: items.stock,
+									action: items,
 								},
 							];
 						}, [])
@@ -92,16 +92,46 @@ export const LowStock = ({ loading, setLoading }) => {
 };
 
 // TODO: SupplierTenderController GetSupplierTenderByItemId
-const LowStockModal = ({ setLoading }) => {
+const LowStockModal = ({ text, setLoading }) => {
+	const items= text.action;
 	const [visible, setVisible] = useState(false);
-
-	const orderData = [
-		{
-			key: "1",
-			supplierName: "ALPHA",
-			orderQuantity: "20",
-		},
-	];
+	const [dataSource, setDataSource] = useState([]);
+	console.log(items.id);
+	
+	useEffect(() => {
+		axios
+			.get(`https://localhost:5001/api/supplierTenderItem/${items.id}`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					/*setDataSource(
+						result.data.reduce((rows, items) => {
+							return [
+								...rows,
+								{
+									key: items.id,
+									category: items.categoryName,
+									bin: items.bin,
+									description: items.description,
+									uom: items.uoM,
+									reorderLevel: items.reorderLevel,
+									reorderQuantity: items.reorderQty,
+									stock: items.stock,
+								},
+							];
+						}, [])
+					);*/
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 
 	const columns = [
 		{
@@ -154,7 +184,7 @@ const LowStockModal = ({ setLoading }) => {
 					</Button>,
 				]}
 			>
-				<Table columns={columns} dataSource={orderData} pagination={false} size="small" />
+				<Table columns={columns} pagination={false} size="small" />
 			</Modal>
 		</>
 	);

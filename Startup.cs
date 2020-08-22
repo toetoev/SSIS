@@ -26,7 +26,7 @@ namespace SSIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddCors();
+            services.AddCors();
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddDbContext<DataContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DbConn")));
@@ -63,6 +63,7 @@ namespace SSIS
             services.AddScoped<IRetrievalItemService, RetrievalItemService>();
             services.AddScoped<IRetrievalService, RetrievalService>();
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<ISupplierTenderItemService, SupplierTenderItemService>();
 
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -77,6 +78,7 @@ namespace SSIS
             services.AddScoped<IRetrievalRepository, RetrievalRepository>();
             services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<ISupplierTenderItemRepository, SupplierTenderItemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,7 +96,7 @@ namespace SSIS
             }
 
             // app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

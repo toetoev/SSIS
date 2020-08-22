@@ -46,12 +46,10 @@ namespace SSIS.Models
         public Nullable<DateTime> AcknowledgedOn { get; set; }
         public RequisitionStatus Status { get; set; }
 
-        [Required]
         public string DepartmentName { get; set; }
 
         public virtual Department Department { get; set; }
 
-        [Required]
         public string RequestedByEmail { get; set; }
         public virtual DeptStaff RequestedBy { get; set; }
         public string ReviewedByEmail { get; set; }
