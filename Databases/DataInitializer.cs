@@ -179,9 +179,9 @@ namespace SSIS.Databases
         {
             ICollection<Supplier> suppliers = new List<Supplier>
             {
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" }
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "Supplier One Contact", Phone = "45723494", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "Supplier Two Contact", Phone = "94367954", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "Supplier Three Contact", Phone = "13096528", Fax = "", GST = "", Address = "" }
             };
             foreach (var supplier in suppliers)
             {

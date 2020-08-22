@@ -68,6 +68,7 @@ namespace SSIS.Services
                         }
                         await _orderRepository.CreateOrder(newOrder);
                     }
+                    return new ApiResponse { Success = false, Message = "Supplier you've chosen doesn't exist" };
                 }
 
             }

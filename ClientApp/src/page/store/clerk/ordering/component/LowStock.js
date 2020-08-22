@@ -39,7 +39,7 @@ export const LowStock = ({ loading, setLoading }) => {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <LowStockModal text={text}/>,
+			render: (text) => <LowStockModal text={text} />,
 		},
 	];
 	useEffect(() => {
@@ -51,6 +51,7 @@ export const LowStock = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, items) => {
@@ -91,13 +92,12 @@ export const LowStock = ({ loading, setLoading }) => {
 	);
 };
 
-// TODO: SupplierTenderController GetSupplierTenderByItemId
+// TODO: from action pass into modal
 const LowStockModal = ({ text, setLoading }) => {
-	const items= text.action;
+	const items = text.action;
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	console.log(items.id);
-	
+	// TODO: I think LowStock component call should have the data now, you test first, so no call here
 	useEffect(() => {
 		axios
 			.get(`https://localhost:5001/api/supplierTenderItem/${items.id}`, {
@@ -107,7 +107,6 @@ const LowStockModal = ({ text, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					/*setDataSource(
 						result.data.reduce((rows, items) => {
@@ -161,7 +160,15 @@ const LowStockModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 
-	// TODO: call createOrder
+	// TODO: call createOrder List<Order>
+	// [{
+	// 	supplierId: "",
+	// 	orderItems: [{
+	// 		itemId: "",
+	// 		orderedQty:
+	// 	}]
+	// }];
+	// check api.http
 	const handleSubmit = () => {
 		setVisible(true);
 		setLoading(true);
@@ -190,8 +197,10 @@ const LowStockModal = ({ text, setLoading }) => {
 	);
 };
 
-const Details = ({ dataSource, handleDataChange }) => {
+// TODO: pass supplier info from LowStockModal into details, then set to Descriptions
+const Details = () => {
 	const [visible, setVisible] = useState(false);
+	const [dataSource, setDataSource] = useState([]);
 
 	const columns = [
 		{
@@ -219,7 +228,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(false);
 	};
 
-	// TODO: call SupplierController get supplier by id
+	// TODO: call GetSupplierTenderItemBySupplierId (Backend not done yet)
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")

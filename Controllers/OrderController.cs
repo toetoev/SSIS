@@ -27,6 +27,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult CreateOrder([FromBody] List<Order> orders)
         {
             string orderedBy = User.FindFirst(ClaimTypes.Email).Value;

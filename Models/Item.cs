@@ -52,7 +52,7 @@ namespace SSIS.Models
         [JsonIgnore]
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
 
-        public virtual ICollection<SupplierTenderItem> SupplyTenderItems { get; set; }
+        public virtual ICollection<SupplierTenderItem> SupplierTenderItems { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }

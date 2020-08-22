@@ -35,7 +35,7 @@ namespace SSIS.Databases
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<SupplierTenderItem> SupplyTenderItems { get; set; }
+        public DbSet<SupplierTenderItem> SupplierTenderItems { get; set; }
         public DbSet<Retrieval> Retrievals { get; set; }
         public DbSet<RetrievalItem> RetrievalItems { get; set; }
         public DbSet<Adjustment> Adjustments { get; set; }
