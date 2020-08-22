@@ -18,7 +18,6 @@ namespace SSIS.Models
         [JsonConverter(typeof(DateFormatConverter))]
         public DateTime OrderedOn { get; set; }
 
-        [Required]
         public string OrderedByEmail { get; set; }
         public virtual StoreStaff OrderedBy { get; set; }
 

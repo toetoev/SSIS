@@ -3,6 +3,7 @@ import { default as React, useEffect, useState } from "react";
 
 import Confirm from "../../../../component/Confirm";
 import axios from "axios";
+import toTitleCase from "../../../../../util/toTitleCase";
 
 export const Order = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -11,20 +12,28 @@ export const Order = () => {
 	};
 	const columns = [
 		{
-			title: "Category",
-			dataIndex: "category",
-		},
-		{
-			title: "Description",
-			dataIndex: "description",
-		},
-		{
-			title: "Reorder Quantity",
-			dataIndex: "reorderQuantity",
-		},
-		{
 			title: "Supplier",
-			dataIndex: "supplier" || "supplier2" || "supplier3",
+			dataIndex: "supplier",
+		},
+		{
+			title: "Ordered By",
+			dataIndex: "orderedBy",
+		},
+		{
+			title: "Ordered Date",
+			dataIndex: "orderedOn",
+		},
+		{
+			title: "Received By",
+			dataIndex: "receivedBy",
+		},
+		{
+			title: "Received Date",
+			dataIndex: "receivedOn",
+		},
+		{
+			title: "Status",
+			dataIndex: "status",
 		},
 		{
 			title: "Action",
@@ -51,22 +60,25 @@ export const Order = () => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					const test = result.data;
 
 					console.log(test);
 					setDataSource(
-						result.data.reduce((rows, orders) => {
+						result.data.reduce((rows, order) => {
 							return [
 								...rows,
 								{
-									key: orders.id,
-									//category: orders.map(orderItems.id),
-									//category: orders.orderItems[item],
-									//description :
-									//reorderQuantity :
-									supplier : orders.supplier.name,
-									action: orders,
+									key: order.id,
+									supplier: order.supplier.name,
+									orderedBy: order.orderedBy.name,
+									orderedOn: order.orderedOn,
+									receivedBy:
+										order.receivedBy === null ? "" : order.receivedBy.name,
+									receivedOn: order.receivedOn,
+									status: toTitleCase(order.status),
+									action: order,
 								},
 							];
 						}, [])
@@ -78,7 +90,6 @@ export const Order = () => {
 				console.log(error);
 			});
 	}, []);
-
 	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
