@@ -135,7 +135,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 				Add
 			</Button>
 			<Modal
-				title="Create Stationery"
+				title="Add Stationery"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}
@@ -148,82 +148,82 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical">
+				<Form form={form} layout="vertical" size="small">
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Category">
 								<Select placeholder="Select Category">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Bin">
 								<Input placeholder="Enter Bin" />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Unit of Measure">
 								<Input placeholder="Enter Unit of Measure" />
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Description">
 								<Input placeholder="Enter description..." />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Supplier 1">
 								<Select placeholder="Select Supplier 1">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Supplier 2">
 								<Select placeholder="Select Supplier 2">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Supplier 3">
 								<Select placeholder="Select Supplier 3">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Reorder Level">
 								<Input placeholder="Enter Reorder Level" />
 							</Form.Item>
 						</Col>
-						<Col>
+						<Col span={11}>
 							<Form.Item label="Reorder Quantity">
 								<Input placeholder="Enter Reorder Quantity" />
 							</Form.Item>
