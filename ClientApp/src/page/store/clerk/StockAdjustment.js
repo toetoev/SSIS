@@ -1,6 +1,19 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table, Descriptions } from "antd";
+import {
+	Button,
+	Col,
+	Descriptions,
+	Divider,
+	Form,
+	Input,
+	Modal,
+	Row,
+	Select,
+	Space,
+	Table,
+} from "antd";
 import React, { useEffect, useState } from "react";
 
+import Confirm from "../../component/Confirm";
 import axios from "axios";
 
 export default function StockAdjustment() {
@@ -27,11 +40,11 @@ export default function StockAdjustment() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <StockAdjustmentModal text={text} />,
+			render: (text) => <AdjustmentModal text={text} />,
 		},
 	];
 
-	// TODO: call get all adjustment
+	// TODO: call get all adjustment (test after create adjustment)
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/adjustment", {
@@ -43,7 +56,6 @@ export default function StockAdjustment() {
 				const result = res.data;
 				if (result.success) {
 					console.log(result);
-
 					setDataSource(
 						result.data.reduce((rows, stocks) => {
 							return [
@@ -78,16 +90,18 @@ export default function StockAdjustment() {
 							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
-						<CreateAdjustmentVoucher dataSource={dataSource} />
 					</Space>
 				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Row justify="end">
+				<CreateAdjustmentVoucher dataSource={dataSource} />
+			</Row>
 		</Space>
 	);
 }
 
-const StockAdjustmentModal = ({ text }) => {
+const AdjustmentModal = ({ text }) => {
 	const stocks = text.action;
 	const [dataSource] = useState(
 		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
@@ -103,7 +117,6 @@ const StockAdjustmentModal = ({ text }) => {
 			];
 		}, [])
 	);
-
 	const columns = [
 		{
 			title: "Item Category",
@@ -122,7 +135,6 @@ const StockAdjustmentModal = ({ text }) => {
 			dataIndex: "reason",
 		},
 	];
-
 	const [visible, setVisible] = useState(false);
 	const showModal = () => {
 		setVisible(true);
@@ -130,18 +142,13 @@ const StockAdjustmentModal = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-
+	const handleDelete = () => {};
 	return (
 		<div>
 			<Space>
-				<Button>
-					<a onClick={showModal}>View</a>
-				</Button>
-				<Button type="primary">
-					<a>Edit</a>
-				</Button>
-				<Button type="danger">
-					<a>Delete</a>
+				<Button onClick={showModal}>View</Button>
+				<Button type="danger" onClick={handleDelete}>
+					Delete
 				</Button>
 			</Space>
 			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
@@ -156,9 +163,7 @@ const StockAdjustmentModal = ({ text }) => {
 					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Issued On">
-						{stocks.issuedOn}
-					</Descriptions.Item>
+					<Descriptions.Item label="Issued On">{stocks.issuedOn}</Descriptions.Item>
 				</Descriptions>
 				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
@@ -166,19 +171,106 @@ const StockAdjustmentModal = ({ text }) => {
 	);
 };
 
-const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
+const CreateAdjustmentVoucher = () => {
 	const [form] = Form.useForm();
+	const [visible, setVisible] = useState(false);
+	const [dataSource, setDataSource] = useState([]);
+	const [remarks, setRemarks] = useState("");
+	const columns = [
+		{
+			title: "Item Description",
+			dataIndex: "description",
+		},
+		{
+			title: "Quantity Adjusted",
+			dataIndex: "adjustedQty",
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: (text) => (
+				<Space>
+					<DeleteAdjustmentItem
+						dataSource={dataSource}
+						handleDataChange={handleDataChange}
+						text={text}
+					></DeleteAdjustmentItem>
+				</Space>
+			),
+		},
+	];
+
+	const showModal = () => {
+		setVisible(true);
+	};
+	// TODO: create adjustment
+	const handleSubmit = () => {};
+
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
+	const handleDataChange = (data) => {
+		setDataSource(data);
+	};
+	return (
+		<>
+			<Button type="primary" onClick={showModal}>
+				Create Adjustment Voucher
+			</Button>
+			<Modal
+				title="Create Adjustment Voucher"
+				visible={visible}
+				onOk={handleSubmit}
+				onCancel={handleCancel}
+				footer={[
+					<Button key="cancel" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit}>
+						Submit
+					</Button>,
+				]}
+			>
+				<Space direction="vertical" style={{ width: "100%" }}>
+					<Row justify="end">
+						<Space>
+							<ClearAdjustmentItems
+								dataSource={dataSource}
+								handleDataChange={handleDataChange}
+							></ClearAdjustmentItems>
+							<AddAdjustmentItem
+								dataSource={dataSource}
+								handleDataChange={handleDataChange}
+							/>
+						</Space>
+					</Row>
+					<Table
+						columns={columns}
+						dataSource={dataSource}
+						pagination={false}
+						size="middle"
+					/>
+					<Divider dashed />
+					<Input
+						placeholder="Remarks (Optional)"
+						value={remarks}
+						onChange={(e) => setRemarks(e.target.value)}
+					/>
+				</Space>
+			</Modal>
+		</>
+	);
+};
+
+const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
+	const [form] = Form.useForm();
+	const [item, setItem] = useState("");
+	const [adjustedQty, setAdjustedQty] = useState(0);
 	const [visible, setVisible] = useState(false);
 	const [itemOptions, setItemOptions] = useState([]);
 
 	const showModal = () => {
 		setVisible(true);
-	};
-
-	const handleSubmit = () => { };
-
-	const handleCancel = (e) => {
-		setVisible(false);
 	};
 
 	useEffect(() => {
@@ -192,13 +284,9 @@ const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 				const result = res.data;
 				if (result.success) {
 					setItemOptions(
-						result.data.reduce(
-							(options, itemDescription) => [
-								...options,
-								{ label: itemDescription.description, value: itemDescription.description },
-							],
-							[]
-						)
+						result.data.reduce((options, item) => {
+							return [...options, { label: item.description, value: item.id }];
+						}, [])
 					);
 				}
 			})
@@ -207,15 +295,48 @@ const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 			});
 	}, []);
 
-	const { TextArea } = Input;
+	const handleSubmit = () => {
+		form.validateFields()
+			.then((val) => {
+				if (dataSource.find((val) => val.key === item)) {
+					handleDataChange(
+						dataSource.map((val) => {
+							if (val.key === item) {
+								val.adjustedQty = val.adjustedQty + adjustedQty;
+							}
+							return val;
+						})
+					);
+				} else {
+					handleDataChange([
+						...dataSource,
+						{
+							key: item,
+							description: itemOptions.find((val) => val.value === item).label,
+							adjustedQty: adjustedQty,
+						},
+					]);
+				}
+				setVisible(false);
+			})
+			.catch((err) => {});
+	};
 
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
+
+	const onValuesChange = (val) => {
+		if (val.adjustedQty) setAdjustedQty(Number(val.adjustedQty));
+		if (val.item) setItem(val.item);
+	};
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Create Adjustment Voucher
+				Add
 			</Button>
 			<Modal
-				title="Create Supplier"
+				title="Stationery Catalogue"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}
@@ -228,32 +349,55 @@ const CreateAdjustmentVoucher = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Button 
-					style={{float: "right"}}
-					type="primary">
-					Add More
-				</Button>
-				
-				<Form form={form} layout="vertical">
-					<Row justify="space-between">
-						<Col span={11}>
-							<Form.Item name="itemDescription" label="Item Description : ">
-								<Select placeholder="Select Item" options={itemOptions}>
-								</Select>
-							</Form.Item>
-						</Col>
-						<Col span={11}>
-							<Form.Item label="Quantity Adjusted : ">
-								<InputNumber placeholder="0" />
-							</Form.Item>
-						</Col>
-					</Row>
-					<Form.Item label="Reason : ">
-						<TextArea rows={4} placeholder="Reason..." />
+				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item
+						name="item"
+						label="Item Description : "
+						rules={[{ required: true, message: "Please choose one item" }]}
+					>
+						<Select options={itemOptions} style={{ width: "100%" }}></Select>
+					</Form.Item>
+					<Form.Item
+						name="adjustedQty"
+						label="Quantity Adjusted: "
+						rules={[
+							{
+								required: true,
+								type: "number",
+								transform: (val) => Number(val),
+								message: "Please input a number",
+							},
+						]}
+					>
+						<Input type="number" placeholder="0" />
 					</Form.Item>
 				</Form>
 			</Modal>
 		</>
 	);
 };
-// TODO: add Add Item modal
+
+const DeleteAdjustmentItem = ({ dataSource, handleDataChange, text }) => {
+	const handleDelete = () => {
+		Confirm("Are you sure delete the item?", "", () =>
+			handleDataChange(dataSource.filter((val) => val.key !== text.key))
+		);
+	};
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Delete
+		</Button>
+	);
+};
+
+const ClearAdjustmentItems = ({ dataSource, handleDataChange }) => {
+	const handleClick = () => {
+		if (dataSource.length > 0)
+			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
+	};
+	return (
+		<Button type="danger" onClick={handleClick}>
+			Clear
+		</Button>
+	);
+};

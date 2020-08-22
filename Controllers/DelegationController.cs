@@ -18,11 +18,32 @@ namespace SSIS.Controllers
             _delegationService = delegationService;
         }
 
-        [HttpGet("")]
-        public IActionResult GetAction()
+        [HttpPost("")]
+        public IActionResult CreateDelegation([FromBody] Delegation delegation)
         {
-            string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.GetDelegationByDeptHeadEmail(email).Result);
+            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.CreateDelegation(delegation, delegatedByEmail).Result);
+        }
+
+        [HttpGet("")]
+        public IActionResult GetDelegationByDeptHeadEmail()
+        {
+            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.GetDelegationByDeptHeadEmail(delegatedByEmail).Result);
+        }
+
+        [HttpPut("")]
+        public IActionResult UpdateDelegation([FromBody] Delegation delegation)
+        {
+            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.UpdateDelegation(delegation, delegatedByEmail).Result);
+        }
+
+        [HttpDelete("{startDate}")]
+        public IActionResult DeleteDelegation([FromRoute] DateTime startDate)
+        {
+            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.DeleteDelegation(startDate, delegatedByEmail).Result);
         }
     }
 }

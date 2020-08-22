@@ -1,34 +1,29 @@
-import { Button, Descriptions, Modal, Space, Table, Row, Col, Input } from "antd";
+import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../component/Error";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-
+// IMPROVE: add search bar
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
-	const { Search } = Input;
-	const [search, setSearch] = useState("");
-	const [filterState, setFilterState] = useState([]);
-
 	const columns = [
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			sorter: (a, b) => sorter(a.status, b.status),
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: (a, b) => sorter(a.status, b.status),
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			key : "status",
 			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
@@ -74,36 +69,12 @@ export default function ReviewRequisition() {
 			});
 	}, [loading]);
 
-	console.log(dataSource);
-
-	useEffect(() => {
-		setFilterState(
-			dataSource.filter(e => {
-				return e.requestedBy.toLowerCase().includes(search.toLowerCase()) || 
-					e.status.toLowerCase().includes(search.toLowerCase()) ||
-					e.requestedDate.includes(search);
-			})
-		)
-	}, [search, dataSource]);
-
 	return (
-		<Space direction="vertical" style={{ width: "100%" }}>
+		<Space direction="vertical">
 			<h3>Review Requisitions</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
-				<Col>
-					<Space>
-						<Search
-							placeholder="input search text"
-							//onSearch={(value) => console.log(value)}
-							style={{ width: 200 }}
-							onChange={e => setSearch(e.target.value)}
-						/>
-					</Space>
-				</Col>
-			</Row>
 			<Table
 				loading={loading}
-				dataSource={filterState}
+				dataSource={dataSource}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
@@ -128,7 +99,9 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 		}, [])
 	);
 	const [visible, setVisible] = useState(false);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
+	const [rejectReason, setRejectReason] = useState("");
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -148,8 +121,15 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 	};
 
 	const handleReview = (reviewResult) => {
+		var data;
+		if (reviewResult === "REJECTED")
+			data = {
+				status: reviewResult,
+				comment: rejectReason,
+			};
+		else data = { status: reviewResult };
 		axios
-			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
+			.put("https://localhost:5001/api/requisition/" + text.key, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -157,8 +137,10 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus(reviewResult);
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
@@ -174,21 +156,21 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				footer={
 					status === "APPLIED"
 						? [
-							<Button
-								key="reject"
-								type="danger"
-								onClick={() => handleReview("REJECTED")}
-							>
-								Reject
+								<Button
+									key="reject"
+									type="danger"
+									onClick={() => handleReview("REJECTED")}
+								>
+									Reject
 								</Button>,
-							<Button
-								key="approve"
-								type="primary"
-								onClick={() => handleReview("APPROVED")}
-							>
-								Approve
+								<Button
+									key="approve"
+									type="primary"
+									onClick={() => handleReview("APPROVED")}
+								>
+									Approve
 								</Button>,
-						]
+						  ]
 						: null
 				}
 			>
@@ -236,16 +218,20 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 					</>
 				) : null}
 				{status === "DELIVERED" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:">
-							{requisition.acknowledgedBy === null
-								? ""
-								: requisition.acknowledgedBy.name}
-						</Descriptions.Item>
-						<Descriptions.Item label="Delivered date:">
-							{requisition.acknowledgedOn}
-						</Descriptions.Item>
-					</Descriptions>
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Delivered by:">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Delivered date:">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
 				) : null}
 				<Table
 					dataSource={dataSource}
@@ -254,28 +240,17 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 					pagination={false}
 					size="small"
 				/>
+				{status === "APPLIED" ? (
+					<>
+						<Divider dashed />
+						<Input
+							placeholder="Reject Reason (Optional)"
+							value={rejectReason}
+							onChange={(e) => setRejectReason(e.target.value)}
+						/>
+					</>
+				) : null}
 			</Modal>
 		</div>
 	);
 };
-
-function fuzzysearch(needle, haystack) {
-	var hlen = haystack.length;
-	var nlen = needle.length;
-	if (nlen > hlen) {
-		return false;
-	}
-	if (nlen === hlen) {
-		return needle === haystack;
-	}
-	outer: for (var i = 0, j = 0; i < nlen; i++) {
-		var nch = needle.charCodeAt(i);
-		while (j < hlen) {
-			if (haystack.charCodeAt(j++) === nch) {
-				continue outer;
-			}
-		}
-		return false;
-	}
-	return true;
-}

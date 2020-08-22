@@ -13,15 +13,17 @@ namespace SSIS.Services
     {
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IRequisitionRepository _requisitionRepository;
+        private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
+            _retrievalRepository = retrievalRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -63,7 +65,7 @@ namespace SSIS.Services
                     requisitionStatuses = new List<RequisitionStatus> { RequisitionStatus.APPROVED, RequisitionStatus.DELIVERED, RequisitionStatus.PENDING_COLLECTION, RequisitionStatus.PROCESSING_RETRIEVAL };
                     break;
                 case DeptRole.DeptHead:
-                    requisitionStatuses = new List<RequisitionStatus> { RequisitionStatus.APPLIED, RequisitionStatus.APPROVED, RequisitionStatus.DELIVERED, RequisitionStatus.PENDING_COLLECTION };
+                    requisitionStatuses = Enum.GetValues(typeof(RequisitionStatus)).Cast<RequisitionStatus>().ToList();
                     break;
                 default:
                     break;
@@ -81,7 +83,7 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId, itemId) };
         }
 
-        public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email)
+        public async Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email, string comment)
         {
             Requisition requisition = await _requisitionRepository.GetRequisitionById(requisitionId);
             DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
@@ -94,6 +96,7 @@ namespace SSIS.Services
                         requisition.Status = status;
                         requisition.ReviewedBy = deptStaff;
                         requisition.ReviewedOn = DateTime.Now;
+                        requisition.Comment = comment;
                         return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
                     }
                     if (deptStaff.Role == DeptRole.DeptRep && requisition.Status == RequisitionStatus.PENDING_COLLECTION && status == RequisitionStatus.DELIVERED)
@@ -101,6 +104,8 @@ namespace SSIS.Services
                         requisition.Status = status;
                         requisition.AcknowledgedBy = deptStaff;
                         requisition.AcknowledgedOn = DateTime.Now;
+                        if (requisition.Retrieval.Requisitions.All(r => r.Status == RequisitionStatus.DELIVERED))
+                            await _retrievalRepository.DeleteRetrieval(requisition.Retrieval);
                         foreach (var requisitionItem in requisition.RequisitionItems)
                         {
                             Item itemFromRepo = await _itemRepository.GetItemById(requisitionItem.ItemId);

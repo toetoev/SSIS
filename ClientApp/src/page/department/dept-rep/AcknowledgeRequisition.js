@@ -2,17 +2,19 @@ import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
+// IMPROVE: add search bar
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-
+	// IMPROVE: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Reviewed By",
@@ -120,9 +122,9 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
-	// TODO: conditional render column based on status
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -149,16 +151,22 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	};
 	const handleAcknowledge = (e) => {
 		axios
-			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
+			.put(
+				`https://localhost:5001/api/requisition/${requisition.id}`,
+				{ status: "DELIVERED" },
+				{
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				}
+			)
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus("DELIVERED");
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
