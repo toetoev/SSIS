@@ -44,7 +44,7 @@ export default function StockAdjustment() {
 		},
 	];
 
-	// TODO: call get all adjustment
+	// TODO: call get all adjustment (test after create adjustment)
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/adjustment", {
