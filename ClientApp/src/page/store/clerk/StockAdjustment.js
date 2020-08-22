@@ -7,7 +7,6 @@ import axios from "axios";
 export default function StockAdjustment() {
 	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
 			title: "Submitted On",
@@ -61,7 +60,6 @@ export default function StockAdjustment() {
 					);
 				}
 			})
-
 			.catch(function (error) {
 				console.log(error);
 			});
@@ -130,6 +128,7 @@ const AdjustmentDetailsModal = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+	// TODO: call delete adjustment
 	const handleDelete = () => {};
 	return (
 		<div>
