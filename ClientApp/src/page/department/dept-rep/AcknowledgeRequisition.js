@@ -4,6 +4,7 @@ import { default as React, useEffect, useState } from "react";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);

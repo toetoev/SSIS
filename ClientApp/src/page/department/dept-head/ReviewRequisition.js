@@ -6,6 +6,7 @@ import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -23,7 +24,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Status",
 			dataIndex: "status",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -206,16 +207,20 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 					</>
 				) : null}
 				{status === "DELIVERED" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:">
-							{requisition.acknowledgedBy === null
-								? ""
-								: requisition.acknowledgedBy.name}
-						</Descriptions.Item>
-						<Descriptions.Item label="Delivered date:">
-							{requisition.acknowledgedOn}
-						</Descriptions.Item>
-					</Descriptions>
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Delivered by:">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Delivered date:">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
 				) : null}
 				<Table
 					dataSource={dataSource}
