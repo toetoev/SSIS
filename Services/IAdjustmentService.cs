@@ -10,7 +10,7 @@ namespace SSIS.Services
     {
         Task<ApiResponse> GetAllAdjustments();
         Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems);
-        Task<ApiResponse> UpdateAdjustmentStatus(Guid adjustmentId, AdjustmentStatus status, string email);
+        Task<ApiResponse> ReviewAdjustment(Guid adjustmentId, AdjustmentStatus status, string email);
         Task<ApiResponse> DeleteAdjustment(Guid adjustmentId);
     }
 }

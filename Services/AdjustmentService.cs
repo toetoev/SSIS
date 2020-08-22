@@ -60,15 +60,36 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.CreateAdjustment(adjustment) };
         }
 
-        public async Task<ApiResponse> UpdateAdjustmentStatus(Guid adjustmentId, AdjustmentStatus status, string email)
+        public async Task<ApiResponse> ReviewAdjustment(Guid adjustmentId, AdjustmentStatus status, string email)
         {
-            Adjustment adjustment = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
-            //StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
-            if (adjustment != null && adjustment.Status == AdjustmentStatus.APPLIED)
+            Adjustment adjustmentFromRepo = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
+            StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            if (adjustmentFromRepo != null && adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
             {
-                adjustment.Status = status;
-                return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
-
+                bool itemsValid = true;
+                foreach (var adjustmentItem in adjustmentFromRepo.AdjustmentItems)
+                {
+                    Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
+                    if (itemFromRepo != null)
+                    {
+                        if (adjustmentItem.AdjustedQty < 0)
+                        {
+                            if (itemFromRepo.Stock < Math.Abs(adjustmentItem.AdjustedQty))
+                            {
+                                itemsValid = false;
+                                return new ApiResponse { Success = false, Message = "Stock don't have enough items to deduct" };
+                            }
+                        }
+                        itemFromRepo.Stock += adjustmentItem.AdjustedQty;
+                    }
+                    else
+                        return new ApiResponse { Success = false, Message = "Some items do not exist" };
+                }
+                if (itemsValid)
+                {
+                    adjustmentFromRepo.Status = status;
+                    return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
+                }
             }
             return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };
         }

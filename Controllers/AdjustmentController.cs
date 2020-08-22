@@ -40,10 +40,10 @@ namespace SSIS.Controllers
 
         [HttpPut("{adjustmentId}")]
         [Authorize(Roles = StoreRole.Manager + "," + StoreRole.Supervisor)]
-        public IActionResult UpdateAdjustmentStatus([FromRoute] Guid adjustmentId, [FromBody] AdjustmentStatus status)
+        public IActionResult ReviewAdjustment([FromRoute] Guid adjustmentId, [FromBody] AdjustmentStatus status)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.UpdateAdjustmentStatus(adjustmentId, status, email).Result);
+            return Ok(_adjustmentService.ReviewAdjustment(adjustmentId, status, email).Result);
         }
 
         [HttpDelete("{adjustmentId")]
