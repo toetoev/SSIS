@@ -2,18 +2,19 @@ import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-// TODO: add search bar
+// IMPROVE: add search bar
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
+	// IMPROVE: make sorter work
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Reviewed By",
@@ -123,7 +124,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	);
 	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
-	// TODO: conditional render column based on status
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",

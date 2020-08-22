@@ -11,8 +11,14 @@ namespace SSIS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public string ContactName { get; set; }
+
+        [Required]
         public string Phone { get; set; }
         public string Fax { get; set; }
         public string GST { get; set; }

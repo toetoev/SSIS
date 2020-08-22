@@ -5,11 +5,11 @@ import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-// TODO: add search bar
+// IMPROVE: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work all field
+	// IMPROVE: make sorter work all field
 	const columns = [
 		{
 			title: "Requested Date",
@@ -115,7 +115,7 @@ const RequisitionModal = ({ text }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					requestedQty: requisitionItem.need,
-					// TODO: if its -1, render nothing
+					// IMPROVE: conditional render if its -1, render nothing
 					receivedQty: requisitionItem.actual,
 					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
 				},
@@ -124,7 +124,7 @@ const RequisitionModal = ({ text }) => {
 	);
 	const [status] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
-	// TODO: conditional render column based on status
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",

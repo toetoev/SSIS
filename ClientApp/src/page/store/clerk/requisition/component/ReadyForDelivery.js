@@ -3,10 +3,10 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
-// TODO: search bar
+// IMPROVE: search bar
 export const ReadyForDelivery = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: sorter
+	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Department Name",
@@ -54,8 +54,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 											: requisition.requestedBy.name,
 									requestedDate: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
-									// TODO: what field is it?
-									//collectionDate: requisition.department.collectionDate,
 									action: requisition,
 								},
 							];

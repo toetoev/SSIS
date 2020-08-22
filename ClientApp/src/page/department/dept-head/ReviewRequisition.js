@@ -6,7 +6,7 @@ import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-// TODO: add search bar
+// IMPROVE: add search bar
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -101,6 +101,7 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 	const [visible, setVisible] = useState(false);
 	const [status, setStatus] = useState(requisition.status);
 	const [rejectReason, setRejectReason] = useState("");
+	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",

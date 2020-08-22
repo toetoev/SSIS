@@ -30,20 +30,31 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.GetAllAdjustments().Result);
         }
 
+        // TODO: GetAdjustmentByStoreStaff [Manager, Supervisor] return according to total price $250
+
         [HttpPost("")]
         [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
-        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
+        //  remarks and a List<AdjustmentItem> adjustmentItems
+        public IActionResult CreateAdjustment([FromBody] Adjustment adjustment)
         {
             string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustmentItems).Result);
+            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustment).Result);
         }
 
         [HttpPut("{adjustmentId}")]
         [Authorize(Roles = StoreRole.Manager + "," + StoreRole.Supervisor)]
-        public IActionResult UpdateAdjustmentStatus([FromRoute] Guid adjustmentId, [FromBody] AdjustmentStatus status)
+        public IActionResult ReviewAdjustment([FromRoute] Guid adjustmentId, [FromBody] AdjustmentStatus status)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.UpdateAdjustmentStatus(adjustmentId, status, email).Result);
+            return Ok(_adjustmentService.ReviewAdjustment(adjustmentId, status, email).Result);
+        }
+
+        [HttpDelete("{adjustmentId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult DeleteAdjustment([FromRoute] Guid adjustmentId)
+        {
+            string deletedByemail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.DeleteAdjustment(adjustmentId, deletedByemail).Result);
         }
     }
 }

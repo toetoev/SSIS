@@ -5,11 +5,11 @@ import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
 
-// TODO: add search bar
+// IMPROVE: add search bar
 export const Todo = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-	// TODO: make sorter work
+	// IMPROVE: make sorter work
 	const columns = [
 		{
 			title: "Department Name",

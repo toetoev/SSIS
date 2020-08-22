@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
 import axios from "axios";
-// TODO: search bar
+
+// IMPROVE: search bar
 export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: sorter
+	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Created By",
