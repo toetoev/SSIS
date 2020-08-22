@@ -115,6 +115,7 @@ const RequisitionModal = ({ text }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					requestedQty: requisitionItem.need,
+					// TODO: if its -1, render nothing
 					receivedQty: requisitionItem.actual,
 					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
 				},

@@ -1,11 +1,12 @@
-import { Button, Form, InputNumber, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
+import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
-export const Disbursement = ({ loading, setLoading }) => {
-	const [form] = Form.useForm();
-	const [dataSource, setDataSource] = useState([]);
+import axios from "axios";
 
+// TODO: search bar
+export const Disbursement = ({ loading, setLoading }) => {
+	const [dataSource, setDataSource] = useState([]);
+	// TODO: sorter
 	const columns = [
 		{
 			title: "Retrieved Item",
@@ -122,7 +123,6 @@ const DisburseModal = ({ text, setLoading }) => {
 					},
 				];
 		});
-		console.log(data);
 		if (data.length === dataSource.length) {
 			axios
 				.put("https://localhost:5001/api/requisitionItem/", data, {

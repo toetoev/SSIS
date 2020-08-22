@@ -1,12 +1,12 @@
-import { Button, Form, Modal, Space, Table } from "antd";
+import { Button, Modal, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 
+// TODO: search bar
 export const Completed = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	const [form] = Form.useForm();
-
+	// TODO: sorter
 	const columns = [
 		{
 			title: "Department Name",
@@ -114,22 +114,19 @@ const CompletedModal = ({ text }) => {
 		setVisible(false);
 	};
 	return (
-		<div>
-			<Space>
-				<Button type="primary" onClick={showModal}>
-					View
-				</Button>
-				<Button type="danger">Delete</Button>
-			</Space>
+		<>
+			<Button type="primary" onClick={showModal}>
+				View
+			</Button>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
 				<Table
 					dataSource={dataSource}
 					columns={reqColumns}
 					pagination={false}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					size="small"
 				/>
 			</Modal>
-		</div>
+		</>
 	);
 };
