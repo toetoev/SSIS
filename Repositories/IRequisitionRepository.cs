@@ -14,5 +14,6 @@ namespace SSIS.Repositories
         Task<Requisition> GetRequisitionById(Guid requisitionId);
         Task<int> UpdateRequisition();
         Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId);
+        Task<List<Item>> GetPopularItems(string deptName);
     }
 }

@@ -15,15 +15,17 @@ namespace SSIS.Services
         private readonly IRequisitionRepository _requisitionRepository;
         private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IDeptRepository _deptRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository, IRetrievalRepository retrievalRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
             _retrievalRepository = retrievalRepository;
+            _deptRepository = deptRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -119,6 +121,23 @@ namespace SSIS.Services
 
             }
             return new ApiResponse { Success = false, Message = "Cannot find requisition reviewing" };
+        }
+
+        public async Task<ApiResponse> GetPopularItems(string deptName)
+        {
+            if (await _deptRepository.DepartmentExist(deptName))
+            {
+                List<Item> items = await _requisitionRepository.GetPopularItems(deptName);
+                foreach (var item in items)
+                {
+                    Item itemFromRepo = await _itemRepository.GetItemById(item.Id);
+                    item.Description = itemFromRepo.Description;
+                }
+                return new ApiResponse { Success = true, Data = items };
+
+            }
+            else
+                return new ApiResponse { Success = false, Message = "Popular items you are searching for does not exist" };
         }
     }
 }

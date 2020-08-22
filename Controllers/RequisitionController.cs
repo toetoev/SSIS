@@ -60,5 +60,12 @@ namespace SSIS.Controllers
         {
             return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId).Result);
         }
+
+        [HttpGet("popular")]
+        [Authorize(Roles = DeptRole.Employee)]
+        public IActionResult GetPopularItems([FromQuery] string deptName)
+        {
+            return Ok(_requisitionService.GetPopularItems(deptName).Result);
+        }
     }
 }

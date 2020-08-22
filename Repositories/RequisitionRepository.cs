@@ -43,7 +43,6 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId)
         {
-            // return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId).OrderBy(r => r.RequestedOn).ToListAsync();
             return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId && r.RequisitionItems.Any(ri => ri.ItemId == itemId)).Select(r => new Requisition(
                 r.Id,
                 r.RequestedOn,
@@ -61,10 +60,18 @@ namespace SSIS.Repositories
                 r.AcknowledgedBy,
                 r.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList(),
                 r.RetrievalId
-                // take only the non-deleted children:
             )).ToListAsync();
-            // keep only those parents that have any non-deleted Children:
-            // .Where(r => r.Children.Any());
+        }
+
+        public async Task<List<Item>> GetPopularItems(string deptName)
+        {
+            return await _dbContext.Items
+                .Where(i => i.RequisitionItems.Where(ri => ri.Requisition.DepartmentName == deptName).Any())
+                .GroupBy(i => i.Id)
+                .OrderByDescending(i => i.Count())
+                .Take(5)
+                .Select(i => new Item { Id = i.Key })
+                .ToListAsync();
         }
     }
 }
