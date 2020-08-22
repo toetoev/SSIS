@@ -45,5 +45,12 @@ namespace SSIS.Controllers
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_adjustmentService.UpdateAdjustmentStatus(adjustmentId, status, email).Result);
         }
+
+        [HttpDelete("{adjustmentId")]
+        [Authorize(Roles = StoreRole.Manager + "," + StoreRole.Supervisor)]
+        public IActionResult DeleteAdjustment([FromRoute] Guid adjustmentId)
+        {
+            return Ok(_adjustmentService.DeleteAdjustment(adjustmentId).Result);
+        }
     }
 }

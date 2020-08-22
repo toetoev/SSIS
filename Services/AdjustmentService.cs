@@ -26,7 +26,6 @@ namespace SSIS.Services
         {
             _adjustmentRepository = adjustmentRepository;
             _itemRepository = itemRepository;
-
         }
         public async Task<ApiResponse> GetAllAdjustments()
         {
@@ -47,8 +46,12 @@ namespace SSIS.Services
                 Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
                 if (itemFromRepo != null)
                 {
-                    if (adjustmentItem.AdjustedQty < 0 && itemFromRepo.Stock >= Math.Abs(adjustmentItem.AdjustedQty))
-                        adjustmentItem.AdjustmentId = adjustment.Id;
+                    if (adjustmentItem.AdjustedQty < 0)
+                        if (itemFromRepo.Stock >= Math.Abs(adjustmentItem.AdjustedQty))
+                            adjustmentItem.AdjustmentId = adjustment.Id;
+                        else
+                            return new ApiResponse { Success = false, Message = "Stock don't have enough items to deduct" };
+
                 }
                 else
                     return new ApiResponse { Success = false, Message = "Some items do not exist" };
@@ -62,13 +65,23 @@ namespace SSIS.Services
             Adjustment adjustment = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
             //StoreStaff storeStaff = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (adjustment != null && adjustment.Status == AdjustmentStatus.APPLIED)
-
             {
                 adjustment.Status = status;
                 return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
 
             }
             return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };
+        }
+
+        public async Task<ApiResponse> DeleteAdjustment(Guid adjustmentId)
+        {
+            Adjustment adjustmentFromRepo = await _adjustmentRepository.GetAdjustmentById(adjustmentId);
+            if (adjustmentFromRepo != null)
+            {
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.DeleteAdjustment(adjustmentFromRepo) };
+            }
+            else
+                return new ApiResponse { Success = false, Message = "Cannot find adjustment to delete" };
         }
     }
 }

@@ -12,6 +12,7 @@ namespace SSIS.Repositories
         Task<Adjustment> GetAdjustmentById(Guid adjustmentId);
         Task<int> UpdateAdjustmentStatus();
         Task<int> UpdateAdjustment();
+        Task<int> DeleteAdjustment(Adjustment adjustment);
     }
 
 }
