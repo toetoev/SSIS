@@ -34,10 +34,11 @@ namespace SSIS.Controllers
 
         [HttpPost("")]
         [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
-        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
+        //  remarks and a List<AdjustmentItem> adjustmentItems
+        public IActionResult CreateAdjustment([FromBody] Adjustment adjustment)
         {
             string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustmentItems).Result);
+            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustment).Result);
         }
 
         [HttpPut("{adjustmentId}")]
