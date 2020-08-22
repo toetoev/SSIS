@@ -1,14 +1,12 @@
-import "./Login.css";
-
-import { Button, Form, Input, Radio } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
-
-import DeptRole from "../../constant/DeptRole";
-import Error from "../component/Error";
-import StoreRole from "../../constant/StoreRole";
+import { Button, Form, Input, Radio } from "antd";
 import axios from "axios";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import DeptRole from "../../constant/DeptRole";
+import StoreRole from "../../constant/StoreRole";
+import Error from "../component/Error";
+import "./Login.css";
 
 export default function Login() {
 	let history = useHistory();
@@ -32,7 +30,6 @@ export default function Login() {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					localStorage.setItem("ACCESS_TOKEN", result.data.accessToken);
 					localStorage.setItem("ROLE", result.data.role);

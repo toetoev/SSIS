@@ -23,7 +23,7 @@ export default function MaintainDept() {
 	const collectionPointOptions = [
 		"Stationery Store - Administration Building (9:00 AM)",
 		"Management School (11:00 AM)",
-		"Management School (11:00 AM)",
+		"Medical School (9:30 AM)",
 		"Engineering School (11:00 AM)",
 		"Science School (9:30 AM)",
 		"University Hospital (11:00 AM)",
@@ -56,7 +56,6 @@ export default function MaintainDept() {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDeptRepOptions(
 						result.data.reduce(
@@ -124,7 +123,7 @@ export default function MaintainDept() {
 				<Form.Item name="collectionPoint" label="Collection Point:" labelAlign="left">
 					<Radio.Group>
 						{collectionPointOptions.map((val) => (
-							<Radio style={radioStyle} value={val}>
+							<Radio style={radioStyle} value={val} key={val}>
 								{val}
 							</Radio>
 						))}

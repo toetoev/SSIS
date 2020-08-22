@@ -25,10 +25,10 @@ namespace SSIS.Controllers
 
         [HttpPut("{requisitionId}")]
         [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep)]
-        public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] RequisitionStatus status)
+        public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] Requisition requisition)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_requisitionService.UpdateRequisitionStatus(requisitionId, status, email).Result);
+            return Ok(_requisitionService.UpdateRequisitionStatus(requisitionId, requisition.Status, email, requisition.Comment).Result);
         }
 
         [HttpGet("{status}")]
@@ -46,20 +46,19 @@ namespace SSIS.Controllers
             return Ok(_requisitionService.GetRequisitionsByDeptStaff(email).Result);
         }
 
-        [HttpGet("{retrievalId}/requisition-item/{itemId}")]
-        [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
-        {
-            string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId, email).Result);
-        }
-
         [HttpPost("")]
         [Authorize(Roles = DeptRole.Employee)]
         public IActionResult CreateRequisition([FromBody] List<RequisitionItem> requisitionItems)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.CreateRequisition(requisitionItems, email).Result);
+        }
+
+        [HttpGet("{retrievalId}/requisition-item/{itemId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
+        public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
+        {
+            return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId).Result);
         }
     }
 }

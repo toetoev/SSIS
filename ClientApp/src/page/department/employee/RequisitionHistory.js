@@ -2,23 +2,24 @@ import { Button, Descriptions, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
 // TODO: add search bar
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
+	// TODO: make sorter work all field
 	const columns = [
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedBy, b.reviewedBy),
 		},
 		{
 			title: "Reviewed Date",
@@ -89,7 +90,6 @@ export default function RequisitionHistory() {
 				console.log(error);
 			});
 	}, [loading]);
-
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
@@ -106,7 +106,6 @@ export default function RequisitionHistory() {
 }
 
 const RequisitionModal = ({ text }) => {
-	console.log(text);
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -116,6 +115,7 @@ const RequisitionModal = ({ text }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					requestedQty: requisitionItem.need,
+					// TODO: if its -1, render nothing
 					receivedQty: requisitionItem.actual,
 					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
 				},
@@ -196,16 +196,20 @@ const RequisitionModal = ({ text }) => {
 					</>
 				) : null}
 				{status === "DELIVERED" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:">
-							{requisition.acknowledgedBy === null
-								? ""
-								: requisition.acknowledgedBy.name}
-						</Descriptions.Item>
-						<Descriptions.Item label="Delivered date:">
-							{requisition.acknowledgedOn}
-						</Descriptions.Item>
-					</Descriptions>
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Received by">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Received date">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
 				) : null}
 				<Descriptions>
 					<Descriptions.Item label="Requested Items"></Descriptions.Item>
@@ -214,7 +218,7 @@ const RequisitionModal = ({ text }) => {
 					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					size="small"
 				/>
 			</Modal>

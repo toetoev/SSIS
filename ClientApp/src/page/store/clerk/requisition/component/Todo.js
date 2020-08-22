@@ -1,9 +1,11 @@
 import { Button, Descriptions, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
 
+// TODO: add search bar
 export const Todo = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -45,6 +47,7 @@ export const Todo = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -103,23 +106,25 @@ export const Todo = ({ loading, setLoading }) => {
 
 const CreateRetrieval = ({ selectedRowKeys, setLoading, setSelectedRowKeys }) => {
 	const handleCreateRetrieval = () => {
-		axios
-			.post("https://localhost:5001/api/retrieval", selectedRowKeys, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					Success("Done creating retrieval list");
-					setSelectedRowKeys([]);
-					setLoading(true);
-				} else {
-					Error(result.message);
-				}
-			});
+		if (selectedRowKeys.length > 0) {
+			axios
+				.post("https://localhost:5001/api/retrieval", selectedRowKeys, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						Success("Done creating retrieval list");
+						setSelectedRowKeys([]);
+						setLoading(true);
+					} else {
+						Error(result.message);
+					}
+				});
+		} else Error("Please select some requisition you want to handle");
 	};
 	return (
 		<Button type="primary" onClick={handleCreateRetrieval}>
@@ -178,7 +183,7 @@ const TodoModal = ({ text }) => {
 					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					size="small"
 				/>
 			</Modal>

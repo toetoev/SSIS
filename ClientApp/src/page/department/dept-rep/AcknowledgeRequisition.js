@@ -4,6 +4,7 @@ import { default as React, useEffect, useState } from "react";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function AcknowledgeRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -12,26 +13,32 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: true,
 		},
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
+			sorter: true,
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
+			sorter: true,
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
+			sorter: true,
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: true,
 		},
 		{
 			title: "Action",
@@ -81,7 +88,7 @@ export default function AcknowledgeRequisition() {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical">
@@ -92,6 +99,7 @@ export default function AcknowledgeRequisition() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				size="middle"
 			/>
 		</Space>
 	);
@@ -113,7 +121,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
 	// TODO: conditional render column based on status
 	const columns = [
@@ -142,16 +150,22 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	};
 	const handleAcknowledge = (e) => {
 		axios
-			.put(`https://localhost:5001/api/requisition/${requisition.id}`, `"DELIVERED"`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
+			.put(
+				`https://localhost:5001/api/requisition/${requisition.id}`,
+				{ status: "DELIVERED" },
+				{
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				}
+			)
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus("DELIVERED");
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
@@ -187,9 +201,6 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 						{requisition.department.collectionPointId}
 					</Descriptions.Item>
 				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Requested Items"></Descriptions.Item>
-				</Descriptions>
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
@@ -206,11 +217,15 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 						</Descriptions>
 					</>
 				) : null}
+				<Descriptions>
+					<Descriptions.Item label="Requested Items"></Descriptions.Item>
+				</Descriptions>
 				<Table
 					dataSource={dataSource}
 					columns={columns}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					pagination={false}
+					size="small"
 				/>
 			</Modal>
 		</div>

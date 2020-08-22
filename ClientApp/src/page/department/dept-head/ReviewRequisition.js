@@ -1,26 +1,30 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../component/Error";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
+// TODO: add search bar
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// TODO: make sorter work
 	const columns = [
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -74,6 +78,7 @@ export default function ReviewRequisition() {
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
+				size="middle"
 			/>
 		</Space>
 	);
@@ -94,7 +99,8 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 		}, [])
 	);
 	const [visible, setVisible] = useState(false);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
+	const [rejectReason, setRejectReason] = useState("");
 	const columns = [
 		{
 			title: "Item Description",
@@ -114,8 +120,15 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 	};
 
 	const handleReview = (reviewResult) => {
+		var data;
+		if (reviewResult === "REJECTED")
+			data = {
+				status: reviewResult,
+				comment: rejectReason,
+			};
+		else data = { status: reviewResult };
 		axios
-			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
+			.put("https://localhost:5001/api/requisition/" + text.key, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -123,8 +136,10 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				if (result.success) setLoading(true);
-				else Error(result.message);
+				if (result.success) {
+					setLoading(true);
+					setStatus(reviewResult);
+				} else Error(result.message);
 			});
 		setVisible(false);
 	};
@@ -202,23 +217,38 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 					</>
 				) : null}
 				{status === "DELIVERED" ? (
-					<Descriptions>
-						<Descriptions.Item label="Delivered by:">
-							{requisition.acknowledgedBy === null
-								? ""
-								: requisition.acknowledgedBy.name}
-						</Descriptions.Item>
-						<Descriptions.Item label="Delivered date:">
-							{requisition.acknowledgedOn}
-						</Descriptions.Item>
-					</Descriptions>
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Delivered by:">
+								{requisition.acknowledgedBy === null
+									? ""
+									: requisition.acknowledgedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Delivered date:">
+								{requisition.acknowledgedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
 				) : null}
 				<Table
 					dataSource={dataSource}
 					columns={columns}
-					scroll={{ y: 100 }}
+					scroll={{ y: 400 }}
 					pagination={false}
+					size="small"
 				/>
+				{status === "APPLIED" ? (
+					<>
+						<Divider dashed />
+						<Input
+							placeholder="Reject Reason (Optional)"
+							value={rejectReason}
+							onChange={(e) => setRejectReason(e.target.value)}
+						/>
+					</>
+				) : null}
 			</Modal>
 		</div>
 	);

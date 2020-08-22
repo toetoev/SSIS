@@ -5,6 +5,7 @@ import axios from "axios";
 
 export const Stock = () => {
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Category",
@@ -47,6 +48,7 @@ export const Stock = () => {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/item", {
 				headers: {
@@ -75,14 +77,22 @@ export const Stock = () => {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
 	}, []);
 
 	return (
-		<Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} pagination={false} />
+		<Table
+			columns={columns}
+			dataSource={dataSource}
+			loading={loading}
+			scroll={{ y: 400 }}
+			pagination={false}
+			size="small"
+		/>
 	);
 };

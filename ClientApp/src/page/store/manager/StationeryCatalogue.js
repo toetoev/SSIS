@@ -1,53 +1,35 @@
-import { Button, Input, Space, Table, Row, Col, Form, Select, InputNumber, Modal } from "antd";
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
 export default function StationeryCatalogue() {
-	//const [dataSource, setDataSource] = useState([]);
+	const [dataSource, setDataSource] = useState([]);
 	const { Search } = Input;
-
-	const dataSource = [
-		{
-			key: "1",
-			category: "Clip",
-			description: "Clip...",
-			uom: "A3",
-			reorderQuantity: "2",
-			reorderLevel: "1",
-			action: "action",
-		},
-	];
 
 	const columns = [
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "UOM",
 			dataIndex: "uom",
-			key: "uom",
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
 			render: () => (
 				<Space>
@@ -71,29 +53,52 @@ export default function StationeryCatalogue() {
 		};
 	}*/
 
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/requisition", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: requisition.id,
+									
+								},
+							];
+						}, [])
+					);
+				}
+			})
+
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Stationery Catalogue</h3>
-			<Row
-				justify="space-between"
-				style={{ float: "right" }}
-			>
+			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={value => console.log(value)}
+							onSearch={(value) => console.log(value)}
 							style={{ width: 200 }}
 						/>
 						<Add dataSource={dataSource} />
 					</Space>
 				</Col>
 			</Row>
-			<Table
-				columns={columns}
-				dataSource={dataSource}
-				//onRow={onClickRow}
-			/>
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
 }
@@ -106,9 +111,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -120,7 +123,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-
 				}
 			})
 			.catch(function (error) {
@@ -150,10 +152,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form
-					form={form}
-					layout="vertical"
-				>
+				<Form form={form} layout="vertical">
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item label="Category">
@@ -252,9 +251,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -270,7 +267,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 			title: "Price",
 			dataIndex: "price",
 			key: "price",
-		}
+		},
 	];
 
 	useEffect(() => {
@@ -279,7 +276,6 @@ const Details = ({ dataSource, handleDataChange }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-
 				}
 			})
 			.catch(function (error) {
@@ -289,9 +285,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 
 	return (
 		<>
-			<Button onClick={showModal}>
-				View
-			</Button>
+			<Button onClick={showModal}>View</Button>
 
 			<Modal
 				title="Stationery Details"
@@ -314,11 +308,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 				<p>Reorder Level : 200</p>
 				<p>Reorder Quantity : 150</p>
 
-				<Table
-						columns={columns}
-						dataSource={dataSource}
-						pagination={false}
-					/>
+				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</>
 	);

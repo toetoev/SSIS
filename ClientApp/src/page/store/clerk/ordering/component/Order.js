@@ -1,8 +1,8 @@
 import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
-import axios from "axios";
 import Confirm from "../../../../component/Confirm";
+import axios from "axios";
 
 export const Order = () => {
 	const [dataSource, setDataSource] = useState([]);
@@ -13,26 +13,21 @@ export const Order = () => {
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
 		},
 		{
 			title: "Supplier",
-			dataIndex: "supplier1" || "supplier2" || "supplier3",
-			key: "supplier",
+			dataIndex: "supplier" || "supplier2" || "supplier3",
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
 			render: (text) => (
 				<Space>
@@ -46,7 +41,7 @@ export const Order = () => {
 			),
 		},
 	];
-	// TODO: call get all order
+
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/order", {
@@ -56,9 +51,26 @@ export const Order = () => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
-					console.log(result);
+					const test = result.data;
+
+					console.log(test);
+					setDataSource(
+						result.data.reduce((rows, orders) => {
+							return [
+								...rows,
+								{
+									key: orders.id,
+									//category: orders.map(orderItems.id),
+									//category: orders.orderItems[item],
+									//description :
+									//reorderQuantity :
+									supplier : orders.supplier.name,
+									action: orders,
+								},
+							];
+						}, [])
+					);
 				}
 			})
 
@@ -67,7 +79,7 @@ export const Order = () => {
 			});
 	}, []);
 
-	return <Table columns={columns} dataSource={dataSource} />;
+	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
 const Receive = ({ dataSource, handleDataChange }) => {

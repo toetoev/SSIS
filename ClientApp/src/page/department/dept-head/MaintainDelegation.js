@@ -1,6 +1,7 @@
 import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import React, { useState } from "react";
 
+// TODO: review and modify
 export default function MaintainDelegation() {
 	const dataSource = [
 		{
@@ -55,7 +56,7 @@ export default function MaintainDelegation() {
 			<Row justify="end">
 				<Add />
 			</Row>
-			<Table columns={columns} dataSource={dataSource} />
+			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
 }

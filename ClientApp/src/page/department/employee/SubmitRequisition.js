@@ -8,6 +8,7 @@ import axios from "axios";
 
 export default function SubmitRequisition() {
 	const [dataSource, setDataSource] = useState([]);
+	// TODO: add sorter to all field
 	const columns = [
 		{
 			title: "Product Description",
@@ -50,7 +51,7 @@ export default function SubmitRequisition() {
 					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} pagination={false} />
+			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
 				<Space>
 					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>

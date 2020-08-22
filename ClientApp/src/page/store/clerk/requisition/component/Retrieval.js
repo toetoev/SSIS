@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
 import axios from "axios";
-
+// TODO: search bar
 export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
+	// TODO: sorter
 	const columns = [
 		{
 			title: "Created By",
@@ -120,7 +121,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 				<InputNumber
 					min={1}
 					max={record.needed}
-					defaultValue={text.totalQtyRetrieved === -1 ? null : record.retrieved}
+					defaultValue={record.retrieved === -1 ? null : record.retrieved}
 					onChange={(val) => onChange(val, record)}
 				/>
 			),
@@ -150,7 +151,6 @@ const RetrievalModal = ({ text, setLoading }) => {
 	};
 
 	const handleConfirm = (e) => {
-		console.log(dataSource.forEach((i) => console.log(i.retrieved)));
 		let data = [];
 		dataSource.forEach((item) => {
 			if (item.retrieved != -1)
@@ -195,7 +195,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 							dataSource={dataSource}
 							columns={columns}
 							pagination={false}
-							scroll={{ y: 300 }}
+							scroll={{ y: 400 }}
 							size="small"
 						/>
 					</Row>
