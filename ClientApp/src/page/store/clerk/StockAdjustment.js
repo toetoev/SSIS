@@ -170,7 +170,7 @@ const AdjustmentModal = ({ text }) => {
 		</div>
 	);
 };
-
+// TODO: remarks to reason for each item
 const CreateAdjustmentVoucher = () => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);

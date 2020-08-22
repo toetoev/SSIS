@@ -1,11 +1,10 @@
-import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
+import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
-import Confirm from "../../../../component/Confirm";
 import axios from "axios";
 import toTitleCase from "../../../../../util/toTitleCase";
 
-export const Order = () => {
+export const Order = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const handleDataChange = (data) => {
 		setDataSource(data);
@@ -40,12 +39,8 @@ export const Order = () => {
 			key: "action",
 			render: (text) => (
 				<Space>
-					<Receive text={text}></Receive>
-					<Remove
-						dataSource={dataSource}
-						handleDataChange={handleDataChange}
-						text={text}
-					></Remove>
+					<OrderModal text={text} setLoading={setLoading}></OrderModal>
+					<Remove text={text}></Remove>
 				</Space>
 			),
 		},
@@ -60,11 +55,7 @@ export const Order = () => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
-					const test = result.data;
-
-					console.log(test);
 					setDataSource(
 						result.data.reduce((rows, order) => {
 							return [
@@ -85,7 +76,6 @@ export const Order = () => {
 					);
 				}
 			})
-
 			.catch(function (error) {
 				console.log(error);
 			});
@@ -93,52 +83,77 @@ export const Order = () => {
 	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
-const Receive = ({ dataSource, handleDataChange }) => {
-	const [form] = Form.useForm();
-	const [item, setItem] = useState("");
-	const [quantity, setQuantity] = useState(0);
+const OrderModal = ({ text, setLoading }) => {
+	const order = text.action;
 	const [visible, setVisible] = useState(false);
-	const [itemOptions, setItemOptions] = useState([]);
-
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].actualAmount = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const [dataSource, setDataSource] = useState(
+		order.orderItems.reduce((rows, orderItem) => {
+			return [
+				...rows,
+				{
+					key: orderItem.itemId,
+					description: orderItem.item.description,
+					orderedQty: orderItem.orderedQty,
+				},
+			];
+		}, [])
+	);
+	const columns = [
+		{
+			title: "Description",
+			dataIndex: "description",
+		},
+		{
+			title: "Ordered Qty",
+			dataIndex: "orderedQty",
+		},
+		{
+			title: "Delivered Qty",
+			dataIndex: "deliveredQty",
+			render:
+				// TODO: test received status conditional rendering
+				text.status === "Ordered"
+					? (text, record) => (
+							<InputNumber
+								min={0}
+								max={record.orderedQty}
+								onChange={(val) => onChange(val, record)}
+							/>
+					  )
+					: null,
+		},
+		{
+			title: "Remarks",
+			dataIndex: "remarks",
+			render:
+				// TODO: test received status conditional rendering
+				text.status === "Ordered"
+					? (text, record) => (
+							<Input type="text" onChange={(val) => onChange(val, record)} />
+					  )
+					: null,
+		},
+	];
 	const showModal = () => {
 		setVisible(true);
 	};
 
 	// TODO: call receive order
-	const handleSubmit = () => {
-		form.validateFields()
-			.then((val) => {
-				if (dataSource.find((val) => val.key === item)) {
-					handleDataChange(
-						dataSource.map((val) => {
-							if (val.key === item) {
-								val.quantity = val.quantity + quantity;
-							}
-							return val;
-						})
-					);
-				} else {
-					handleDataChange([
-						...dataSource,
-						{
-							key: item,
-							description: itemOptions.find((val) => val.value === item).label,
-							quantity: quantity,
-						},
-					]);
-				}
-				setVisible(false);
-			})
-			.catch((err) => {});
-	};
+	const handleSubmit = () => {};
 
 	const hideModal = (e) => {
 		setVisible(false);
-	};
-
-	const onValuesChange = (val) => {
-		if (val.quantity) setQuantity(Number(val.quantity));
-		if (val.item) setItem(val.item);
 	};
 
 	return (
@@ -151,34 +166,27 @@ const Receive = ({ dataSource, handleDataChange }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={hideModal}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
+					<Button onClick={hideModal}>Cancel</Button>,
+					<Button type="primary" onClick={handleSubmit}>
 						Submit
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
-					<Form.Item name="item" label="Item Description : ">
-						<Select options={itemOptions} style={{ width: "100%" }}></Select>
-					</Form.Item>
-					<Form.Item name="quantity" label="Quantity : ">
-						<Input type="number" placeholder="0" />
-					</Form.Item>
-				</Form>
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 400 }}
+					size="small"
+				/>
 			</Modal>
 		</>
 	);
 };
 
-const Remove = ({ dataSource, handleDataChange, text }) => {
+const Remove = ({ text }) => {
 	// TODO: call delete order
-	const handleDelete = () => {
-		Confirm("Are you sure delete the item?", "", () =>
-			handleDataChange(dataSource.filter((val) => val.key !== text.key))
-		);
-	};
+	const handleDelete = () => {};
 	return (
 		<Button type="danger" onClick={handleDelete}>
 			Remove
