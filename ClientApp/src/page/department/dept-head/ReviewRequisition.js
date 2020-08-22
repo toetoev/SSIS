@@ -1,14 +1,18 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Modal, Space, Table, Row, Col, Input } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../component/Error";
 import axios from "axios";
 import toTitleCase from "../../../util/toTitleCase";
 
+
 export default function ReviewRequisition() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
+	const { Search } = Input;
+	const [search, setSearch] = useState("");
+	const [filterState, setFilterState] = useState([]);
 
 	const columns = [
 		{
@@ -24,6 +28,7 @@ export default function ReviewRequisition() {
 		{
 			title: "Status",
 			dataIndex: "status",
+			key : "status",
 			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
@@ -69,12 +74,36 @@ export default function ReviewRequisition() {
 			});
 	}, [loading]);
 
+	console.log(dataSource);
+
+	useEffect(() => {
+		setFilterState(
+			dataSource.filter(e => {
+				return e.requestedBy.toLowerCase().includes(search.toLowerCase()) || 
+					e.status.toLowerCase().includes(search.toLowerCase()) ||
+					e.requestedDate.includes(search);
+			})
+		)
+	}, [search, dataSource]);
+
 	return (
-		<Space direction="vertical">
+		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Review Requisitions</h3>
+			<Row justify="space-between" style={{ float: "right" }}>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							//onSearch={(value) => console.log(value)}
+							style={{ width: 200 }}
+							onChange={e => setSearch(e.target.value)}
+						/>
+					</Space>
+				</Col>
+			</Row>
 			<Table
 				loading={loading}
-				dataSource={dataSource}
+				dataSource={filterState}
 				columns={columns}
 				pagination={{ pageSize: 50 }}
 				scroll={{ y: 500 }}
@@ -145,21 +174,21 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				footer={
 					status === "APPLIED"
 						? [
-								<Button
-									key="reject"
-									type="danger"
-									onClick={() => handleReview("REJECTED")}
-								>
-									Reject
+							<Button
+								key="reject"
+								type="danger"
+								onClick={() => handleReview("REJECTED")}
+							>
+								Reject
 								</Button>,
-								<Button
-									key="approve"
-									type="primary"
-									onClick={() => handleReview("APPROVED")}
-								>
-									Approve
+							<Button
+								key="approve"
+								type="primary"
+								onClick={() => handleReview("APPROVED")}
+							>
+								Approve
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>
@@ -229,3 +258,24 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 		</div>
 	);
 };
+
+function fuzzysearch(needle, haystack) {
+	var hlen = haystack.length;
+	var nlen = needle.length;
+	if (nlen > hlen) {
+		return false;
+	}
+	if (nlen === hlen) {
+		return needle === haystack;
+	}
+	outer: for (var i = 0, j = 0; i < nlen; i++) {
+		var nch = needle.charCodeAt(i);
+		while (j < hlen) {
+			if (haystack.charCodeAt(j++) === nch) {
+				continue outer;
+			}
+		}
+		return false;
+	}
+	return true;
+}
