@@ -1,4 +1,4 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../component/Error";
@@ -100,6 +100,7 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 	);
 	const [visible, setVisible] = useState(false);
 	const [status] = useState(requisition.status);
+	const [rejectReason, setRejectReason] = useState("");
 	const columns = [
 		{
 			title: "Item Description",
@@ -119,8 +120,15 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 	};
 
 	const handleReview = (reviewResult) => {
+		var data;
+		if (reviewResult === "REJECTED")
+			data = {
+				status: reviewResult,
+				comment: rejectReason,
+			};
+		else data = { status: reviewResult };
 		axios
-			.put("https://localhost:5001/api/requisition/" + text.key, `"${reviewResult}"`, {
+			.put("https://localhost:5001/api/requisition/" + text.key, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -229,6 +237,16 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 					pagination={false}
 					size="small"
 				/>
+				{status === "APPLIED" ? (
+					<>
+						<Divider dashed />
+						<Input
+							placeholder="Reject Reason (Optional)"
+							value={rejectReason}
+							onChange={(e) => setRejectReason(e.target.value)}
+						/>
+					</>
+				) : null}
 			</Modal>
 		</div>
 	);
