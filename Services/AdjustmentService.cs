@@ -91,6 +91,11 @@ namespace SSIS.Services
                 if (itemsValid)
                 {
                     adjustmentFromRepo.Status = status;
+                    if (status == AdjustmentStatus.ISSUED)
+                    {
+                        adjustmentFromRepo.IssuedOn = DateTime.Now;
+                        adjustmentFromRepo.IssuedBy = storeStaffFromRepo;
+                    }
                     return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
                 }
             }

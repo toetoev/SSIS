@@ -87,7 +87,13 @@ export default function StockAdjustment() {
 					</Space>
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
+			<Table
+				columns={columns}
+				dataSource={dataSource}
+				pagination={false}
+				size="middle"
+				loading={loading}
+			/>
 			<Row justify="end">
 				<CreateAdjustmentVoucher dataSource={dataSource} setLoading={setLoading} />
 			</Row>
@@ -136,7 +142,6 @@ const AdjustmentDetailsModal = ({ text, setLoading }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call delete adjustment
 	const handleDelete = () => {
 		Confirm("Are you sure about deleting the adjustment voucher?", "", () => {
 			axios
@@ -156,10 +161,14 @@ const AdjustmentDetailsModal = ({ text, setLoading }) => {
 	return (
 		<div>
 			<Space>
-				<Button onClick={showModal}>View</Button>
-				<Button type="danger" onClick={handleDelete}>
-					Delete
+				<Button type="primary" onClick={showModal}>
+					View
 				</Button>
+				{stocks.status === "APPLIED" ? (
+					<Button type="danger" onClick={handleDelete}>
+						Delete
+					</Button>
+				) : null}
 			</Space>
 			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
@@ -174,7 +183,7 @@ const AdjustmentDetailsModal = ({ text, setLoading }) => {
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Issued By">
-								{stocks.issuedBy.name}
+								{stocks.issuedBy === null ? "" : stocks.issuedBy.name}
 							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
