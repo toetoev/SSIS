@@ -238,7 +238,6 @@ const LowStockModal = ({ text, setLoading }) => {
 
 const SupplierDetails = ({ text }) => {
 	const supplier = text.action;
-	console.log(supplier);
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
