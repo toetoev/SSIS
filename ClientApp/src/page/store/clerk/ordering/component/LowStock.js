@@ -2,38 +2,48 @@ import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+import useSearch from "../../../../component/useSearch";
 
-export const LowStock = ({ loading, setLoading }) => {
+export const LowStock = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
+	const [backupData, setBackupData] = useState([]);
+	const options = {
+		keys: ["category", "description", "uoM"],
+	};
+	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
 	const columns = [
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
+			sorter: (a, b) => a.categoryName - b.categoryName,
+		},
+		{
+			title: "Bin",
+			dataIndex: "bin",
 			sorter: (a, b) => a.categoryName - b.categoryName,
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
 			sorter: (a, b) => a.description - b.description,
+		},
+		{
+			title: "UoM",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
 			sorter: true,
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
 			sorter: true,
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
-			key: "stock",
 			sorter: true,
 		},
 		{
@@ -62,7 +72,7 @@ export const LowStock = ({ loading, setLoading }) => {
 									category: items.categoryName,
 									bin: items.bin,
 									description: items.description,
-									uom: items.uoM,
+									uoM: items.uoM,
 									reorderLevel: items.reorderLevel,
 									reorderQuantity: items.reorderQty,
 									stock: items.stock,
@@ -79,6 +89,27 @@ export const LowStock = ({ loading, setLoading }) => {
 				console.log(error);
 			});
 	}, [loading]);
+
+	// useEffect(() => {
+	// 	if (keyword === "") setDataSource(backupData);
+	// 	else {
+	// 		setBackupData(dataSource);
+	// 		const options = {
+	// 			keys: [
+	// 				"category",
+	// 				"bin",
+	// 				"description",
+	// 				"uom",
+	// 				"reorderLevel",
+	// 				"reorderQuantity",
+	// 				"stock",
+	// 			],
+	// 		};
+	// 		const fuse = new Fuse(dataSource, options);
+	// 		const result = fuse.search(keyword);
+	// 		setDataSource(result.map((val) => val.item));
+	// 	}
+	// }, [keyword]);
 
 	return (
 		<Table
