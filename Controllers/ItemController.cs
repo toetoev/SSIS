@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -30,6 +31,13 @@ namespace SSIS.Controllers
         public IActionResult GetLowStockItems()
         {
             return Ok(_itemService.GetLowStockItems().Result);
+        }
+
+        [HttpPut("{itemId}")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult UpdateItem([FromRoute] Guid itemId, [FromBody] Item item)
+        {
+            return Ok(_itemService.UpdateItem(itemId, item));
         }
     }
 }

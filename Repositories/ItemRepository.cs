@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Repositories
@@ -33,12 +34,17 @@ namespace SSIS.Repositories
 
         public async Task<List<Item>> GetLowStockItems()
         {
-            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).ToListAsync();
+            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).Where(i => !i.OrderItems.Any(oi => oi.Order.OrderedOn.Date.CompareTo(DateTime.Now.Date) <= 0)).ToListAsync();
         }
 
         public async Task<bool> ItemExist(Guid itemId)
         {
             return await _dbContext.Items.AnyAsync(i => i.Id == itemId);
+        }
+
+        public async Task<int> UpdateItem()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,49 +1,57 @@
 import { Button, Descriptions, Modal, Table, Input } from "antd";
 import React, { useEffect, useState } from "react";
 
-import axios from "axios";
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
-import Form from "antd/lib/form/Form";
+import axios from "axios";
+import useSearch from "../../../../../hook/useSearch";
 
-export const LowStock = ({ loading, setLoading }) => {
+export const LowStock = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
-
+	const [backupData, setBackupData] = useState([]);
+	const options = {
+		keys: ["category", "description", "uoM"],
+	};
+	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
 	const columns = [
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
+			sorter: (a, b) => a.categoryName - b.categoryName,
+		},
+		{
+			title: "Bin",
+			dataIndex: "bin",
 			sorter: (a, b) => a.categoryName - b.categoryName,
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
 			sorter: (a, b) => a.description - b.description,
+		},
+		{
+			title: "UoM",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
 			sorter: true,
 		},
 		{
 			title: "Reorder Quantity",
-			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
+			dataIndex: "reorderQty",
 			sorter: true,
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
-			key: "stock",
 			sorter: true,
 		},
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <LowStockModal text={text} />,
+			render: (text) => <LowStockModal text={text} setLoading={setLoading} />,
 		},
 	];
 	useEffect(() => {
@@ -65,9 +73,9 @@ export const LowStock = ({ loading, setLoading }) => {
 									category: items.categoryName,
 									bin: items.bin,
 									description: items.description,
-									uom: items.uoM,
+									uoM: items.uoM,
 									reorderLevel: items.reorderLevel,
-									reorderQuantity: items.reorderQty,
+									reorderQty: items.reorderQty,
 									stock: items.stock,
 									action: items,
 								},
@@ -82,14 +90,12 @@ export const LowStock = ({ loading, setLoading }) => {
 				console.log(error);
 			});
 	}, [loading]);
-
 	return (
 		<Table
 			columns={columns}
 			loading={loading}
 			dataSource={dataSource}
 			scroll={{ y: 400 }}
-			pagination={false}
 			size="small"
 		/>
 	);
@@ -100,6 +106,33 @@ const LowStockModal = ({ text, setLoading }) => {
 	const [quantity, setQuantity] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].orderedQty = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	useEffect(() => {
+		setDataSource(
+			items.supplierTenderItems.reduce(
+				(items, item) => [
+					...items,
+					{
+						key: item.supplierId,
+						supplierName: item.supplier === null ? "" : item.supplier.name,
+						orderedQty: 0,
+						priority: item.priority,
+					},
+				],
+				[]
+			)
+		);
+	}, []);
 
 	const columns = [
 		{
@@ -107,46 +140,28 @@ const LowStockModal = ({ text, setLoading }) => {
 			dataIndex: "supplierName",
 		},
 		{
+			title: "Order Priority",
+			dataIndex: "priority",
+		},
+		{
 			title: "Order Quantity",
-			dataIndex: "orderQuantity",
-			render: () => 
-				<Input type="number" placeholder="0" onChange={e => setQuantity(e.target.value)}/>,
+			dataIndex: "orderedQty",
+			render: (text, record) => (
+				<InputNumber
+					min={0}
+					max={record.reorderQty}
+					defaultValue={0}
+					onChange={(val) => onChange(val, record)}
+				/>
+			),
 		},
 		{
 			title: "View Supplier Details",
+			dataIndex: "details",
 			key: "details",
-			render: (text) => <Details text={text} />,
+			render: () => <Details />,
 		},
 	];
-
-	useEffect(() => {
-		axios
-			.get(`https://localhost:5001/api/supplierTenderItem/${items.id}`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setDataSource(
-						result.data.reduce((rows, supplierTender) => {
-							return [
-								...rows,
-								{
-									key: supplierTender.supplierId,
-									supplierName: supplierTender.supplier.name,
-									action: supplierTender,
-								},
-							];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
 
 	const showModal = () => {
 		setVisible(true);
@@ -156,50 +171,44 @@ const LowStockModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
-
-	// TODO: call createOrder List<Order>
-	// [{
-	// 	supplierId: "",
-	// 	orderItems: [{
-	// 		itemId: "",
-	// 		orderedQty:
-	// 	}]
-	// }];
 	const handleSubmit = () => {
-		console.log(dataSource);
-		if (dataSource.length > 0) {
-			const data = dataSource.map((val) => {
-				return {
-					supplierId: val.key,
-					orderItems: [{
-						itemId: val.action.itemId,
-						orderedQty: quantity,
-					}],
+		if (dataSource.reduce((acc, item) => acc + item.orderedQty, 0) !== text.reorderQty)
+			Error("Order quantities added up together should be reorder quantity");
+		else {
+			let data = [];
+			dataSource.forEach((el) => {
+				if (el.orderedQty !== Number(0)) {
+					data.push({
+						supplierId: el.key,
+						orderItems: [
+							{
+								itemId: text.key,
+								orderedQty: el.orderedQty,
+							},
+						],
+					});
 				}
 			});
+			console.log(dataSource);
 			console.log(data);
 			axios
 				.post("https://localhost:5001/api/order", data, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
 					},
 				})
 				.then((res) => {
 					const result = res.data;
-					console.log(result)
 					if (result.success) {
-						Success("Order Applied Successfully");
+						Success("Order placed successfully");
 					} else {
 						Error(result.message);
 					}
+					setLoading(true);
 				});
-		} else {
-			Error("Please choose some items before submit");
+			setVisible(false);
 		}
-		setVisible(true);
 	};
 
 	return (
@@ -220,6 +229,11 @@ const LowStockModal = ({ text, setLoading }) => {
 					</Button>,
 				]}
 			>
+				<Descriptions>
+					<Descriptions.Item label="Reorder Quantity">
+						{text.reorderQty}
+					</Descriptions.Item>
+				</Descriptions>
 				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</>
@@ -280,6 +294,20 @@ const Details = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+
+	// TODO: call GetSupplierTenderItemBySupplierId (Backend not done yet)
+	useEffect(() => {
+		// axios
+		// 	.get("https://localhost:5001/api/item")
+		// 	.then((res) => {
+		// 		const result = res.data;
+		// 		if (result.success) {
+		// 		}
+		// 	})
+		// 	.catch(function (error) {
+		// 		console.log(error);
+		// 	});
+	}, []);
 
 	return (
 		<>

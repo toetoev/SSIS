@@ -1,6 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import Dashboard from "../Dashboard";
+import Dashboard from "../dashboard/Dashboard";
 import { Layout } from "antd";
 import { Navbar } from "../../component/Navbar";
 import React from "react";
@@ -11,6 +11,7 @@ const { Header, Sider, Content } = Layout;
 // IMPROVE: make default page to be stock adjustment
 export default function Supervisor() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },

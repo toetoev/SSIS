@@ -1,20 +1,22 @@
-import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
+import { Button, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
 export const Disbursement = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Retrieved Item",
 			dataIndex: "retrievedItem",
+			sorter: (a, b) => sorter(a.retrievedItem, b.retrievedItem),
 		},
 		{
 			title: "Amount Retrieved",
 			dataIndex: "amountRetrieved",
+			sorter: (a, b) => sorter(a.amountRetrieved, b.amountRetrieved),
 		},
 		{
 			title: "Action",
@@ -110,7 +112,6 @@ const DisburseModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 	const handleConfirm = (e) => {
-		console.log(dataSource);
 		let data = [];
 		dataSource.forEach((item) => {
 			if (item.actualAmount != -1)
@@ -183,28 +184,23 @@ const DisburseModal = ({ text, setLoading }) => {
 				title="Disburse among departments"
 				visible={visible}
 				onCancel={hideModal}
-				footer={null}
+				footer={[
+					<Button type="secondary" onClick={hideModal}>
+						Cancel
+					</Button>,
+					<Button type="primary" onClick={handleConfirm}>
+						Confirm
+					</Button>,
+				]}
 				width="700px"
 			>
-				<Space direction="vertical">
-					<Row>
-						<Table
-							dataSource={dataSource}
-							columns={columns}
-							pagination={false}
-							scroll={{ y: 400 }}
-							size="small"
-						/>
-					</Row>
-					<Row justify="end">
-						<Space>
-							<Button type="secondary">Print</Button>
-							<Button type="primary" onClick={handleConfirm}>
-								Confirm
-							</Button>
-						</Space>
-					</Row>
-				</Space>
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 400 }}
+					size="small"
+				/>
 			</Modal>
 		</div>
 	);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Repositories
@@ -29,7 +30,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Adjustment>> GetAll()
         {
-            return await _dbContext.Adjustments.ToListAsync();
+            return await _dbContext.Adjustments.OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToListAsync();
         }
 
         public async Task<int> UpdateAdjustmentStatus()

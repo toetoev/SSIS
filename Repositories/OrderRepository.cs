@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Services
@@ -22,9 +23,9 @@ namespace SSIS.Services
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteOrder(Guid orderId)
+        public async Task<int> DeleteOrder(Order order)
         {
-            _dbContext.Remove(orderId);
+            _dbContext.Remove(order);
             return await _dbContext.SaveChangesAsync();
         }
 

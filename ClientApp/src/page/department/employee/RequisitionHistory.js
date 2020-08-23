@@ -1,4 +1,4 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
@@ -9,7 +9,6 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// IMPROVE: make sorter work all field
 	const columns = [
 		{
 			title: "Requested Date",
@@ -24,27 +23,27 @@ export default function RequisitionHistory() {
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedDate, b.reviewedDate),
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedBy, b.acknowledgedBy),
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedDate, b.acknowledgedDate),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <RequisitionModal text={text} />,
+			render: (text) => <RequisitionModal text={text} setLoading={setLoading} />,
 		},
 	];
 
@@ -84,12 +83,12 @@ export default function RequisitionHistory() {
 				}
 				setLoading(false);
 			})
-
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
 			});
 	}, [loading]);
+
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
@@ -105,7 +104,7 @@ export default function RequisitionHistory() {
 	);
 }
 
-const RequisitionModal = ({ text }) => {
+const RequisitionModal = ({ text, setLoading }) => {
 	const requisition = text.action;
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
@@ -115,15 +114,18 @@ const RequisitionModal = ({ text }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					requestedQty: requisitionItem.need,
-					// IMPROVE: conditional render if its -1, render nothing
-					receivedQty: requisitionItem.actual,
-					unfulfilledQty: requisitionItem.need - requisitionItem.actual,
+					receivedQty: requisitionItem.actual === -1 ? null : requisitionItem.actual,
+					unfulfilledQty:
+						requisitionItem.actual === -1
+							? null
+							: requisitionItem.need - requisitionItem.actual,
 				},
 			];
 		}, [])
 	);
-	const [status] = useState(requisition.status);
+	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	const [rejectReason, setRejectReason] = useState("");
 	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
@@ -147,19 +149,79 @@ const RequisitionModal = ({ text }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
+
 	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	const handleReview = (reviewResult) => {
+		var data;
+		if (reviewResult === "REJECTED")
+			data = {
+				status: reviewResult,
+				comment: rejectReason,
+			};
+		else data = { status: reviewResult };
+		axios
+			.put("https://localhost:5001/api/requisition/" + text.key, data, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setLoading(true);
+					setStatus(reviewResult);
+				} else Error(result.message);
+			});
+		setVisible(false);
+	};
+	// TODO: authorized people can review requisition (api not done yet)
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>
 				View
 			</Button>
-			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
+			<Modal
+				title="Requisition Details"
+				visible={visible}
+				onCancel={hideModal}
+				footer={
+					status === "APPLIED"
+						? [
+								<Button
+									key="reject"
+									type="danger"
+									onClick={() => handleReview("REJECTED")}
+								>
+									Reject
+								</Button>,
+								<Button
+									key="approve"
+									type="primary"
+									onClick={() => handleReview("APPROVED")}
+								>
+									Approve
+								</Button>,
+						  ]
+						: null
+				}
+			>
 				<Descriptions>
 					<Descriptions.Item label="Collection Point">
 						{requisition.department.collectionPointId}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Requested By">
+						{requisition.requestedBy === null ? "" : requisition.requestedBy.name}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Requested Date">
+						{requisition.requestedOn}
 					</Descriptions.Item>
 				</Descriptions>
 				{status === "APPROVED" ? (
@@ -221,6 +283,16 @@ const RequisitionModal = ({ text }) => {
 					scroll={{ y: 400 }}
 					size="small"
 				/>
+				{status === "APPLIED" ? (
+					<>
+						<Divider dashed />
+						<Input
+							placeholder="Reject Reason (Optional)"
+							value={rejectReason}
+							onChange={(e) => setRejectReason(e.target.value)}
+						/>
+					</>
+				) : null}
 			</Modal>
 		</div>
 	);

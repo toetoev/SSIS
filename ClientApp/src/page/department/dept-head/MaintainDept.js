@@ -10,7 +10,6 @@ export default function MaintainDept() {
 	const [collectionPoint, setCollectionPoint] = useState("");
 	const [deptRep, setDeptRep] = useState("");
 	const [deptRepOptions, setDeptRepOptions] = useState([]);
-
 	const layout = {
 		labelCol: { span: 8 },
 		wrapperCol: { span: 16 },
@@ -116,6 +115,7 @@ export default function MaintainDept() {
 				}
 			});
 	};
+
 	return (
 		<Space direction="vertical" style={{ minWidth: 600 }}>
 			<h3>Maintain Department</h3>

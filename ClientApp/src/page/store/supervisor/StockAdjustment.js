@@ -1,11 +1,13 @@
-import { Button, Col, Input, Modal, Row, Space, Table, Descriptions } from "antd";
+import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
+// IMPROVE: search bar
 export default function StockAdjustment() {
+	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
-
+	const [loading, setLoading] = useState(true);
 	const columns = [
 		{
 			title: "Submitted On",
@@ -16,8 +18,12 @@ export default function StockAdjustment() {
 			dataIndex: "submittedBy",
 		},
 		{
-			title: "Authorized By",
-			dataIndex: "authorizedBy",
+			title: "Issued By",
+			dataIndex: "issuedBy",
+		},
+		{
+			title: "Issued On",
+			dataIndex: "issuedOn",
 		},
 		{
 			title: "Status",
@@ -26,10 +32,9 @@ export default function StockAdjustment() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <StockAdjustmentModal text={text} />,
+			render: (text) => <StockAdjustmentModal text={text} setLoading={setLoading} />,
 		},
 	];
-	const { Search } = Input;
 
 	useEffect(() => {
 		axios
@@ -49,7 +54,8 @@ export default function StockAdjustment() {
 									key: stocks.id,
 									submittedOn: stocks.submittedOn,
 									submittedBy: stocks.submittedBy.name,
-									//authorizedBy: stocks.requestedOn,
+									issuedBy: stocks.issuedBy === null ? "" : stocks.issuedBy.name,
+									issuedOn: stocks.issuedOn,
 									status: stocks.status,
 									action: stocks,
 								},
@@ -57,17 +63,20 @@ export default function StockAdjustment() {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Stock Adjustment</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
+			<Row justify="space-between">
+				<Col>
+					<h3>Stock Adjustment</h3>
+				</Col>
 				<Col>
 					<Space>
 						<Search
@@ -78,12 +87,12 @@ export default function StockAdjustment() {
 					</Space>
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>
 	);
 }
 
-const StockAdjustmentModal = ({ text }) => {
+const StockAdjustmentModal = ({ text, setLoading }) => {
 	const stocks = text.action;
 	const [dataSource] = useState(
 		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
@@ -99,6 +108,8 @@ const StockAdjustmentModal = ({ text }) => {
 			];
 		}, [])
 	);
+	const [status, setStatus] = useState(stocks.status);
+	const [visible, setVisible] = useState(false);
 
 	const columns = [
 		{
@@ -119,34 +130,53 @@ const StockAdjustmentModal = ({ text }) => {
 		},
 	];
 
-	const [visible, setVisible] = useState(false);
-	//const [status, setStatus] = useState("PENDING_COLLECTION");
-
 	const showModal = () => {
 		setVisible(true);
 	};
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-
+	const handleReview = (reviewResult) => {
+		axios
+			.put(`https://localhost:5001/api/adjustment/${stocks.id}`, `"${reviewResult}"`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setLoading(true);
+					setStatus(reviewResult);
+				} else Error(result.message);
+			});
+		setVisible(false);
+	};
 	return (
 		<div>
 			<Space>
-				<Button>
-					<a onClick={showModal}>View</a>
-				</Button>
-				<Button type="primary">
-					<a>Edit</a>
-				</Button>
-				<Button type="danger">
-					<a>Delete</a>
+				<Button type="primary" onClick={showModal}>
+					Review
 				</Button>
 			</Space>
 			<Modal
 				title="Adjustment Voucher"
 				visible={visible}
 				onCancel={handleCancel}
-				footer={null}
+				footer={
+					stocks.status === "APPLIED" ? (
+						<Space>
+							<Button type="danger" onClick={() => handleReview("REJECTED")}>
+								<a>Reject</a>
+							</Button>
+							<Button type="primary" onClick={() => handleReview("ISSUED")}>
+								<a>Issue</a>
+							</Button>
+						</Space>
+					) : null
+				}
 			>
 				<Descriptions>
 					<Descriptions.Item label="Submitted By ">
@@ -154,35 +184,23 @@ const StockAdjustmentModal = ({ text }) => {
 					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Date Submitted">
-						{stocks.submittedOn}
-					</Descriptions.Item>
+					<Descriptions.Item label="Submitted On">{stocks.submittedOn}</Descriptions.Item>
 				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Issued On">
-						{stocks.issuedOn}
-					</Descriptions.Item>
-				</Descriptions>
-
-				<Table columns={columns} dataSource={dataSource} size="small" pagination={false}/>
-
-				<Row>
-					<Col
-						span={24}
-						style={{
-							textAlign: "right",
-						}}
-					>
-						<Space>
-							<Button type="danger">
-								<a>Reject</a>
-							</Button>
-							<Button type="primary">
-								<a>Issue</a>
-							</Button>
-						</Space>
-					</Col>
-				</Row>
+				{stocks.status === "ISSUED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Issued By">
+								{stocks.issuedBy === null ? "" : stocks.issuedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Issued On">
+								{stocks.issuedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
+				<Table columns={columns} dataSource={dataSource} size="small" pagination={false} />
 			</Modal>
 		</div>
 	);

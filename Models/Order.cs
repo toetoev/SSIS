@@ -7,6 +7,7 @@ using SSIS.Utils;
 
 namespace SSIS.Models
 {
+    [ToString]
     public class Order
     {
         [Key]

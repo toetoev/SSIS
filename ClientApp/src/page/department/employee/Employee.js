@@ -11,6 +11,7 @@ const { Header, Sider, Content } = Layout;
 
 export default function Employee() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Submit Requisition" },
 		{ to: `${path}/requisition-history`, title: "Requisition History" },

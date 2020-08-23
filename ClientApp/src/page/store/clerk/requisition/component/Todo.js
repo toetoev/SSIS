@@ -4,32 +4,32 @@ import { default as React, useEffect, useState } from "react";
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
 
 // IMPROVE: add search bar
 export const Todo = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-	// IMPROVE: make sorter work
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
-			sorter: (a, b) => a - b,
+			sorter: (a, b) => sorter(a.departmentName, b.departmentName),
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
-			sorter: true,
+			sorter: (a, b) => sorter(a.collectionPoint, b.collectionPoint),
 		},
 		{
 			title: "Action",

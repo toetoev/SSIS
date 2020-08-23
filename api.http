@@ -96,7 +96,9 @@ Content-Type: application/json
 
 "APPROVED"
 
-
+### RequisitionController Get Popular Items
+GET https://localhost:5001/api/requisition/popular/?deptName=Computer%20Science
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk4MTExNjQyLCJleHAiOjE1OTgxOTgwNDIsImlhdCI6MTU5ODExMTY0Mn0.17fbXFwBEZXI7qq0HDwg2r7RUemHaifp4RraBSgcacrp3gDtM9uOLZpqMGPpqakwhcIqs-npzfaH8UOxsiFvlw
 
 
 
@@ -148,3 +150,9 @@ Content-Type: application/json
         "orderedQty": 5,
     }],
 }]
+
+### OrderController Get Order Trend
+GET https://localhost:5001/api/order/2020-06-22%2020:58:08/2020-08-22%2020:59:13
+Content-Type: application/json
+
+["Ruler"]

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -59,6 +59,14 @@ namespace SSIS.Controllers
         public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
         {
             return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId).Result);
+        }
+
+        [HttpGet("popular")]
+        [Authorize(Roles = DeptRole.Employee)]
+        public IActionResult GetPopularItems()
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.GetPopularItems(email).Result);
         }
     }
 }

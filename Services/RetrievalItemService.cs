@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {

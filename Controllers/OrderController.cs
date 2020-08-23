@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
+using SSIS.Utils;
 
 namespace SSIS.Controllers
 {
@@ -45,6 +47,12 @@ namespace SSIS.Controllers
         public IActionResult DeleteOrder([FromRoute] Guid orderId)
         {
             return Ok(_orderService.DeleteOrder(orderId).Result);
+        }
+
+        [HttpGet("{startDate}/{endDate}")]
+        public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime endDate, [FromBody] List<string> categories)
+        {
+            return Ok(_orderService.GetOrderTrend(startDate, endDate, categories).Result);
         }
     }
 }

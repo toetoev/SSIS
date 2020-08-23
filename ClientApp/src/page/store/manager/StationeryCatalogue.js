@@ -17,8 +17,8 @@ export default function StationeryCatalogue() {
 			dataIndex: "description",
 		},
 		{
-			title: "UOM",
-			dataIndex: "uom",
+			title: "UoM",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Reorder Quantity",
@@ -70,7 +70,6 @@ export default function StationeryCatalogue() {
 								...rows,
 								{
 									key: requisition.id,
-									
 								},
 							];
 						}, [])
@@ -130,16 +129,13 @@ const Add = ({ dataSource, handleDataChange }) => {
 			});
 	}, []);
 
-	const { TextArea } = Input;
-
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
 				Add
 			</Button>
-
 			<Modal
-				title="Create Stationery"
+				title="Add Stationery"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}
@@ -152,7 +148,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical">
+				<Form form={form} layout="vertical" size="small">
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item label="Category">
@@ -167,23 +163,21 @@ const Add = ({ dataSource, handleDataChange }) => {
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Unit Of Measure">
+							<Form.Item label="Unit of Measure">
 								<Input placeholder="Enter Unit of Measure" />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item label="Reorder Level">
-								<Input placeholder="Enter Reorder Level" />
+							<Form.Item label="Description">
+								<Input placeholder="Enter description..." />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Supplier 1 : ">
+							<Form.Item label="Supplier 1">
 								<Select placeholder="Select Supplier 1">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
@@ -191,14 +185,13 @@ const Add = ({ dataSource, handleDataChange }) => {
 						</Col>
 						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Supplier 2 : ">
+							<Form.Item label="Supplier 2">
 								<Select placeholder="Select Supplier 2">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
@@ -206,14 +199,13 @@ const Add = ({ dataSource, handleDataChange }) => {
 						</Col>
 						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Supplier 3 : ">
+							<Form.Item label="Supplier 3">
 								<Select placeholder="Select Supplier 3">
 									<Select.Option value="demo">Demo</Select.Option>
 								</Select>
@@ -221,15 +213,14 @@ const Add = ({ dataSource, handleDataChange }) => {
 						</Col>
 						<Col span={11}>
 							<Form.Item label="Tender Price">
-								<InputNumber placeholder="0" />
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item label="Description">
-								<TextArea rows={4} placeholder="Enter description..." />
+							<Form.Item label="Reorder Level">
+								<Input placeholder="Enter Reorder Level" />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
