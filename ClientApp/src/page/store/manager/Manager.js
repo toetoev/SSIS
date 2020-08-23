@@ -1,6 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import Dashboard from "../Dashboard";
+import Dashboard from "../dashboard/Dashboard";
 import { Layout } from "antd";
 import MaintainSupplier from "./MaintainSupplier";
 import { Navbar } from "../../component/Navbar";

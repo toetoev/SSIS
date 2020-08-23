@@ -14,7 +14,6 @@ export default function Ordering() {
 			<h3>Purchase Orders</h3>
 			<Tabs
 				defaultActiveKey="Low-Stock"
-				type="card"
 				tabBarExtraContent={<SearchBar setKeyword={setKeyword} />}
 			>
 				<TabPane tab="Low-Stock" key="Low-Stock">
