@@ -31,5 +31,17 @@ namespace SSIS.Controllers
         {
             return Ok(_itemService.GetLowStockItems().Result);
         }
+
+        public IActionResult CreateItem([FromBody] Item item)
+        {
+            return Ok(_itemService.CreateItem(item));
+        }
+
+        [HttpDelete("{itemId}")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult DeleteItem([FromRoute] Guid itemId)
+        {
+            return Ok(_itemService.DeleteItem(itemId).Result);
+        }
     }
 }

@@ -27,9 +27,31 @@ namespace SSIS.Repositories
             return await _dbContext.Suppliers.Where(s => s.Id == supplierId).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> SupplierExist(Guid supplierId)
+        public async Task<bool> SupplierExist(string supplierName)
         {
-            return await _dbContext.Suppliers.AnyAsync(s => s.Id == supplierId);
+            return await _dbContext.Suppliers.AnyAsync(s => s.Name == supplierName);
+        }
+
+        public async Task<int> CreateSupplier(Supplier supplier)
+        {
+            _dbContext.Add(supplier);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Supplier>> GetAllSuppliers()
+        {
+            return await _dbContext.Suppliers.ToListAsync();
+        }
+
+        public async Task<int> UpdateSupplier()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteSupplier(Supplier supplier)
+        {
+            _dbContext.Suppliers.Remove(supplier);
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

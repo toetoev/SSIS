@@ -8,8 +8,12 @@ namespace SSIS.Repositories
 {
     public interface ISupplierRepository
     {
-        Task<bool> SupplierExist(Guid supplierId);
+        Task<bool> SupplierExist(string supplierName);
         Task<Supplier> GetSupplierById(Guid supplierId);
         Task<List<Supplier>> GetAll();
+        Task<int> CreateSupplier(Supplier supplier);
+        Task<List<Supplier>> GetAllSuppliers();
+        Task<int> UpdateSupplier();
+        Task<int> DeleteSupplier(Supplier supplier);
     }
 }
