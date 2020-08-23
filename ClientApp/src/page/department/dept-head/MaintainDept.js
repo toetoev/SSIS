@@ -116,6 +116,7 @@ export default function MaintainDept() {
 				}
 			});
 	};
+
 	return (
 		<Space direction="vertical" style={{ minWidth: 600 }}>
 			<h3>Maintain Department</h3>

@@ -88,6 +88,7 @@ export default function RequisitionHistory() {
 				console.log(error);
 			});
 	}, []);
+
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
@@ -145,10 +146,12 @@ const RequisitionModal = ({ text }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
+
 	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: authorized people can review requisition
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

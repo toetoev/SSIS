@@ -27,16 +27,13 @@ export default function SubmitRequisition() {
 				<Space>
 					<Delete
 						dataSource={dataSource}
-						handleDataChange={handleDataChange}
+						handleDataChange={(data) => setDataSource(data)}
 						text={text}
 					></Delete>
 				</Space>
 			),
 		},
 	];
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
@@ -50,14 +47,20 @@ export default function SubmitRequisition() {
 					</Space>
 				</Col>
 				<Col>
-					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
+					<Add dataSource={dataSource} handleDataChange={(data) => setDataSource(data)} />
 				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
 				<Space>
-					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>
-					<Submit dataSource={dataSource} handleDataChange={handleDataChange} />
+					<Clear
+						dataSource={dataSource}
+						handleDataChange={(data) => setDataSource(data)}
+					></Clear>
+					<Submit
+						dataSource={dataSource}
+						handleDataChange={(data) => setDataSource(data)}
+					/>
 				</Space>
 			</Row>
 		</Space>
@@ -70,10 +73,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 	const [quantity, setQuantity] = useState(0);
 	const [visible, setVisible] = useState(false);
 	const [itemOptions, setItemOptions] = useState([]);
-
-	const showModal = () => {
-		setVisible(true);
-	};
 
 	useEffect(() => {
 		axios
@@ -122,6 +121,10 @@ const Add = ({ dataSource, handleDataChange }) => {
 				setVisible(false);
 			})
 			.catch((err) => {});
+	};
+
+	const showModal = () => {
+		setVisible(true);
 	};
 
 	const handleCancel = (e) => {

@@ -83,7 +83,6 @@ export default function AcknowledgeRequisition() {
 				}
 				setLoading(false);
 			})
-
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
@@ -142,12 +141,15 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
+
 	const showModal = () => {
 		setVisible(true);
 	};
+
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+
 	const handleAcknowledge = (e) => {
 		axios
 			.put(

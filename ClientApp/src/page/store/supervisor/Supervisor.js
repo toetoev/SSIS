@@ -11,6 +11,7 @@ const { Header, Sider, Content } = Layout;
 // IMPROVE: make default page to be stock adjustment
 export default function Supervisor() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },

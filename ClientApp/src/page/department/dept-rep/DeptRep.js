@@ -10,6 +10,7 @@ const { Header, Sider, Content } = Layout;
 
 export default function DeptRep() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [{ to: `${path}`, title: "Requisition History" }];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>

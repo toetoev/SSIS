@@ -181,7 +181,7 @@ const CreateAdjustmentVoucher = () => {
 				<Space>
 					<DeleteAdjustmentItem
 						dataSource={dataSource}
-						handleDataChange={handleDataChange}
+						handleDataChange={(data) => setDataSource(data)}
 						text={text}
 					></DeleteAdjustmentItem>
 				</Space>
@@ -198,9 +198,6 @@ const CreateAdjustmentVoucher = () => {
 
 	const handleCancel = (e) => {
 		setVisible(false);
-	};
-	const handleDataChange = (data) => {
-		setDataSource(data);
 	};
 	return (
 		<>
@@ -226,11 +223,11 @@ const CreateAdjustmentVoucher = () => {
 						<Space>
 							<ClearAdjustmentItems
 								dataSource={dataSource}
-								handleDataChange={handleDataChange}
+								handleDataChange={(data) => setDataSource(data)}
 							></ClearAdjustmentItems>
 							<AddAdjustmentItem
 								dataSource={dataSource}
-								handleDataChange={handleDataChange}
+								handleDataChange={(data) => setDataSource(data)}
 							/>
 						</Space>
 					</Row>

@@ -12,6 +12,7 @@ import StockAdjustment from "./StockAdjustment";
 const { Header, Sider, Content } = Layout;
 export default function Manager() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/stationary-catalogue`, title: "Stationary Catalogue" },

@@ -13,6 +13,7 @@ const { Header, Sider, Content } = Layout;
 // IMPROVE: make default page to be requisition
 export default function Clerk() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/requisition`, title: "Requisitions" },
