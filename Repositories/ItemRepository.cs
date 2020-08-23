@@ -53,5 +53,10 @@ namespace SSIS.Repositories
             _dbContext.Items.Remove(itemFromRepo);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateItem()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

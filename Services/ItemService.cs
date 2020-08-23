@@ -16,11 +16,13 @@ namespace SSIS.Services
     {
         private readonly IItemRepository _itemRepository;
         private readonly ISupplierRepository _supplierRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public ItemService(IItemRepository itemRepository, ISupplierRepository supplierRepository)
+        public ItemService(IItemRepository itemRepository, ISupplierRepository supplierRepository, ICategoryRepository categoryRepository)
         {
             _itemRepository = itemRepository;
             _supplierRepository = supplierRepository;
+            _categoryRepository = categoryRepository;
         }
         public async Task<ApiResponse> GetItemById(Guid itemId)
         {
@@ -63,7 +65,7 @@ namespace SSIS.Services
                 {
                     foreach (var supplierTenderItem in newItem.SupplierTenderItems)
                     {
-                        if (await _supplierRepository.SupplierExist(supplierTenderItem.Supplier.Name))
+                        if (await _supplierRepository.SupplierExist(supplierTenderItem.Supplier.Name) && await _categoryRepository.CategoryExist(supplierTenderItem.Item.CategoryName))
                         {
                             return new ApiResponse { Success = true, Data = await _itemRepository.CreateItem(newItem) };
                         }
@@ -89,6 +91,56 @@ namespace SSIS.Services
                 return new ApiResponse { Success = true, Data = await _itemRepository.DeleteItem(itemFromRepo) };
             }
             return new ApiResponse { Success = false, Message = "Supplier does not exist" };
+        }
+
+        public async Task<ApiResponse> UpdateItem(Guid itemId, Item item)
+        {
+            Item itemFromRepo = await _itemRepository.GetItemById(itemId);
+
+            List<int> priorities = new List<int>();
+
+            if (itemFromRepo != null)
+            {
+                foreach (var newSupplyTenderItem in item.SupplierTenderItems)
+                {
+                    priorities.Add(newSupplyTenderItem.Priority);
+                }
+
+                bool priorityIsUnique = priorities.Distinct().Count() == priorities.Count();
+
+                if (priorityIsUnique)
+                {
+                    if (await _categoryRepository.CategoryExist(item.Category.Name))
+                    {
+                        itemFromRepo.Category.Name = item.Category.Name;
+                        itemFromRepo.Description = item.Description;
+                        itemFromRepo.UoM = item.UoM;
+                        itemFromRepo.Bin = item.Bin;
+                        itemFromRepo.ReorderLevel = item.ReorderLevel;
+                        itemFromRepo.ReorderQty = item.ReorderQty;
+
+                        foreach (var supplierTenderItem in itemFromRepo.SupplierTenderItems)
+                        {
+                            SupplierTenderItem supplierTenderItemInput = item.SupplierTenderItems.First(i => i.SupplierId == supplierTenderItem.SupplierId);
+                            if (supplierTenderItemInput != null && await _supplierRepository.SupplierExist(supplierTenderItem.Supplier.Name))
+                            {
+                                supplierTenderItem.Price = supplierTenderItemInput.Price;
+                                supplierTenderItem.Priority = supplierTenderItemInput.Priority;
+                            }
+                        }
+                        return new ApiResponse { Success = true, Data = await _itemRepository.UpdateItem() };
+                    }
+                    else
+                    {
+                        return new ApiResponse { Success = false, Message = "Category does not exist" };
+                    }
+                }
+                else
+                {
+                    return new ApiResponse { Success = true, Message = "Supplier priorities must be unique" };
+                }
+            }
+            return new ApiResponse { Success = false, Message = "Item does not exist" };
         }
     }
 }

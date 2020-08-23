@@ -32,6 +32,14 @@ namespace SSIS.Controllers
 
         // TODO: GetAdjustmentByStoreStaff [Manager, Supervisor] return according to total price $250
 
+        [HttpGet("")]
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetAdjustmentByStoreStaff()
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.GetAdjustmentByStoreStaff());
+        }
+
         [HttpPost("")]
         [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
         public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)

@@ -8,7 +8,7 @@ namespace SSIS.IRepositories
 {
     public interface IDelegationRepository
     {
-        Task<List<Delegation>> GetDelegationsByDeptHeadEmail(string delegatedByEmail);
+        Task<List<Delegation>> GetDelegationsByDepartment(string deptName);
         Task<int> CreateDelegation(Delegation delegation);
         Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate);
         Task<int> UpdateDelegation();

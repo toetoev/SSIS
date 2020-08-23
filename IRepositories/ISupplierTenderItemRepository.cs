@@ -7,6 +7,6 @@ namespace SSIS.IRepositories
 {
     public interface ISupplierTenderItemRepository
     {
-        Task<List<SupplierTenderItem>> GetSupplierTenderByItemId(Guid itemId);
+        Task<List<SupplierTenderItem>> GetSupplierTenderBySupplierId(Guid supplierId);
     }
 }

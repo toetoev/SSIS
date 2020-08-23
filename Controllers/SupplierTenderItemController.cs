@@ -17,11 +17,11 @@ namespace SSIS.Controllers
             _supplierTenderItemService = supplierTenderItemService;
         }
 
-        [HttpGet("{itemId}")]
+        [HttpGet("{supplierId}")]
         [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetSupplierTenderByItemId([FromRoute] Guid itemId)
+        public IActionResult GetSupplierTenderBySupplierId([FromRoute] Guid supplierId)
         {
-            return Ok(_supplierTenderItemService.GetSupplierTenderByItemId(itemId).Result);
+            return Ok(_supplierTenderItemService.GetSupplierTenderBySupplierId(supplierId).Result);
         }
     }
 }

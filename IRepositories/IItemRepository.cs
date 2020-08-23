@@ -15,5 +15,6 @@ namespace SSIS.IRepositories
 		Task<List<Item>> GetLowStockItems();
 		Task<int> CreateItem(Item item);
 		Task<int> DeleteItem(Item itemFromRepo);
+		Task<int> UpdateItem();
 	}
 }
