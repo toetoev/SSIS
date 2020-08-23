@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
+import sorter from "../../../util/sorter";
 import axios from "axios";
 
 export default function SubmitRequisition() {
@@ -13,10 +14,12 @@ export default function SubmitRequisition() {
 		{
 			title: "Product Description",
 			dataIndex: "description",
+			sorter : (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "Quantity",
 			dataIndex: "quantity",
+			sorter : (a, b) => sorter(a.quantity, b.quantity),
 		},
 		{
 			title: "Action",
