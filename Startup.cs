@@ -57,6 +57,7 @@ namespace SSIS
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IRequisitionItemService, RequisitionItemService>();
             services.AddScoped<IRequisitionService, RequisitionService>();
@@ -71,6 +72,7 @@ namespace SSIS
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();

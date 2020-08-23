@@ -12,5 +12,6 @@ namespace SSIS.Services
         Task<ApiResponse> CreateOrder(List<Order> orders, string orderedByEmail);
         Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail);
         Task<ApiResponse> DeleteOrder(Guid orderId);
+        Task<ApiResponse> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories);
     }
 }
