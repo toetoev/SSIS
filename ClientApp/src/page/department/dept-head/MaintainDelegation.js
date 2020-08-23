@@ -47,7 +47,7 @@ export default function MaintainDelegation() {
 }
 
 const Add = () => {
-	// TODO: get deptStaff by role set to select
+	// TODO: get deptStaff by role set to select ( /?roles=EMPLOYEE)
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
 	const [delegatedTo, setDelegatedTo] = useState("");
