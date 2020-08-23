@@ -1,18 +1,9 @@
 import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-// TODO: review and modify
 export default function MaintainDelegation() {
-	const dataSource = [
-		{
-			key: "1",
-			startDate: "17 August",
-			endDate: "20 August",
-			delegate: "Meka",
-			comment: "Sick Leave",
-			action: "Delete",
-		},
-	];
+	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(true);
 	const columns = [
 		{
 			title: "Start Date",
@@ -34,38 +25,39 @@ export default function MaintainDelegation() {
 			title: "Action",
 			dataIndex: "action",
 			key: "action",
-			render: () => (
+			render: (text) => (
 				<Space>
-					<Button type="primary">
-						<a>Edit</a>
-					</Button>
-					<Button type="danger">
-						<a>Delete</a>
-					</Button>
+					<Edit text={text} />
+					<Delete text={text} />
 				</Space>
 			),
 		},
 	];
+	// TODO: get all delegation
+	useEffect(() => {}, [loading]);
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Authority Delegation</h3>
-			<Row justify="end">
+			<Row justify="space-between">
+				<h3>Authority Delegation</h3>
 				<Add />
 			</Row>
-			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>
 	);
 }
 
 const Add = () => {
 	// TODO: get deptStaff by role set to select
-	const { TextArea } = Input;
-	const { Option } = Select;
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
+	const [delegatedTo, setDelegatedTo] = useState("");
+	const [comment, setComment] = useState("");
 	const [visible, setVisible] = useState(false);
 	const showModal = () => {
 		setVisible(true);
 	};
-	const handleOk = (e) => {
+	const handleSubmit = (e) => {
+		// TODO: create delegation
 		setVisible(false);
 	};
 	const handleCancel = (e) => {
@@ -74,11 +66,12 @@ const Add = () => {
 	const onChange = (date, dateString) => {
 		console.log(date, dateString);
 	};
-	const handleChange = () => {
-		console.log("handle change");
+	const onValuesChange = (val) => {
+		if (val.startDate) setStartDate(val.startDate);
+		if (val.endDate) setEndDate(val.endDate);
+		if (val.delegatedTo) setDelegatedTo(val.delegatedTo);
+		if (val.comment) setComment(val.comment);
 	};
-	const handleSubmit = () => {};
-
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -87,32 +80,45 @@ const Add = () => {
 			<Modal
 				title="Delegation Options"
 				visible={visible}
-				onOk={handleOk}
-				onCancel={handleCancel}
+				footer={[
+					<Button key="cancel" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit}>
+						Submit
+					</Button>,
+				]}
 			>
-				<Form layout="vertical" onSubmit={handleSubmit}>
-					<Form.Item label="Start Date">
+				<Form layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item label="Start Date" name="startDate">
 						<DatePicker onChange={onChange} style={{ width: "100%" }} />
 					</Form.Item>
-					<Form.Item label="End Date">
+					<Form.Item label="End Date" name="endDate">
 						<DatePicker onChange={onChange} style={{ width: "100%" }} />
 					</Form.Item>
-					<Form.Item label="Delegate">
-						<Select
-							defaultValue="Martini Zhao"
-							style={{ width: "100%" }}
-							onChange={handleChange}
-						>
-							<Option value="jack">Jack</Option>
-							<Option value="lucy">Lucy</Option>
-							<Option value="Yiminghe">Yiminghe</Option>
-						</Select>
+					<Form.Item label="Delegated To" name="delegatedTo">
+						<Select style={{ width: "100%" }}></Select>
 					</Form.Item>
-					<Form.Item label="Comment">
+					<Form.Item label="Comment" name="comment">
 						<Input type="text"></Input>
 					</Form.Item>
 				</Form>
 			</Modal>
 		</>
+	);
+};
+
+// TODO: edit modal, put initial value to modal, then call updateDelegation
+const Edit = ({ text }) => {
+	return <Button type="primary">Edit</Button>;
+};
+
+const Delete = ({ text }) => {
+	// TODO: delete delegation
+	const handleDelete = () => {};
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Delete
+		</Button>
 	);
 };
