@@ -64,6 +64,7 @@ namespace SSIS
             services.AddScoped<IRetrievalService, RetrievalService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<ISupplierTenderItemService, SupplierTenderItemService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -79,6 +80,7 @@ namespace SSIS
             services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<ISupplierTenderItemRepository, SupplierTenderItemRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
