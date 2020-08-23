@@ -17,22 +17,18 @@ export default function MaintainDelegation() {
 		{
 			title: "Start Date",
 			dataIndex: "startDate",
-			key: "startDate",
 		},
 		{
 			title: "End Date",
 			dataIndex: "endDate",
-			key: "endDate",
 		},
 		{
-			title: "Delegate",
-			dataIndex: "delegate",
-			key: "delegate",
+			title: "Delegated To",
+			dataIndex: "delegatedTo",
 		},
 		{
 			title: "Comment",
 			dataIndex: "comment",
-			key: "comment",
 		},
 		{
 			title: "Action",
@@ -62,6 +58,7 @@ export default function MaintainDelegation() {
 }
 
 const Add = () => {
+	// TODO: get deptStaff by role set to select
 	const { TextArea } = Input;
 	const { Option } = Select;
 	const [visible, setVisible] = useState(false);
@@ -112,7 +109,7 @@ const Add = () => {
 						</Select>
 					</Form.Item>
 					<Form.Item label="Comment">
-						<TextArea rows={4}></TextArea>
+						<Input type="text"></Input>
 					</Form.Item>
 				</Form>
 			</Modal>
