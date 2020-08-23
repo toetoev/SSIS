@@ -1,6 +1,8 @@
 import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Error from "../../../../component/Error";
+import Success from "../../../../component/Success";
 import axios from "axios";
 import useSearch from "../../../../../hook/useSearch";
 
@@ -38,7 +40,7 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 		},
 		{
 			title: "Reorder Quantity",
-			dataIndex: "reorderQuantity",
+			dataIndex: "reorderQty",
 			sorter: true,
 		},
 		{
@@ -49,7 +51,7 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <LowStockModal text={text} />,
+			render: (text) => <LowStockModal text={text} setLoading={setLoading} />,
 		},
 	];
 	useEffect(() => {
@@ -61,7 +63,6 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, items) => {
@@ -74,7 +75,7 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 									description: items.description,
 									uoM: items.uoM,
 									reorderLevel: items.reorderLevel,
-									reorderQuantity: items.reorderQty,
+									reorderQty: items.reorderQty,
 									stock: items.stock,
 									action: items,
 								},
@@ -100,57 +101,58 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 	);
 };
 
-// TODO: from action pass into modal
 const LowStockModal = ({ text, setLoading }) => {
 	const items = text.action;
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: I think LowStock component call should have the data now, you test first, so no call here
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].orderedQty = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
 	useEffect(() => {
-		axios
-			.get(`https://localhost:5001/api/supplierTenderItem/${items.id}`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-				},
-			})
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					/*setDataSource(
-						result.data.reduce((rows, items) => {
-							return [
-								...rows,
-								{
-									key: items.id,
-									category: items.categoryName,
-									bin: items.bin,
-									description: items.description,
-									uom: items.uoM,
-									reorderLevel: items.reorderLevel,
-									reorderQuantity: items.reorderQty,
-									stock: items.stock,
-								},
-							];
-						}, [])
-					);*/
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+		setDataSource(
+			items.supplierTenderItems.reduce(
+				(items, item) => [
+					...items,
+					{
+						key: item.supplierId,
+						supplierName: item.supplier === null ? "" : item.supplier.name,
+						orderedQty: 0,
+						priority: item.priority,
+					},
+				],
+				[]
+			)
+		);
 	}, []);
 
 	const columns = [
 		{
 			title: "Supplier Name",
 			dataIndex: "supplierName",
-			key: "supplierName",
+		},
+		{
+			title: "Order Priority",
+			dataIndex: "priority",
 		},
 		{
 			title: "Order Quantity",
-			dataIndex: "orderQuantity",
-			key: "orderQuantity",
-			render: () => <InputNumber placeholder="20" />,
+			dataIndex: "orderedQty",
+			render: (text, record) => (
+				<InputNumber
+					min={0}
+					max={record.reorderQty}
+					defaultValue={0}
+					onChange={(val) => onChange(val, record)}
+				/>
+			),
 		},
 		{
 			title: "View Supplier Details",
@@ -168,18 +170,44 @@ const LowStockModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 
-	// TODO: call createOrder List<Order>
-	// [{
-	// 	supplierId: "",
-	// 	orderItems: [{
-	// 		itemId: "",
-	// 		orderedQty:
-	// 	}]
-	// }];
-	// check api.http
 	const handleSubmit = () => {
-		setVisible(true);
-		setLoading(true);
+		if (dataSource.reduce((acc, item) => acc + item.orderedQty, 0) !== text.reorderQty)
+			Error("Order quantities added up together should be reorder quantity");
+		else {
+			let data = [];
+			dataSource.forEach((el) => {
+				if (el.orderedQty !== Number(0)) {
+					data.push({
+						supplierId: el.key,
+						orderItems: [
+							{
+								itemId: text.key,
+								orderedQty: el.orderedQty,
+							},
+						],
+					});
+				}
+			});
+			console.log(dataSource);
+			console.log(data);
+			axios
+				.post("https://localhost:5001/api/order", data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						Success("Order placed successfully");
+					} else {
+						Error(result.message);
+					}
+					setLoading(true);
+				});
+			setVisible(false);
+		}
 	};
 	return (
 		<>
@@ -199,7 +227,12 @@ const LowStockModal = ({ text, setLoading }) => {
 					</Button>,
 				]}
 			>
-				<Table columns={columns} pagination={false} size="small" />
+				<Descriptions>
+					<Descriptions.Item label="Reorder Quantity">
+						{text.reorderQty}
+					</Descriptions.Item>
+				</Descriptions>
+				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</>
 	);
@@ -238,16 +271,16 @@ const Details = () => {
 
 	// TODO: call GetSupplierTenderItemBySupplierId (Backend not done yet)
 	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+		// axios
+		// 	.get("https://localhost:5001/api/item")
+		// 	.then((res) => {
+		// 		const result = res.data;
+		// 		if (result.success) {
+		// 		}
+		// 	})
+		// 	.catch(function (error) {
+		// 		console.log(error);
+		// 	});
 	}, []);
 
 	return (

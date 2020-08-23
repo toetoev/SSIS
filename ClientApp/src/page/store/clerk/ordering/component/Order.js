@@ -1,6 +1,8 @@
 import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Confirm from "../../../../component/Confirm";
+import Error from "../../../../component/Error";
 import axios from "axios";
 import toTitleCase from "../../../../../util/toTitleCase";
 import useSearch from "../../../../../hook/useSearch";
@@ -45,8 +47,8 @@ export const Order = ({ loading, setLoading, keyword }) => {
 			key: "action",
 			render: (text) => (
 				<Space>
-					<OrderModal text={text} setLoading={setLoading}></OrderModal>
-					<Remove text={text}></Remove>
+					<OrderModal text={text} setLoading={setLoading} />
+					<Remove text={text} setLoading={setLoading} />
 				</Space>
 			),
 		},
@@ -85,7 +87,7 @@ export const Order = ({ loading, setLoading, keyword }) => {
 			.catch(function (error) {
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
@@ -172,8 +174,10 @@ const OrderModal = ({ text, setLoading }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={[
-					<Button onClick={hideModal}>Cancel</Button>,
-					<Button type="primary" onClick={handleSubmit}>
+					<Button key="cancel" onClick={hideModal}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
 					</Button>,
 				]}
@@ -190,9 +194,24 @@ const OrderModal = ({ text, setLoading }) => {
 	);
 };
 
-const Remove = ({ text }) => {
-	// TODO: call delete order
-	const handleDelete = () => {};
+const Remove = ({ text, setLoading }) => {
+	console.log(text);
+	const handleDelete = () => {
+		Confirm("Are you sure about deleting the order?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/order/" + text.action.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
 	return (
 		<Button type="danger" onClick={handleDelete}>
 			Remove

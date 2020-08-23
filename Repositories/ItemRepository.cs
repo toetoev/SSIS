@@ -34,7 +34,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Item>> GetLowStockItems()
         {
-            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).ToListAsync();
+            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).Where(i => !i.OrderItems.Any(oi => oi.Order.OrderedOn.Date.CompareTo(DateTime.Now.Date) <= 0)).ToListAsync();
         }
 
         public async Task<bool> ItemExist(Guid itemId)

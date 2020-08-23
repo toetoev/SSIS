@@ -62,7 +62,7 @@ namespace SSIS.Services
                         Order newOrder = new Order
                         {
                         Id = orderId,
-                        SupplierId = supplier.Id,
+                        Supplier = supplier,
                         OrderedBy = orderedBy,
                         OrderedOn = DateTime.Now,
                         Status = OrderStatus.ORDERED
@@ -77,9 +77,9 @@ namespace SSIS.Services
                         }
                         await _orderRepository.CreateOrder(newOrder);
                     }
-                    return new ApiResponse { Success = false, Message = "Supplier you've chosen doesn't exist" };
+                    else
+                        return new ApiResponse { Success = false, Message = "Supplier you've chosen doesn't exist" };
                 }
-
             }
             return new ApiResponse { Success = true };
         }
@@ -90,7 +90,7 @@ namespace SSIS.Services
             if (orderFromRepo != null)
             {
                 if (orderFromRepo.Status == OrderStatus.ORDERED)
-                    return new ApiResponse { Success = true, Data = await _orderRepository.DeleteOrder(orderId) };
+                    return new ApiResponse { Success = true, Data = await _orderRepository.DeleteOrder(orderFromRepo) };
                 else
                     return new ApiResponse { Success = false, Message = "Cannot delete order already received" };
             }
