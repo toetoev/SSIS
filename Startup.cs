@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SSIS.Databases;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Repositories;
 using SSIS.Services;
 

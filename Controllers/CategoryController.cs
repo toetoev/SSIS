@@ -3,8 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {

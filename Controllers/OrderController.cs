@@ -4,8 +4,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
 using SSIS.Utils;
 
 namespace SSIS.Controllers

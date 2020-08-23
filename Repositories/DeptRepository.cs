@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Repositories

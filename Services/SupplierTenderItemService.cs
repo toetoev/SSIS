@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {
