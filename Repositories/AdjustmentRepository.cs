@@ -30,7 +30,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Adjustment>> GetAll()
         {
-            return await _dbContext.Adjustments.ToListAsync();
+            return await _dbContext.Adjustments.OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToListAsync();
         }
 
         public async Task<int> UpdateAdjustmentStatus()

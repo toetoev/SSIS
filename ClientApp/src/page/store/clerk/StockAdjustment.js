@@ -2,11 +2,14 @@ import { Button, Col, Descriptions, Form, Input, Modal, Row, Select, Space, Tabl
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
+import Success from "../../component/Success";
 import axios from "axios";
 
+// IMPROVE: search bar
 export default function StockAdjustment() {
 	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
+	const [loading, setLoading] = useState(true);
 	const columns = [
 		{
 			title: "Submitted On",
@@ -18,7 +21,11 @@ export default function StockAdjustment() {
 		},
 		{
 			title: "Issued By",
-			dataIndex: "authorizedBy",
+			dataIndex: "issuedBy",
+		},
+		{
+			title: "Issued On",
+			dataIndex: "issuedOn",
 		},
 		{
 			title: "Status",
@@ -27,11 +34,10 @@ export default function StockAdjustment() {
 		{
 			title: "Action",
 			key: "action",
-			render: (text) => <AdjustmentDetailsModal text={text} />,
+			render: (text) => <AdjustmentDetailsModal text={text} setLoading={setLoading} />,
 		},
 	];
 
-	// TODO: call get all adjustment (test after create adjustment)
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/adjustment", {
@@ -51,7 +57,8 @@ export default function StockAdjustment() {
 									key: stocks.id,
 									submittedOn: stocks.submittedOn,
 									submittedBy: stocks.submittedBy.name,
-									//authorizedBy: stocks.requestedOn,
+									issuedBy: stocks.issuedBy === null ? "" : stocks.issuedBy.name,
+									issuedOn: stocks.issuedOn,
 									status: stocks.status,
 									action: stocks,
 								},
@@ -59,16 +66,20 @@ export default function StockAdjustment() {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Stock Adjustment</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
+			<Row justify="space-between">
+				<Col>
+					<h3>Stock Adjustment</h3>
+				</Col>
 				<Col>
 					<Space>
 						<Search
@@ -79,22 +90,28 @@ export default function StockAdjustment() {
 					</Space>
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Table
+				columns={columns}
+				dataSource={dataSource}
+				pagination={false}
+				size="middle"
+				loading={loading}
+			/>
 			<Row justify="end">
-				<CreateAdjustmentVoucher dataSource={dataSource} />
+				<CreateAdjustmentVoucher dataSource={dataSource} setLoading={setLoading} />
 			</Row>
 		</Space>
 	);
 }
 
-const AdjustmentDetailsModal = ({ text }) => {
+const AdjustmentDetailsModal = ({ text, setLoading }) => {
 	const stocks = text.action;
 	const [dataSource] = useState(
 		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
 			return [
 				...rows,
 				{
-					key: adjustmentItems.adjustmentId,
+					key: adjustmentItems.item.id,
 					category: adjustmentItems.item.categoryName,
 					description: adjustmentItems.item.description,
 					quantityAdjusted: adjustmentItems.adjustedQty,
@@ -128,15 +145,33 @@ const AdjustmentDetailsModal = ({ text }) => {
 	const hideModal = (e) => {
 		setVisible(false);
 	};
-	// TODO: call delete adjustment
-	const handleDelete = () => {};
+	const handleDelete = () => {
+		Confirm("Are you sure about deleting the adjustment voucher?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/adjustment/" + stocks.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
 	return (
 		<div>
 			<Space>
-				<Button onClick={showModal}>View</Button>
-				<Button type="danger" onClick={handleDelete}>
-					Delete
+				<Button type="primary" onClick={showModal}>
+					View
 				</Button>
+				{stocks.status === "APPLIED" ? (
+					<Button type="danger" onClick={handleDelete}>
+						Delete
+					</Button>
+				) : null}
 			</Space>
 			<Modal title="Adjustment Voucher" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
@@ -145,12 +180,24 @@ const AdjustmentDetailsModal = ({ text }) => {
 					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Date Submitted">
-						{stocks.submittedOn}
-					</Descriptions.Item>
+					<Descriptions.Item label="Submitted On">{stocks.submittedOn}</Descriptions.Item>
 				</Descriptions>
+				{stocks.status === "ISSUED" ? (
+					<>
+						<Descriptions>
+							<Descriptions.Item label="Issued By">
+								{stocks.issuedBy === null ? "" : stocks.issuedBy.name}
+							</Descriptions.Item>
+						</Descriptions>
+						<Descriptions>
+							<Descriptions.Item label="Issued On">
+								{stocks.issuedOn}
+							</Descriptions.Item>
+						</Descriptions>
+					</>
+				) : null}
 				<Descriptions>
-					<Descriptions.Item label="Issued On">{stocks.issuedOn}</Descriptions.Item>
+					<Descriptions.Item label="Adjustment Items"></Descriptions.Item>
 				</Descriptions>
 				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
@@ -158,7 +205,7 @@ const AdjustmentDetailsModal = ({ text }) => {
 	);
 };
 
-const CreateAdjustmentVoucher = () => {
+const CreateAdjustmentVoucher = ({ setLoading }) => {
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const columns = [
@@ -193,12 +240,41 @@ const CreateAdjustmentVoucher = () => {
 		setVisible(true);
 	};
 
-	// TODO: create adjustment post List<AdjustmentItem> itemId, adjustedQty, reason
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		let data = [];
+		console.log(dataSource);
+		dataSource.forEach((el) =>
+			data.push({
+				itemId: el.key,
+				adjustedQty: el.adjustedQty,
+				reason: el.reason,
+			})
+		);
+		axios
+			.post("https://localhost:5001/api/adjustment", data, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setLoading(true);
+					Success("Adjustment Submit Successfully");
+					setVisible(false);
+				} else Error(result.message);
+			});
+	};
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
+
+	const handleDataChange = (data) => {
+		setDataSource(data);
+	};
+
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -223,11 +299,11 @@ const CreateAdjustmentVoucher = () => {
 						<Space>
 							<ClearAdjustmentItems
 								dataSource={dataSource}
-								handleDataChange={(data) => setDataSource(data)}
+								handleDataChange={handleDataChange}
 							></ClearAdjustmentItems>
 							<AddAdjustmentItem
 								dataSource={dataSource}
-								handleDataChange={(data) => setDataSource(data)}
+								handleDataChange={handleDataChange}
 							/>
 						</Space>
 					</Row>
@@ -275,7 +351,33 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 			});
 	}, []);
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		form.validateFields()
+			.then((val) => {
+				if (dataSource.find((val) => val.key === item)) {
+					handleDataChange(
+						dataSource.map((val) => {
+							if (val.key === item) {
+								val.adjustedQty = val.adjustedQty + adjustedQty;
+							}
+							return val;
+						})
+					);
+				} else {
+					handleDataChange([
+						...dataSource,
+						{
+							key: item,
+							description: itemOptions.find((val) => val.value === item).label,
+							adjustedQty: adjustedQty,
+							reason: reason,
+						},
+					]);
+				}
+				setVisible(false);
+			})
+			.catch((err) => {});
+	};
 
 	const handleCancel = (e) => {
 		setVisible(false);
