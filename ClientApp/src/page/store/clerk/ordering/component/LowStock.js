@@ -126,6 +126,7 @@ const LowStockModal = ({ text, setLoading }) => {
 						supplierName: item.supplier === null ? "" : item.supplier.name,
 						orderedQty: 0,
 						priority: item.priority,
+						action: item,
 					},
 				],
 				[]
@@ -156,9 +157,8 @@ const LowStockModal = ({ text, setLoading }) => {
 		},
 		{
 			title: "View Supplier Details",
-			dataIndex: "details",
-			key: "details",
-			render: () => <Details />,
+			key: "action",
+			render: (text) => <SupplierDetails text={text} />,
 		},
 	];
 
@@ -188,8 +188,6 @@ const LowStockModal = ({ text, setLoading }) => {
 					});
 				}
 			});
-			console.log(dataSource);
-			console.log(data);
 			axios
 				.post("https://localhost:5001/api/order", data, {
 					headers: {
@@ -238,26 +236,24 @@ const LowStockModal = ({ text, setLoading }) => {
 	);
 };
 
-// TODO: pass supplier info from LowStockModal into details, then set to Descriptions
-const Details = () => {
+// TODO: pass supplierId through record.key from LowStockModal into details, then use supplierId call GetSupplierById
+const SupplierDetails = ({ text }) => {
+	const supplier = text.action;
+	console.log(supplier);
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-
 	const columns = [
 		{
 			title: "Item Description",
 			dataIndex: "description",
-			key: "description",
 		},
 		{
 			title: "Price",
 			dataIndex: "price",
-			key: "price",
 		},
 		{
 			title: "Unit Of Measurement",
-			dataIndex: "uom",
-			key: "uom",
+			dataIndex: "uoM",
 		},
 	];
 
@@ -269,59 +265,40 @@ const Details = () => {
 		setVisible(false);
 	};
 
-	// TODO: call GetSupplierTenderItemBySupplierId (Backend not done yet)
-	useEffect(() => {
-		// axios
-		// 	.get("https://localhost:5001/api/item")
-		// 	.then((res) => {
-		// 		const result = res.data;
-		// 		if (result.success) {
-		// 		}
-		// 	})
-		// 	.catch(function (error) {
-		// 		console.log(error);
-		// 	});
-	}, []);
-
 	return (
 		<>
-			<Button onClick={showModal}>View</Button>
-			<Modal
-				title="Stationery Details"
-				visible={visible}
-				onCancel={hideModal}
-				footer={[
-					<Button key="back" onClick={hideModal}>
-						Back
-					</Button>,
-				]}
-			>
+			<Button type="primary" onClick={showModal}>
+				View
+			</Button>
+			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Supplier Name"></Descriptions.Item>
+					<Descriptions.Item label="Supplier Name">
+						{supplier.supplier.name}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Contact Name"></Descriptions.Item>
+					<Descriptions.Item label="Contact Name">
+						{supplier.supplier.contactName}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Phone No"></Descriptions.Item>
+					<Descriptions.Item label="Phone No">
+						{supplier.supplier.phone}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Fax No"></Descriptions.Item>
+					<Descriptions.Item label="Fax No">{supplier.supplier.fax}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="GST Registration No"></Descriptions.Item>
+					<Descriptions.Item label="GST Registration No">
+						{supplier.supplier.gst}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Address"></Descriptions.Item>
+					<Descriptions.Item label="Address">
+						{supplier.supplier.address}
+					</Descriptions.Item>
 				</Descriptions>
-
-				<Table
-					title={() => "Items : "}
-					columns={columns}
-					dataSource={dataSource}
-					pagination={false}
-					size="small"
-				/>
 			</Modal>
 		</>
 	);
