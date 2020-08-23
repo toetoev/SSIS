@@ -1,10 +1,14 @@
-import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
+import { Button, Descriptions, Modal, Table, Input } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+import Error from "../../../../component/Error";
+import Success from "../../../../component/Success";
+import Form from "antd/lib/form/Form";
 
 export const LowStock = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
+
 	const columns = [
 		{
 			title: "Category",
@@ -51,7 +55,6 @@ export const LowStock = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, items) => {
@@ -92,12 +95,30 @@ export const LowStock = ({ loading, setLoading }) => {
 	);
 };
 
-// TODO: from action pass into modal
 const LowStockModal = ({ text, setLoading }) => {
 	const items = text.action;
+	const [quantity, setQuantity] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	// TODO: I think LowStock component call should have the data now, you test first, so no call here
+
+	const columns = [
+		{
+			title: "Supplier Name",
+			dataIndex: "supplierName",
+		},
+		{
+			title: "Order Quantity",
+			dataIndex: "orderQuantity",
+			render: () => 
+				<Input type="number" placeholder="0" onChange={e => setQuantity(e.target.value)}/>,
+		},
+		{
+			title: "View Supplier Details",
+			key: "details",
+			render: (text) => <Details text={text} />,
+		},
+	];
+
 	useEffect(() => {
 		axios
 			.get(`https://localhost:5001/api/supplierTenderItem/${items.id}`, {
@@ -108,23 +129,18 @@ const LowStockModal = ({ text, setLoading }) => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					/*setDataSource(
-						result.data.reduce((rows, items) => {
+					setDataSource(
+						result.data.reduce((rows, supplierTender) => {
 							return [
 								...rows,
 								{
-									key: items.id,
-									category: items.categoryName,
-									bin: items.bin,
-									description: items.description,
-									uom: items.uoM,
-									reorderLevel: items.reorderLevel,
-									reorderQuantity: items.reorderQty,
-									stock: items.stock,
+									key: supplierTender.supplierId,
+									supplierName: supplierTender.supplier.name,
+									action: supplierTender,
 								},
 							];
 						}, [])
-					);*/
+					);
 				}
 			})
 			.catch(function (error) {
@@ -132,32 +148,16 @@ const LowStockModal = ({ text, setLoading }) => {
 			});
 	}, []);
 
-	const columns = [
-		{
-			title: "Supplier Name",
-			dataIndex: "supplierName",
-			key: "supplierName",
-		},
-		{
-			title: "Order Quantity",
-			dataIndex: "orderQuantity",
-			key: "orderQuantity",
-			render: () => <InputNumber placeholder="20" />,
-		},
-		{
-			title: "View Supplier Details",
-			dataIndex: "details",
-			key: "details",
-			render: () => <Details />,
-		},
-	];
-
 	const showModal = () => {
 		setVisible(true);
 	};
 
 	const hideModal = (e) => {
 		setVisible(false);
+	};
+
+	const handleDataChange = (data) => {
+		setDataSource(data);
 	};
 
 	// TODO: call createOrder List<Order>
@@ -168,11 +168,40 @@ const LowStockModal = ({ text, setLoading }) => {
 	// 		orderedQty:
 	// 	}]
 	// }];
-	// check api.http
 	const handleSubmit = () => {
+		console.log(dataSource);
+		if (dataSource.length > 0) {
+			const data = dataSource.map((val) => {
+				return {
+					supplierId: val.key,
+					orderItems: [{
+						itemId: val.action.itemId,
+						orderedQty: quantity,
+					}],
+				}
+			});
+			console.log(data);
+			axios
+				.post("https://localhost:5001/api/order", data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					console.log(result)
+					if (result.success) {
+						Success("Order Applied Successfully");
+					} else {
+						Error(result.message);
+					}
+				});
+		} else {
+			Error("Please choose some items before submit");
+		}
 		setVisible(true);
-		setLoading(true);
 	};
+
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -191,45 +220,32 @@ const LowStockModal = ({ text, setLoading }) => {
 					</Button>,
 				]}
 			>
-				<Table columns={columns} pagination={false} size="small" />
+				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
 			</Modal>
 		</>
 	);
 };
 
-// TODO: pass supplier info from LowStockModal into details, then set to Descriptions
-const Details = () => {
+const Details = ({ text }) => {
+	const supplierDetails = text.action;
+	console.log(supplierDetails);
 	const [visible, setVisible] = useState(false);
-	const [dataSource, setDataSource] = useState([]);
-
-	const columns = [
-		{
-			title: "Item Description",
-			dataIndex: "description",
-			key: "description",
-		},
-		{
-			title: "Price",
-			dataIndex: "price",
-			key: "price",
-		},
-		{
-			title: "Unit Of Measurement",
-			dataIndex: "uom",
-			key: "uom",
-		},
-	];
-
-	const showModal = () => {
-		setVisible(true);
-	};
-
-	const hideModal = (e) => {
-		setVisible(false);
-	};
+	const [dataSource] = useState(
+		/*supplierDetails.reduce((rows, items) => {
+			return [
+				...rows,
+				{
+					key: items.itemId,
+					//description: items.item.description,
+					//price: items.item.uoM,
+					//uom: items.need,
+				},
+			];
+		}, [])*/
+	);
 
 	// TODO: call GetSupplierTenderItemBySupplierId (Backend not done yet)
-	useEffect(() => {
+	/*useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
 			.then((res) => {
@@ -240,7 +256,30 @@ const Details = () => {
 			.catch(function (error) {
 				console.log(error);
 			});
-	}, []);
+	}, []);*/
+
+	const columns = [
+		{
+			title: "Item Description",
+			dataIndex: "description",
+		},
+		{
+			title: "Price",
+			dataIndex: "price",
+		},
+		{
+			title: "Unit Of Measurement",
+			dataIndex: "uom",
+		},
+	];
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	const hideModal = (e) => {
+		setVisible(false);
+	};
 
 	return (
 		<>
@@ -256,28 +295,28 @@ const Details = () => {
 				]}
 			>
 				<Descriptions>
-					<Descriptions.Item label="Supplier Name"></Descriptions.Item>
+					<Descriptions.Item label="Supplier Name">{supplierDetails.supplier.name}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Contact Name"></Descriptions.Item>
+					<Descriptions.Item label="Contact Name">{supplierDetails.supplier.contactName}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Phone No"></Descriptions.Item>
+					<Descriptions.Item label="Phone No">{supplierDetails.supplier.phone}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Fax No"></Descriptions.Item>
+					<Descriptions.Item label="Fax No">{supplierDetails.supplier.fax}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="GST Registration No"></Descriptions.Item>
+					<Descriptions.Item label="GST Registration No">{supplierDetails.supplier.gst}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Address"></Descriptions.Item>
+					<Descriptions.Item label="Address">{supplierDetails.supplier.address}</Descriptions.Item>
 				</Descriptions>
 
 				<Table
 					title={() => "Items : "}
 					columns={columns}
-					dataSource={dataSource}
+					//dataSource={dataSource}
 					pagination={false}
 					size="small"
 				/>
