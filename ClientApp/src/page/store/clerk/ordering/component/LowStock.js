@@ -236,7 +236,6 @@ const LowStockModal = ({ text, setLoading }) => {
 	);
 };
 
-// TODO: pass supplierId through record.key from LowStockModal into details, then use supplierId call GetSupplierById
 const SupplierDetails = ({ text }) => {
 	const supplier = text.action;
 	console.log(supplier);
