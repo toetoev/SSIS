@@ -17,7 +17,7 @@ export default function StockAdjustment() {
 			dataIndex: "submittedBy",
 		},
 		{
-			title: "Authorized By",
+			title: "Issued By",
 			dataIndex: "authorizedBy",
 		},
 		{
