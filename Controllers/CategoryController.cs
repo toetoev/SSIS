@@ -21,14 +21,14 @@ namespace SSIS.Controllers
 
         [HttpGet("")]
         [Authorize(Roles = StoreRole.All)]
-        public IActionResult GetAllCategories()
+        public IActionResult GetAll()
         {
             return Ok(_categoryService.GetAllCategories().Result);
         }
 
         [HttpGet("{categoryName}")]
         [Authorize(Roles = StoreRole.All)]
-        public IActionResult GetAllItems([FromRoute] string categoryName)
+        public IActionResult GetCategoryById([FromRoute] string categoryName)
         {
             return Ok(_categoryService.GetCategoryById(categoryName).Result);
         }
