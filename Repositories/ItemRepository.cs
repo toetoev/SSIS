@@ -40,5 +40,10 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Items.AnyAsync(i => i.Id == itemId);
         }
+
+        public async Task<int> UpdateItem()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

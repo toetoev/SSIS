@@ -13,6 +13,7 @@ namespace SSIS.Services
 
         Task<ApiResponse> GetItemById(Guid itemId);
         Task<ApiResponse> GetLowStockItems();
+        Task<ApiResponse> UpdateItem(Guid itemId, Item item);
     }
 
 }
