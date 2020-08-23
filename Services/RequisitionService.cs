@@ -123,11 +123,12 @@ namespace SSIS.Services
             return new ApiResponse { Success = false, Message = "Cannot find requisition reviewing" };
         }
 
-        public async Task<ApiResponse> GetPopularItems(string deptName)
+        public async Task<ApiResponse> GetPopularItems(string email)
         {
-            if (await _deptRepository.DepartmentExist(deptName))
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            if (await _deptRepository.DepartmentExist(deptStaff.DepartmentName))
             {
-                List<Item> items = await _requisitionRepository.GetPopularItems(deptName);
+                List<Item> items = await _requisitionRepository.GetPopularItems(deptStaff.DepartmentName);
                 foreach (var item in items)
                 {
                     Item itemFromRepo = await _itemRepository.GetItemById(item.Id);

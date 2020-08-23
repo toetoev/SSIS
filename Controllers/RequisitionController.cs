@@ -63,9 +63,10 @@ namespace SSIS.Controllers
 
         [HttpGet("popular")]
         [Authorize(Roles = DeptRole.Employee)]
-        public IActionResult GetPopularItems([FromQuery] string deptName)
+        public IActionResult GetPopularItems()
         {
-            return Ok(_requisitionService.GetPopularItems(deptName).Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.GetPopularItems(email).Result);
         }
     }
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
+import { PlusOutlined } from "@ant-design/icons";
 import Success from "../../component/Success";
 import axios from "axios";
 import sorter from "../../../util/sorter";
@@ -37,18 +38,8 @@ export default function SubmitRequisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
-			{/* // TODO: recommendation */}
 			<Row justify="space-between">
-				<Col>
-					<Space>
-						<Button type="primary">Stapler</Button>
-						<Button type="primary">Tray</Button>
-						<Button type="primary">Clip</Button>
-					</Space>
-				</Col>
-				<Col>
-					<Add dataSource={dataSource} handleDataChange={(data) => setDataSource(data)} />
-				</Col>
+				<Add dataSource={dataSource} handleDataChange={(data) => setDataSource(data)} />
 			</Row>
 			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
@@ -73,6 +64,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 	const [quantity, setQuantity] = useState(0);
 	const [visible, setVisible] = useState(false);
 	const [itemOptions, setItemOptions] = useState([]);
+	const [popularItems, setPopularItems] = useState([]);
 
 	useEffect(() => {
 		axios
@@ -87,6 +79,26 @@ const Add = ({ dataSource, handleDataChange }) => {
 					setItemOptions(
 						result.data.reduce((options, item) => {
 							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		axios
+			.get("https://localhost:5001/api/requisition/popular", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				console.log(result);
+				if (result.success) {
+					setPopularItems(
+						result.data.reduce((items, item) => {
+							return [...items, { id: item.id, description: item.description }];
 						}, [])
 					);
 				}
@@ -131,6 +143,14 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(false);
 	};
 
+	const showPopularItem = (id) => {
+		form.setFieldsValue({
+			item: id,
+		});
+		setItem(id);
+		setVisible(true);
+	};
+
 	const onValuesChange = (val) => {
 		if (val.quantity) setQuantity(Number(val.quantity));
 		if (val.item) setItem(val.item);
@@ -138,9 +158,25 @@ const Add = ({ dataSource, handleDataChange }) => {
 
 	return (
 		<>
-			<Button type="primary" onClick={showModal}>
-				Add
-			</Button>
+			<Col>
+				<Space>
+					{popularItems.map((item) => (
+						<Button
+							type="primary"
+							key={item.id}
+							onClick={() => showPopularItem(item.id)}
+							icon={<PlusOutlined />}
+						>
+							{item.description}
+						</Button>
+					))}
+				</Space>
+			</Col>
+			<Col>
+				<Button type="primary" onClick={showModal}>
+					Add
+				</Button>
+			</Col>
 			<Modal
 				title="Stationery Catalogue"
 				visible={visible}
@@ -199,6 +235,7 @@ const Delete = ({ dataSource, handleDataChange, text }) => {
 
 const Submit = ({ dataSource, handleDataChange }) => {
 	const handleSubmit = () => {
+		console.log("Submit");
 		if (dataSource.length > 0) {
 			const data = dataSource.map((val) => {
 				return { itemId: val.key, need: val.quantity };
