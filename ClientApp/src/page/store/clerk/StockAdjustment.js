@@ -87,7 +87,7 @@ export default function StockAdjustment() {
 					</Space>
 				</Col>
 			</Row>
-			<Table columns={columns} dataSource={dataSource} size="middle" />
+			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
 				<CreateAdjustmentVoucher dataSource={dataSource} setLoading={setLoading} />
 			</Row>

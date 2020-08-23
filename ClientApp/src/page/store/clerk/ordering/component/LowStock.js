@@ -95,7 +95,6 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 			loading={loading}
 			dataSource={dataSource}
 			scroll={{ y: 400 }}
-			pagination={false}
 			size="small"
 		/>
 	);
