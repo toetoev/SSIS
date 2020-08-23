@@ -5,6 +5,7 @@ import Confirm from "../../component/Confirm";
 import Success from "../../component/Success";
 import axios from "axios";
 
+// IMPROVE: search bar
 export default function StockAdjustment() {
 	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
@@ -75,8 +76,10 @@ export default function StockAdjustment() {
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Stock Adjustment</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
+			<Row justify="space-between">
+				<Col>
+					<h3>Stock Adjustment</h3>
+				</Col>
 				<Col>
 					<Space>
 						<Search

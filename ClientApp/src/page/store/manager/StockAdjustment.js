@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import Error from "../../component/Error";
 import axios from "axios";
 
+// IMPROVE: search bar
 export default function StockAdjustment() {
+	const { Search } = Input;
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const columns = [
@@ -70,11 +72,12 @@ export default function StockAdjustment() {
 			});
 	}, [loading]);
 
-	const { Search } = Input;
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
-			<h3>Stock Adjustment</h3>
-			<Row justify="space-between" style={{ float: "right" }}>
+			<Row justify="space-between">
+				<Col>
+					<h3>Stock Adjustment</h3>
+				</Col>
 				<Col>
 					<Space>
 						<Search
@@ -92,8 +95,6 @@ export default function StockAdjustment() {
 
 const StockAdjustmentModal = ({ text, setLoading }) => {
 	const stocks = text.action;
-	console.log(stocks);
-	console.log(stocks);
 	const [dataSource] = useState(
 		stocks.adjustmentItems.reduce((rows, adjustmentItems) => {
 			return [
