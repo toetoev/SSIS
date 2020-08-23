@@ -3,9 +3,15 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 import toTitleCase from "../../../../../util/toTitleCase";
+import useSearch from "../../../../component/useSearch";
 
-export const Order = ({ loading, setLoading }) => {
+export const Order = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
+	const [backupData, setBackupData] = useState([]);
+	const options = {
+		keys: ["supplier", "orderedBy", "orderedOn", "receivedBy", "receivedOn"],
+	};
+	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
 	const handleDataChange = (data) => {
 		setDataSource(data);
 	};

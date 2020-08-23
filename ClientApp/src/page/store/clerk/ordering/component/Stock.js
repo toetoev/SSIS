@@ -2,9 +2,15 @@ import { default as React, useEffect, useState } from "react";
 
 import { Table } from "antd";
 import axios from "axios";
+import useSearch from "../../../../component/useSearch";
 
-export const Stock = () => {
+export const Stock = ({ keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
+	const [backupData, setBackupData] = useState([]);
+	const options = {
+		keys: ["category", "bin", "description", "uoM"],
+	};
+	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
 	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
@@ -24,8 +30,7 @@ export const Stock = () => {
 		},
 		{
 			title: "UoM",
-			dataIndex: "uom",
-			key: "uom",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Reorder Level",
@@ -68,7 +73,7 @@ export const Stock = () => {
 									category: items.categoryName,
 									bin: items.bin,
 									description: items.description,
-									uom: items.uoM,
+									uoM: items.uoM,
 									reorderLevel: items.reorderLevel,
 									reorderQuantity: items.reorderQty,
 									stock: items.stock,
@@ -91,7 +96,6 @@ export const Stock = () => {
 			dataSource={dataSource}
 			loading={loading}
 			scroll={{ y: 400 }}
-			pagination={false}
 			size="small"
 		/>
 	);

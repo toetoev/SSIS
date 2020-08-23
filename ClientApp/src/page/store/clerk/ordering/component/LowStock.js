@@ -89,28 +89,6 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 				console.log(error);
 			});
 	}, [loading]);
-
-	// useEffect(() => {
-	// 	if (keyword === "") setDataSource(backupData);
-	// 	else {
-	// 		setBackupData(dataSource);
-	// 		const options = {
-	// 			keys: [
-	// 				"category",
-	// 				"bin",
-	// 				"description",
-	// 				"uom",
-	// 				"reorderLevel",
-	// 				"reorderQuantity",
-	// 				"stock",
-	// 			],
-	// 		};
-	// 		const fuse = new Fuse(dataSource, options);
-	// 		const result = fuse.search(keyword);
-	// 		setDataSource(result.map((val) => val.item));
-	// 	}
-	// }, [keyword]);
-
 	return (
 		<Table
 			columns={columns}
