@@ -2,24 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IOrderItemRepository _orderItemRepository;
         private readonly IItemRepository _itemRepository;
         private readonly ISupplierRepository _supplierRepository;
         private readonly IStoreStaffRepository _storeStaffRepository;
-        public OrderService(IOrderRepository orderRepository, IItemRepository itemRepository, ISupplierRepository supplierRepository, IStoreStaffRepository storeStaffRepository)
+        private readonly ICategoryRepository _categoryRepository;
+        public OrderService(IOrderRepository orderRepository, IItemRepository itemRepository, ISupplierRepository supplierRepository, IStoreStaffRepository storeStaffRepository, ICategoryRepository categoryRepository, IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
             _itemRepository = itemRepository;
             _supplierRepository = supplierRepository;
             _storeStaffRepository = storeStaffRepository;
+            _categoryRepository = categoryRepository;
+            _orderItemRepository = orderItemRepository;
         }
 
         public async Task<ApiResponse> CreateOrder(List<Order> orders, string orderedByEmail)
@@ -34,12 +39,15 @@ namespace SSIS.Services
                     foreach (var orderItem in order.OrderItems)
                     {
                         Item itemFromRepo = await _itemRepository.GetItemById(orderItem.ItemId);
+                        orderItem.DeliveredQty = -1;
                         if (itemFromRepo != null)
                         {
                             // Existing orderItem
                             OrderItem orderItemFromRepo = orderFromRepo.OrderItems.Where(oi => oi.ItemId == itemFromRepo.Id).FirstOrDefault();
                             if (orderItemFromRepo != null)
+                            {
                                 orderItemFromRepo.OrderedQty += orderItem.OrderedQty;
+                            }
                             else
                                 orderFromRepo.OrderItems.Add(orderItem);
                         }
@@ -63,6 +71,7 @@ namespace SSIS.Services
                         foreach (var orderItem in order.OrderItems)
                         {
                             Item itemFromRepo = await _itemRepository.GetItemById(orderItem.ItemId);
+                            orderItem.DeliveredQty = -1;
                             if (itemFromRepo != null)
                                 newOrder.OrderItems.Add(orderItem);
                         }
@@ -91,6 +100,22 @@ namespace SSIS.Services
         public async Task<ApiResponse> GetAllOrders()
         {
             return new ApiResponse { Success = true, Data = await _orderRepository.GetAll() };
+        }
+
+        public async Task<ApiResponse> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories)
+        {
+            if (startDate.CompareTo(endDate) < 0)
+            {
+                foreach (var category in categories)
+                {
+                    if (!await _categoryRepository.CategoryExist(category))
+                        return new ApiResponse { Success = false, Message = "Some of the categories doesn't exist" };
+                }
+                return new ApiResponse { Success = true, Data = await _orderItemRepository.GetOrderTrend(startDate, endDate, categories) };
+            }
+            else
+                return new ApiResponse { Success = false, Message = "End date should be after start date" };
+
         }
 
         public async Task<ApiResponse> ReceiveOrder(Guid orderId, List<OrderItem> orderItems, string receivedByEmail)

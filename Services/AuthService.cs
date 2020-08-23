@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {

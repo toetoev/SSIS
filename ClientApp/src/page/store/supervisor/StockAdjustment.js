@@ -1,4 +1,4 @@
-import { Button, Col, Input, Modal, Row, Space, Table, Descriptions } from "antd";
+import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -159,12 +159,10 @@ const StockAdjustmentModal = ({ text }) => {
 					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Issued On">
-						{stocks.issuedOn}
-					</Descriptions.Item>
+					<Descriptions.Item label="Issued On">{stocks.issuedOn}</Descriptions.Item>
 				</Descriptions>
 
-				<Table columns={columns} dataSource={dataSource} size="small" pagination={false}/>
+				<Table columns={columns} dataSource={dataSource} size="small" pagination={false} />
 
 				<Row>
 					<Col

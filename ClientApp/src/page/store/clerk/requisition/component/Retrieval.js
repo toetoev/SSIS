@@ -4,19 +4,21 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
 export const Retrieval = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Created By",
 			dataIndex: "createdBy",
+			sorter: (a, b) => sorter(a.createdBy, b.createdBy),
 		},
 		{
 			title: "Created On",
 			dataIndex: "createdOn",
+			sorter: (a, b) => sorter(a.createdOn, b.createdOn),
 		},
 		{
 			title: "Action",

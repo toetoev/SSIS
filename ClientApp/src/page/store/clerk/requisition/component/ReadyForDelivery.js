@@ -2,27 +2,31 @@ import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
 export const ReadyForDelivery = ({ loading, setLoading }) => {
 	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
+			sorter: (a, b) => sorter(a.departmentName, b.departmentName),
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
+			sorter: (a, b) => sorter(a.collectionPoint, b.collectionPoint),
 		},
 		{
 			title: "Disbursement List",

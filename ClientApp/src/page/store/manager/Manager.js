@@ -1,6 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import Dashboard from "../Dashboard";
+import Dashboard from "../dashboard/Dashboard";
 import { Layout } from "antd";
 import MaintainSupplier from "./MaintainSupplier";
 import { Navbar } from "../../component/Navbar";
@@ -12,6 +12,7 @@ import StockAdjustment from "./StockAdjustment";
 const { Header, Sider, Content } = Layout;
 export default function Manager() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
 		{ to: `${path}/stationary-catalogue`, title: "Stationary Catalogue" },

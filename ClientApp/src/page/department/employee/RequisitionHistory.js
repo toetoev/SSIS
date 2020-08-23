@@ -9,7 +9,6 @@ import toTitleCase from "../../../util/toTitleCase";
 export default function RequisitionHistory() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
-	// IMPROVE: make sorter work all field
 	const columns = [
 		{
 			title: "Requested Date",
@@ -24,22 +23,22 @@ export default function RequisitionHistory() {
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedDate, b.reviewedDate),
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedBy, b.acknowledgedBy),
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedDate, b.acknowledgedDate),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -84,12 +83,12 @@ export default function RequisitionHistory() {
 				}
 				setLoading(false);
 			})
-
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
 			});
-	}, [loading]);
+	}, []);
+
 	return (
 		<Space direction="vertical">
 			<h3>Requisition History</h3>
@@ -147,10 +146,12 @@ const RequisitionModal = ({ text }) => {
 	const showModal = () => {
 		setVisible(true);
 	};
+
 	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: authorized people can review requisition
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

@@ -13,7 +13,7 @@ export default function Requisition() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Requisitions</h3>
-			<Tabs defaultActiveKey="To-Do" type="card" tabBarExtraContent={<SearchBar />}>
+			<Tabs defaultActiveKey="To-Do" tabBarExtraContent={<SearchBar />}>
 				<TabPane tab="To-Do" key="To-Do">
 					<Todo loading={loading} setLoading={setLoading} />
 				</TabPane>

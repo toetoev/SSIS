@@ -11,6 +11,7 @@ import Sidebar from "../../component/Sidebar";
 const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
+	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}/maintain-department`, title: "Maintain Department" },
 		{ to: `${path}`, title: "Review Requisition" },
