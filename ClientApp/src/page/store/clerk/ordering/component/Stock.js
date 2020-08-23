@@ -2,7 +2,7 @@ import { default as React, useEffect, useState } from "react";
 
 import { Table } from "antd";
 import axios from "axios";
-import useSearch from "../../../../component/useSearch";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Stock = ({ keyword }) => {
 	const [dataSource, setDataSource] = useState([]);

@@ -3,7 +3,7 @@ import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
 import toTitleCase from "../../../../../util/toTitleCase";
-import useSearch from "../../../../component/useSearch";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Order = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);

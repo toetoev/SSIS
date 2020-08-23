@@ -5,18 +5,20 @@ import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 
 export default function SubmitRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: add sorter to all field
 	const columns = [
 		{
 			title: "Product Description",
 			dataIndex: "description",
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "Quantity",
 			dataIndex: "quantity",
+			sorter: (a, b) => sorter(a.quantity, b.quantity),
 		},
 		{
 			title: "Action",

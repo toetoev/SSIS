@@ -2,7 +2,7 @@ import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import useSearch from "../../../../component/useSearch";
+import useSearch from "../../../../../hook/useSearch";
 
 export const LowStock = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
