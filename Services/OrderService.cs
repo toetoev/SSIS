@@ -16,13 +16,14 @@ namespace SSIS.Services
         private readonly ISupplierRepository _supplierRepository;
         private readonly IStoreStaffRepository _storeStaffRepository;
         private readonly ICategoryRepository _categoryRepository;
-        public OrderService(IOrderRepository orderRepository, IItemRepository itemRepository, ISupplierRepository supplierRepository, IStoreStaffRepository storeStaffRepository, ICategoryRepository categoryRepository)
+        public OrderService(IOrderRepository orderRepository, IItemRepository itemRepository, ISupplierRepository supplierRepository, IStoreStaffRepository storeStaffRepository, ICategoryRepository categoryRepository, IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
             _itemRepository = itemRepository;
             _supplierRepository = supplierRepository;
             _storeStaffRepository = storeStaffRepository;
             _categoryRepository = categoryRepository;
+            _orderItemRepository = orderItemRepository;
         }
 
         public async Task<ApiResponse> CreateOrder(List<Order> orders, string orderedByEmail)

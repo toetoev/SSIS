@@ -15,13 +15,13 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> GetAllCategories()
         {
-            return new ApiResponse { Success = true, Data = _categoryRepository.GetAll() };
+            return new ApiResponse { Success = true, Data = await _categoryRepository.GetAll() };
 
         }
 
         public async Task<ApiResponse> GetCategoryById(string name)
         {
-            return new ApiResponse { Success = true, Data = _categoryRepository.GetCategoryByName(name) };
+            return new ApiResponse { Success = true, Data = await _categoryRepository.GetCategoryByName(name) };
         }
     }
 }

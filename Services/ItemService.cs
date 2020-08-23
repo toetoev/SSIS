@@ -50,7 +50,6 @@ namespace SSIS.Services
         {
             Item itemFromRepo = await _itemRepository.GetItemById(itemId);
             //List<SupplierTenderItem> SupplierTenderItemsFromRepo = (List<SupplierTenderItem>) itemFromRepo.SupplierTenderItems;
-
             if (itemFromRepo != null)
             {
                 itemFromRepo.Description = item.Description;
@@ -76,7 +75,7 @@ namespace SSIS.Services
                 }
                 return new ApiResponse { Success = true, Data = await _itemRepository.UpdateItem() };
             }
-
+            return new ApiResponse { Success = false, Message = "item does not exist" };
         }
     }
 }

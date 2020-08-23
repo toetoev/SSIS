@@ -150,3 +150,9 @@ Content-Type: application/json
         "orderedQty": 5,
     }],
 }]
+
+### OrderController Get Order Trend
+GET https://localhost:5001/api/order/2020-06-22%2020:58:08/2020-08-22%2020:59:13
+Content-Type: application/json
+
+["Ruler"]

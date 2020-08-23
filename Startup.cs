@@ -75,6 +75,7 @@ namespace SSIS
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IRetrievalItemRepository, RetrievalItemRepository>();
