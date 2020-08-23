@@ -39,6 +39,7 @@ namespace SSIS.Controllers
         [HttpPut("{orderId}")]
         public IActionResult ReceiveOrder([FromRoute] Guid orderId, [FromBody] List<OrderItem> orderItems)
         {
+            orderItems.ForEach(el => System.Console.WriteLine(el.ToString()));
             string receivedByEmail = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_orderService.ReceiveOrder(orderId, orderItems, receivedByEmail).Result);
         }

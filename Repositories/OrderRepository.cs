@@ -41,7 +41,12 @@ namespace SSIS.Services
 
         public async Task<Order> GetOrderBySupplierAndDate(Guid supplierId, DateTime date)
         {
-            return await _dbContext.Orders.Where(o => o.SupplierId == supplierId && o.OrderedOn.Date == date).FirstOrDefaultAsync();
+            return await _dbContext.Orders.Where(o => o.SupplierId == supplierId && o.OrderedOn.Date == date.Date).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> UpdateOrder()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

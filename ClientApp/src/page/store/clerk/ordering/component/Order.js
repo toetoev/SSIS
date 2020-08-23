@@ -48,7 +48,11 @@ export const Order = ({ loading, setLoading, keyword }) => {
 			render: (text) => (
 				<Space>
 					<OrderModal text={text} setLoading={setLoading} />
-					<Remove text={text} setLoading={setLoading} />
+					{text.status == "Ordered" ? (
+						<Remove text={text} setLoading={setLoading} />
+					) : (
+						<></>
+					)}
 				</Space>
 			),
 		},
@@ -94,17 +98,6 @@ export const Order = ({ loading, setLoading, keyword }) => {
 const OrderModal = ({ text, setLoading }) => {
 	const order = text.action;
 	const [visible, setVisible] = useState(false);
-	const onChange = (val, row) => {
-		const newData = [...dataSource];
-		const index = dataSource.findIndex((item) => row.key === item.key);
-		newData[index].actualAmount = val;
-		const item = newData[index];
-		newData.splice(index, 1, {
-			...item,
-			...row,
-		});
-		setDataSource(newData);
-	};
 	const [dataSource, setDataSource] = useState(
 		order.orderItems.reduce((rows, orderItem) => {
 			return [
@@ -113,10 +106,23 @@ const OrderModal = ({ text, setLoading }) => {
 					key: orderItem.itemId,
 					description: orderItem.item.description,
 					orderedQty: orderItem.orderedQty,
+					deliveredQty: orderItem.deliveredQty,
+					remarks: "",
 				},
 			];
 		}, [])
 	);
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].deliveredQty = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
 	const columns = [
 		{
 			title: "Description",
@@ -130,7 +136,6 @@ const OrderModal = ({ text, setLoading }) => {
 			title: "Delivered Qty",
 			dataIndex: "deliveredQty",
 			render:
-				// TODO: test received status conditional rendering
 				text.status === "Ordered"
 					? (text, record) => (
 							<InputNumber
@@ -139,13 +144,12 @@ const OrderModal = ({ text, setLoading }) => {
 								onChange={(val) => onChange(val, record)}
 							/>
 					  )
-					: null,
+					: undefined,
 		},
 		{
-			title: "Remarks",
+			title: "Remarks (Optional)",
 			dataIndex: "remarks",
 			render:
-				// TODO: test received status conditional rendering
 				text.status === "Ordered"
 					? (text, record) => (
 							<Input type="text" onChange={(val) => onChange(val, record)} />
@@ -157,8 +161,32 @@ const OrderModal = ({ text, setLoading }) => {
 		setVisible(true);
 	};
 
-	// TODO: call receive order
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		let data = [];
+		dataSource.forEach((item) => {
+			if (item.deliveredQty !== null && item.deliveredQty != -1)
+				data = [
+					...data,
+					{ itemId: item.key, deliveredQty: item.deliveredQty, remarks: item.remarks },
+				];
+		});
+		if (data.length === dataSource.length) {
+			axios
+				.put("https://localhost:5001/api/order/" + order.id, data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+						setVisible(false);
+					} else Error(result.message);
+				});
+		}
+	};
 
 	const hideModal = (e) => {
 		setVisible(false);
@@ -167,20 +195,25 @@ const OrderModal = ({ text, setLoading }) => {
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Receive
+				View
 			</Button>
 			<Modal
 				title="Purchase Orders"
 				visible={visible}
 				onCancel={hideModal}
-				footer={[
-					<Button key="cancel" onClick={hideModal}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
-						Submit
-					</Button>,
-				]}
+				width="700px"
+				footer={
+					text.status === "Ordered"
+						? [
+								<Button key="cancel" onClick={hideModal}>
+									Cancel
+								</Button>,
+								<Button key="submit" type="primary" onClick={handleSubmit}>
+									Submit
+								</Button>,
+						  ]
+						: null
+				}
 			>
 				<Table
 					dataSource={dataSource}
@@ -195,7 +228,6 @@ const OrderModal = ({ text, setLoading }) => {
 };
 
 const Remove = ({ text, setLoading }) => {
-	console.log(text);
 	const handleDelete = () => {
 		Confirm("Are you sure about deleting the order?", "", () => {
 			axios

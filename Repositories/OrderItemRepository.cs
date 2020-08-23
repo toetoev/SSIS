@@ -19,6 +19,11 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<OrderItem> GetOrderItemByPK(Guid itemId, Guid orderId)
+        {
+            return await _dbContext.OrderItems.Where(oi => oi.ItemId == itemId && oi.OrderId == orderId).FirstOrDefaultAsync();
+        }
+
         public async Task<List<OrderTrend>> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories)
         {
             List<OrderItem> validOrderItems = await _dbContext.OrderItems

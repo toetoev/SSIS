@@ -13,5 +13,6 @@ namespace SSIS.IRepositories
         Task<int> CreateOrder(Order newOrder);
         Task<Order> GetOrderById(Guid orderId);
         Task<int> DeleteOrder(Order order);
+        Task<int> UpdateOrder();
     }
 }

@@ -32,8 +32,8 @@ namespace SSIS.Services
             StoreStaff orderedBy = await _storeStaffRepository.GetStoreStaffByEmail(orderedByEmail);
             foreach (var order in orders)
             {
-                Order orderFromRepo = await _orderRepository.GetOrderBySupplierAndDate(order.SupplierId, DateTime.Now.Date);
-                if (orderFromRepo != null)
+                Order orderFromRepo = await _orderRepository.GetOrderBySupplierAndDate(order.SupplierId, DateTime.Now);
+                if (orderFromRepo != null && orderFromRepo.Status == OrderStatus.ORDERED)
                 {
                     // Existing order
                     foreach (var orderItem in order.OrderItems)
@@ -43,14 +43,14 @@ namespace SSIS.Services
                         if (itemFromRepo != null)
                         {
                             // Existing orderItem
-                            OrderItem orderItemFromRepo = orderFromRepo.OrderItems.Where(oi => oi.ItemId == itemFromRepo.Id).FirstOrDefault();
+                            OrderItem orderItemFromRepo = await _orderItemRepository.GetOrderItemByPK(orderItem.ItemId, orderFromRepo.Id);
                             if (orderItemFromRepo != null)
-                            {
                                 orderItemFromRepo.OrderedQty += orderItem.OrderedQty;
-                            }
                             else
                                 orderFromRepo.OrderItems.Add(orderItem);
                         }
+                        else
+                            return new ApiResponse { Success = false, Message = "Some items cannot be found" };
                     }
                 }
                 else
@@ -81,7 +81,7 @@ namespace SSIS.Services
                         return new ApiResponse { Success = false, Message = "Supplier you've chosen doesn't exist" };
                 }
             }
-            return new ApiResponse { Success = true };
+            return new ApiResponse { Success = true, Data = await _orderRepository.UpdateOrder() };
         }
 
         public async Task<ApiResponse> DeleteOrder(Guid orderId)
@@ -129,7 +129,7 @@ namespace SSIS.Services
                     Item itemFromRepo = await _itemRepository.GetItemById(orderItem.ItemId);
                     if (itemFromRepo != null)
                     {
-                        OrderItem orderItemFromRepo = orderFromRepo.OrderItems.Where(oi => oi.ItemId == orderItem.ItemId).FirstOrDefault();
+                        OrderItem orderItemFromRepo = await _orderItemRepository.GetOrderItemByPK(orderItem.ItemId, orderItem.OrderId);
                         if (orderItemFromRepo != null)
                         {
                             orderItemFromRepo.DeliveredQty = orderItem.DeliveredQty;
@@ -137,12 +137,16 @@ namespace SSIS.Services
                             itemFromRepo.Stock += orderItem.DeliveredQty;
                         }
                     }
+                    else
+                        return new ApiResponse { Success = false, Message = "Some items cannot be found" };
                 }
                 orderFromRepo.ReceivedBy = receivedBy;
                 orderFromRepo.ReceivedOn = DateTime.Now;
                 orderFromRepo.Status = OrderStatus.RECEIVED;
+                return new ApiResponse { Success = true, Data = await _orderRepository.UpdateOrder() };
             }
-            return new ApiResponse { Success = true };
+            else
+                return new ApiResponse { Success = false, Message = "Order for receiving does not exist" };
         }
     }
 }
