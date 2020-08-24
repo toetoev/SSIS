@@ -28,9 +28,9 @@ namespace SSIS.Repositories
             return await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail && d.StartDate == startDate).FirstOrDefaultAsync();
         }
 
-        public async Task<List<Delegation>> GetDelegationsByDeptHeadEmail(string delegatedByEmail)
+        public async Task<List<Delegation>> GetDelegationsByDepartment(string deptName)
         {
-            return await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail).ToListAsync();
+            return await _dbContext.Delegations.Where(d => d.DelegatedBy.DepartmentName == deptName).ToListAsync();
         }
 
         public async Task<int> UpdateDelegation()

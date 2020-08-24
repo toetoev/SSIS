@@ -19,6 +19,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult CreateDelegation([FromBody] Delegation delegation)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
@@ -29,7 +30,7 @@ namespace SSIS.Controllers
         public IActionResult GetDelegationByDeptHeadEmail()
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.GetDelegationByDeptHeadEmail(delegatedByEmail).Result);
+            return Ok(_delegationService.GetDelegation(delegatedByEmail).Result);
         }
 
         [HttpPut("")]
