@@ -39,14 +39,14 @@ export default function MaintainDelegation() {
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<Row justify="space-between">
 				<h3>Authority Delegation</h3>
-				<Add />
+				<Add setLoading={setLoading} />
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>
 	);
 }
 
-const Add = () => {
+const Add = ({ setLoading }) => {
 	// TODO: get deptStaff by role set to select ( /?roles=EMPLOYEE)
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
@@ -90,6 +90,7 @@ const Add = () => {
 				]}
 			>
 				<Form layout="vertical" onValuesChange={onValuesChange}>
+					{/* // TODO: change to range picker */}
 					<Form.Item label="Start Date" name="startDate">
 						<DatePicker onChange={onChange} style={{ width: "100%" }} />
 					</Form.Item>
@@ -99,7 +100,7 @@ const Add = () => {
 					<Form.Item label="Delegated To" name="delegatedTo">
 						<Select style={{ width: "100%" }}></Select>
 					</Form.Item>
-					<Form.Item label="Comment" name="comment">
+					<Form.Item label="Comment (Optional)" name="comment">
 						<Input type="text"></Input>
 					</Form.Item>
 				</Form>
