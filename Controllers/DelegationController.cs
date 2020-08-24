@@ -27,6 +27,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult GetDelegationByDeptHeadEmail()
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
@@ -34,6 +35,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult UpdateDelegation([FromBody] Delegation delegation)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
@@ -41,6 +43,7 @@ namespace SSIS.Controllers
         }
 
         [HttpDelete("{startDate}")]
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult DeleteDelegation([FromRoute] DateTime startDate)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;

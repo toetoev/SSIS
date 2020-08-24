@@ -7,6 +7,10 @@ import Success from "../../component/Success";
 import sorter from "../../../util/sorter";
 import axios from "axios";
 import moment from "moment";
+
+const dateFormat = "YYYY-MM-DD";
+const { RangePicker } = DatePicker;
+
 export default function MaintainDelegation() {
 	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -29,88 +33,106 @@ export default function MaintainDelegation() {
 		},
 		{
 			title: "Action",
-			dataIndex: "action",
 			key: "action",
 			render: (text) => (
 				<Space>
-					<Edit text={text} />
-					<Delete text={text} />
+					<Edit text={text} setLoading={setLoading} />
+					<Delete text={text} setLoading={setLoading} />
 				</Space>
 			),
 		},
 	];
-	// TODO: get all delegation
-	useEffect(() => { }, [loading]);
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/delegation", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, delegation) => {
+							return [
+								...rows,
+								{
+									key: [delegation.delegatedByEmail, delegation.startDate],
+									startDate: delegation.startDate,
+									endDate: delegation.endDate,
+									delegatedTo: delegation.delegatedTo.name,
+									comment: delegation.comment,
+									action: delegation,
+								},
+							];
+						}, [])
+					);
+				}
+				setLoading(false);
+			})
+			.catch(function (error) {
+				setLoading(false);
+				console.log(error);
+			});
+	}, [loading]);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<Row justify="space-between">
 				<h3>Authority Delegation</h3>
-				<Add dataSource={dataSource} handleDataChange={(data) => setDataSource(data)} />
+				<Add setLoading={setLoading} />
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>
 	);
 }
 
-const Add = ({ dataSource, handleDataChange }) => {
-	const [form] = Form.useForm();
-	const { RangePicker } = DatePicker;
-	const [startDate, setStartDate] = useState("");
-	const [endDate, setEndDate] = useState("");
+const Add = ({ setLoading }) => {
+	const [dateRange, setDateRange] = useState([]);
 	const [delegatedTo, setDelegatedTo] = useState("");
 	const [comment, setComment] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [deptRepOptions, setDeptRepOptions] = useState([]);
-	const dateFormat = "yyyy-MM-DD HH:mm:ss"
 
 	const showModal = () => {
 		setVisible(true);
 	};
 
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
-	const onChange = (date, dateString) => {
-		console.log(date, dateString);
-	};
+
 	const onValuesChange = (val) => {
-		if (val.startDate) setStartDate(moment(val.startDate).format(dateFormat));
-		if (val.endDate) setEndDate(moment(val.endDate).format(dateFormat));
+		if (val.dateRange) setDateRange(val.dateRange.map((val) => val.format(dateFormat)));
 		if (val.delegatedTo) setDelegatedTo(val.delegatedTo);
 		if (val.comment) setComment(val.comment);
 	};
 
 	const handleSubmit = () => {
-		let data = [];
-		data.push({
-			startDate: startDate,
-			endDate : endDate,
-			delegatedToEmail : delegatedTo,
+		let data = ({
+			startDate: dateRange[0],
+			endDate: dateRange[1],
+			delegatedToEmail: delegatedTo,
 			comment: comment,
-		})
-		console.log(data.length);
-		console.log(data);
-		if (data.length > 0) {
-			axios
-				.post("https://localhost:5001/api/delegation", data, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					},
-				})
-				.then((res) => {
-					const result = res.data;
-					console.log(result);
-					if (result.success) {
-						handleDataChange([]);
-						Success("Delegation Applied Successfully");
-					} else {
-						Error(result.message);
-					}
-				});
-		} else {
-			Error("Please fill the form correctly.");
-		}
+		});
+
+		axios
+			.post("https://localhost:5001/api/delegation", data, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					Success("Delegation assigned successfully");
+					setLoading(true);
+				} else {
+					Error(result.message);
+				}
+			});
 		setVisible(false);
 	};
 
@@ -133,13 +155,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 							[]
 						)
 					);
-					let currentDeptRep = result.data.filter((val) => val.role === "DEPTREP");
-					if (currentDeptRep.length === 1) {
-						setDelegatedTo(currentDeptRep[0].email);
-						form.setFieldsValue({
-							deptRep: currentDeptRep[0].email,
-						});
-					}
 				}
 			})
 			.catch(function (error) {
@@ -155,8 +170,9 @@ const Add = ({ dataSource, handleDataChange }) => {
 			<Modal
 				title="Delegation Options"
 				visible={visible}
+				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={handleCancel}>
+					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
 					<Button key="submit" type="primary" onClick={handleSubmit} >
@@ -164,20 +180,12 @@ const Add = ({ dataSource, handleDataChange }) => {
 					</Button>,
 				]}
 			>
-				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
-					<Form.Item label="Start Date" name="startDate">
-						<DatePicker showTime 
-							onChange={onChange}
+				<Form layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item label="Select Date" name="dateRange">
+						<RangePicker
 							style={{ width: "100%" }}
-							onChange={onChange}
-							format={dateFormat} />
-					</Form.Item>
-					<Form.Item label="End Date" name="endDate">
-						<DatePicker showTime 
-							onChange={onChange}
-							style={{ width: "100%" }}
-							onChange={onChange} 
-							format={dateFormat}/>
+							format={dateFormat}
+						/>
 					</Form.Item>
 					<Form.Item label="Delegated To" name="delegatedTo">
 						<Select style={{ width: "100%" }} options={deptRepOptions} placeholder="Select employee to delegate"></Select>
@@ -191,14 +199,144 @@ const Add = ({ dataSource, handleDataChange }) => {
 	);
 };
 
-// TODO: edit modal, put initial value to modal, then call updateDelegation
-const Edit = ({ text }) => {
-	return <Button type="primary">Edit</Button>;
+const Edit = ({ text, setLoading }) => {
+	const delegation = text.action;
+	const [form] = Form.useForm();
+
+	const [dateRange, setDateRange] = useState([]);
+	const [delegatedTo, setDelegatedTo] = useState("");
+	const [visible, setVisible] = useState(false);
+	const [deptRepOptions, setDeptRepOptions] = useState([]);
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	const hideModal = (e) => {
+		setVisible(false);
+	};
+
+	const onValuesChange = (val) => {
+		if (val.dateRange) setDateRange(val.dateRange.map((val) => val.format(dateFormat)));
+		if (val.delegatedTo) setDelegatedTo(val.delegatedTo);
+	};
+
+	const handleSubmit = () => {
+		let data = ({
+			startDate: dateRange[0],
+			endDate: dateRange[1],
+			delegatedToEmail: delegatedTo,
+		});
+		console.log(data);
+
+		/*axios
+			.put("https://localhost:5001/api/delegation", data, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					"Content-type": "application/json",
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setLoading(true);
+					Success("Delegation updated successfully");
+				} else {
+					Error(result.message);
+				}
+			});*/
+		setVisible(false);
+	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/deptStaff?roles=DEPTREP&roles=EMPLOYEE", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDeptRepOptions(
+						result.data.reduce(
+							(options, deptStaff) => [
+								...options,
+								{ label: deptStaff.name, value: deptStaff.email },
+							],
+							[]
+						)
+					);
+
+					setDelegatedTo(delegation.delegatedTo.email);
+					form.setFieldsValue({
+						delegatedTo: delegation.delegatedTo.email,
+					});
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
+
+	return (
+		<>
+			<Button type="primary" onClick={showModal}>
+				Edit
+			</Button>
+			<Modal
+				title="Delegation Options"
+				visible={visible}
+				onCancel={hideModal}
+				footer={[
+					<Button key="cancel" onClick={hideModal}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit} >
+						Submit
+					</Button>,
+				]}
+			>
+				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
+					<Form.Item label="Select Date" name="dateRange">
+						<RangePicker
+							style={{ width: "100%" }}
+							format={dateFormat}
+							defaultValue={[moment(delegation.startDate, dateFormat), moment(delegation.endDate, dateFormat)]}
+						/>
+					</Form.Item>
+					<Form.Item label="Delegated To" name="delegatedTo">
+						<Select
+							style={{ width: "100%" }}
+							options={deptRepOptions}
+						></Select>
+					</Form.Item>
+				</Form>
+			</Modal>
+		</>
+	);
 };
 
-const Delete = ({ text }) => {
-	// TODO: delete delegation
-	const handleDelete = () => { };
+const Delete = ({ text, setLoading }) => {
+	const delegation = text.action;
+	const handleDelete = () => {
+		Confirm("Are you sure about deleting this delegation?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/delegation/" + delegation.startDate, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					console.log(result);
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
+
 	return (
 		<Button type="danger" onClick={handleDelete}>
 			Delete
