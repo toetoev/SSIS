@@ -37,14 +37,14 @@ namespace SSIS.Controllers
         [Authorize(Roles = StoreRole.Manager)]
         public IActionResult CreateItem([FromBody] Item item)
         {
-            return Ok(_itemService.CreateItem(item));
+            return Ok(_itemService.CreateItem(item).Result);
         }
 
         [HttpPut("{itemId}")]
         [Authorize(Roles = StoreRole.Manager)]
         public IActionResult UpdateItem([FromRoute] Guid itemId, [FromBody] Item item)
         {
-            return Ok(_itemService.UpdateItem(itemId, item));
+            return Ok(_itemService.UpdateItem(itemId, item).Result);
         }
 
         [HttpDelete("{itemId}")]

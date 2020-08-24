@@ -24,13 +24,21 @@ namespace SSIS.Services
         {
             DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegatedByEmail);
             DeptStaff delegatedTo = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedToEmail);
-            DateTime startDate = DateTime.Now;
+            DateTime startDate = delegation.StartDate;
 
             if (delegatedTo != null && delegatedBy.DepartmentName == delegatedTo.DepartmentName)
             {
                 if (delegation.EndDate != null && DateTime.Compare(delegation.EndDate, startDate) > 0)
                 {
-                    Delegation newDelegation = new Delegation { DelegatedBy = delegatedBy, StartDate = startDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
+                Delegation newDelegation = new Delegation
+                {
+                DelegatedBy = delegatedBy,
+                DelegatedTo = delegatedTo,
+                StartDate = startDate,
+                EndDate = delegation.EndDate,
+                Comment = delegation.Comment
+                    };
+
                     return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
                 }
                 else
@@ -50,10 +58,6 @@ namespace SSIS.Services
             if (deptStaffFromRepo.Role == DeptRole.DeptHead)
             {
                 return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDepartment(deptStaffFromRepo.DepartmentName) };
-            }
-            else
-            {
-
             }
             return new ApiResponse { Success = false };
         }

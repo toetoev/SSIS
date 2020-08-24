@@ -50,37 +50,60 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> CreateItem(Item newItem)
         {
-            List<int> priorities = new List<int>();
+            // List<int> priorities = new List<int>();
 
-            if (newItem.ReorderLevel < newItem.Stock)
+            // if (newItem.ReorderLevel < newItem.Stock)
+            // {
+            //     foreach (var newSupplyTenderItem in newItem.SupplierTenderItems)
+            //     {
+            //         priorities.Add(newSupplyTenderItem.Priority);
+            //     }
+
+            //     bool priorityIsUnique = priorities.Distinct().Count() == priorities.Count();
+            Category categoryFromRepo = await _categoryRepository.GetCategoryByName(newItem.CategoryName);
+
+            //     if (priorityIsUnique)
+            //     {
+            Item item = new Item
             {
-                foreach (var newSupplyTenderItem in newItem.SupplierTenderItems)
-                {
-                    priorities.Add(newSupplyTenderItem.Priority);
-                }
+                Id = Guid.NewGuid(),
+                Bin = newItem.Bin,
+                Description = newItem.Description,
+                UoM = newItem.UoM,
+                ReorderLevel = newItem.ReorderLevel,
+                ReorderQty = newItem.ReorderQty,
+                Stock = newItem.Stock,
+                Category = categoryFromRepo
+            };
 
-                bool priorityIsUnique = priorities.Distinct().Count() == priorities.Count();
-
-                if (priorityIsUnique)
-                {
-                    foreach (var supplierTenderItem in newItem.SupplierTenderItems)
-                    {
-                        if (await _supplierRepository.SupplierExist(supplierTenderItem.Supplier.Name) && await _categoryRepository.CategoryExist(supplierTenderItem.Item.CategoryName))
-                        {
-                            return new ApiResponse { Success = true, Data = await _itemRepository.CreateItem(newItem) };
-                        }
-                        else
-                        {
-                            return new ApiResponse { Success = true, Message = "Cannot find supplier" };
-                        }
-                    }
-                }
-                else
-                {
-                    return new ApiResponse { Success = true, Message = "Supplier priorities must be unique" };
-                }
+            foreach (var supplierTenderItem in newItem.SupplierTenderItems)
+            {
+                Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierTenderItem.SupplierId);
             }
-            return new ApiResponse { Success = true, Message = "Reorder level must be less than Stock" };
+            // foreach (var supplierTenderItem in newItem.SupplierTenderItems)
+            // {
+            //     Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierTenderItem.SupplierId);
+            //     if (supplierFromRepo != null)
+            //     {
+            //         supplierTenderItem.ItemId = item.Id;
+            //         supplierTenderItem.SupplierId = supplierFromRepo.Id;
+            //     }
+            //     else
+            //     {
+            //         return new ApiResponse { Success = true, Message = "Cannot find supplier" };
+            //     }
+            // }
+
+            //         // item.SupplierTenderItems = newItem.SupplierTenderItems;
+            return new ApiResponse { Success = true, Data = await _itemRepository.CreateItem(item) };
+
+            //     // }
+            //     // else
+            //     // {
+            //         return new ApiResponse { Success = true, Message = "Supplier priorities must be unique" };
+            //     }
+            // }
+            // return new ApiResponse { Success = true, Message = "Reorder level must be less than Stock" };
         }
 
         public async Task<ApiResponse> DeleteItem(Guid itemId)
