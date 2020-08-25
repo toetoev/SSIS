@@ -20,7 +20,13 @@ namespace SSIS.Repositories
 
         public async Task<List<SupplierTenderItem>> GetSupplierTenderBySupplierId(Guid supplierId)
         {
-            return await _dbContext.SupplierTenderItems.Where(sti => sti.SupplierId == supplierId).ToListAsync();
+            List<SupplierTenderItem> supplierTenderItems = await _dbContext.SupplierTenderItems.Where(sti => sti.SupplierId == supplierId).ToListAsync();
+            foreach (var supplierTenderItem in supplierTenderItems)
+            {
+                supplierTenderItem.Description = supplierTenderItem.Item.Description;
+                supplierTenderItem.UoM = supplierTenderItem.Item.UoM;
+            }
+            return supplierTenderItems;
         }
 
         public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority)
