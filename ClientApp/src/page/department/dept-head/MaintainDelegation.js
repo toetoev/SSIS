@@ -229,7 +229,7 @@ const Edit = ({ text, setLoading }) => {
 		};
 		console.log(data);
 
-		/*axios
+		axios
 			.put("https://localhost:5001/api/delegation", data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
@@ -244,7 +244,7 @@ const Edit = ({ text, setLoading }) => {
 				} else {
 					Error(result.message);
 				}
-			});*/
+			});
 		setVisible(false);
 	};
 
