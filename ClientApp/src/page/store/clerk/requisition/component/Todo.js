@@ -1,4 +1,4 @@
-import { Button, Descriptions, Modal, Row, Space, Table } from "antd";
+import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../../../component/Error";
@@ -47,7 +47,7 @@ export const Todo = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
+				console.log("Todo -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -171,14 +171,6 @@ const TodoModal = ({ text }) => {
 				View
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
-				<Descriptions>
-					<Descriptions.Item label="Collection Point">
-						{requisition.department.collectionPointId}
-					</Descriptions.Item>
-				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Requested Items"></Descriptions.Item>
-				</Descriptions>
 				<Table
 					dataSource={dataSource}
 					columns={columns}

@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.IService;
@@ -33,11 +31,25 @@ namespace SSIS.Controllers
             return Ok(_itemService.GetLowStockItems().Result);
         }
 
+        [HttpPost("")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult CreateItem([FromBody] Item item)
+        {
+            return Ok(_itemService.CreateItem(item).Result);
+        }
+
         [HttpPut("{itemId}")]
         [Authorize(Roles = StoreRole.Manager)]
         public IActionResult UpdateItem([FromRoute] Guid itemId, [FromBody] Item item)
         {
-            return Ok(_itemService.UpdateItem(itemId, item));
+            return Ok(_itemService.UpdateItem(itemId, item).Result);
+        }
+
+        [HttpDelete("{itemId}")]
+        [Authorize(Roles = StoreRole.Manager)]
+        public IActionResult DeleteItem([FromRoute] Guid itemId)
+        {
+            return Ok(_itemService.DeleteItem(itemId).Result);
         }
     }
 }

@@ -17,7 +17,6 @@ export default function OrderTrend() {
 	const dateFormat = "yyyy-MM-DD HH:mm:ss";
 	const onValuesChange = (val) => {
 		if (val.dateRange) setDateRange(val.dateRange.map((val) => val.format(dateFormat)));
-		console.log(dateRange);
 		if (val.categories) setCategories(val.categories);
 	};
 

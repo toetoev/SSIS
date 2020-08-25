@@ -13,12 +13,12 @@ namespace SSIS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime SubmittedOn { get; set; }
         public string SubmittedByEmail { get; set; }
         public virtual StoreStaff SubmittedBy { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public Nullable<DateTime> IssuedOn { get; set; }
         public string IssuedByEmail { get; set; }
         public virtual StoreStaff IssuedBy { get; set; }

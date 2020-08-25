@@ -6,6 +6,6 @@ namespace SSIS.IService
 {
     public interface ISupplierTenderItemService
     {
-        Task<ApiResponse> GetSupplierTenderByItemId(Guid itemId);
+        Task<ApiResponse> GetSupplierTenderBySupplierId(Guid supplierId);
     }
 }

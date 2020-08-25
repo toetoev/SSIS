@@ -13,6 +13,8 @@ namespace SSIS.IRepositories
 		Task<bool> ItemExist(Guid itemId);
 		Task<List<Item>> GetItemsByCategory(string name);
 		Task<List<Item>> GetLowStockItems();
+		Task<int> CreateItem(Item item);
+		Task<int> DeleteItem(Item itemFromRepo);
 		Task<int> UpdateItem();
 	}
 }

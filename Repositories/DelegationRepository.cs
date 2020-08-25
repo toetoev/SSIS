@@ -42,5 +42,10 @@ namespace SSIS.Repositories
             _dbContext.Delegations.Remove(delegationFromRepo);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> IsDelegated(string deptStaffEmail)
+        {
+            return await _dbContext.Delegations.AnyAsync(d => d.DelegatedToEmail == deptStaffEmail && d.StartDate.CompareTo(DateTime.Now) <= 0 && d.EndDate.CompareTo(DateTime.Now) >= 0);
+        }
     }
 }

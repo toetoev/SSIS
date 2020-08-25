@@ -13,5 +13,6 @@ namespace SSIS.IRepositories
         Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate);
         Task<int> UpdateDelegation();
         Task<int> DeleteDelegation(Delegation delegationFromRepo);
+        Task<bool> IsDelegated(string deptStaffEmail);
     }
 }

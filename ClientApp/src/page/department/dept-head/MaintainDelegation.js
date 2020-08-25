@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
-import sorter from "../../../util/sorter";
 import axios from "axios";
 import moment from "moment";
 
@@ -110,12 +109,12 @@ const Add = ({ setLoading }) => {
 	};
 
 	const handleSubmit = () => {
-		let data = ({
+		let data = {
 			startDate: dateRange[0],
 			endDate: dateRange[1],
 			delegatedToEmail: delegatedTo,
 			comment: comment,
-		});
+		};
 
 		axios
 			.post("https://localhost:5001/api/delegation", data, {
@@ -175,20 +174,21 @@ const Add = ({ setLoading }) => {
 					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit} >
+					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
 					</Button>,
 				]}
 			>
 				<Form layout="vertical" onValuesChange={onValuesChange}>
 					<Form.Item label="Select Date" name="dateRange">
-						<RangePicker
-							style={{ width: "100%" }}
-							format={dateFormat}
-						/>
+						<RangePicker style={{ width: "100%" }} format={dateFormat} />
 					</Form.Item>
 					<Form.Item label="Delegated To" name="delegatedTo">
-						<Select style={{ width: "100%" }} options={deptRepOptions} placeholder="Select employee to delegate"></Select>
+						<Select
+							style={{ width: "100%" }}
+							options={deptRepOptions}
+							placeholder="Select employee to delegate"
+						></Select>
 					</Form.Item>
 					<Form.Item label="Comment (Optional)" name="comment">
 						<Input type="text"></Input>
@@ -222,11 +222,11 @@ const Edit = ({ text, setLoading }) => {
 	};
 
 	const handleSubmit = () => {
-		let data = ({
+		let data = {
 			startDate: dateRange[0],
 			endDate: dateRange[1],
 			delegatedToEmail: delegatedTo,
-		});
+		};
 		console.log(data);
 
 		/*axios
@@ -292,7 +292,7 @@ const Edit = ({ text, setLoading }) => {
 					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit} >
+					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
 					</Button>,
 				]}
@@ -302,14 +302,14 @@ const Edit = ({ text, setLoading }) => {
 						<RangePicker
 							style={{ width: "100%" }}
 							format={dateFormat}
-							defaultValue={[moment(delegation.startDate, dateFormat), moment(delegation.endDate, dateFormat)]}
+							defaultValue={[
+								moment(delegation.startDate, dateFormat),
+								moment(delegation.endDate, dateFormat),
+							]}
 						/>
 					</Form.Item>
 					<Form.Item label="Delegated To" name="delegatedTo">
-						<Select
-							style={{ width: "100%" }}
-							options={deptRepOptions}
-						></Select>
+						<Select style={{ width: "100%" }} options={deptRepOptions}></Select>
 					</Form.Item>
 				</Form>
 			</Modal>

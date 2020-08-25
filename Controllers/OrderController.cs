@@ -51,7 +51,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("{startDate}/{endDate}")]
-        public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime endDate, [FromBody] List<string> categories)
+        public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateTimeConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateTimeConverter))] DateTime endDate, [FromBody] List<string> categories)
         {
             return Ok(_orderService.GetOrderTrend(startDate, endDate, categories).Result);
         }
