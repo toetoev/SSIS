@@ -18,7 +18,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("{supplierId}")]
-        [Authorize(Roles = StoreRole.Clerk)]
+        [Authorize(Roles = StoreRole.Clerk  + "," + StoreRole.Manager)]
         public IActionResult GetSupplierTenderBySupplierId([FromRoute] Guid supplierId)
         {
             return Ok(_supplierTenderItemService.GetSupplierTenderBySupplierId(supplierId).Result);

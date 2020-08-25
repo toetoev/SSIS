@@ -41,7 +41,7 @@ namespace SSIS.Services
         }
         public async Task<ApiResponse> UpdateSupplier(Guid supplierId, Supplier supplier)
         {
-            Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplier.Id);
+            Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierId);
             if (supplierFromRepo != null)
             {
                 if (supplier.Name.Equals("") || supplier.ContactName.Equals("") || supplier.Phone.Equals(""))
@@ -52,11 +52,7 @@ namespace SSIS.Services
                 supplierFromRepo.Fax = supplier.Fax;
                 supplierFromRepo.GST = supplier.GST;
                 supplierFromRepo.Address = supplier.Address;
-                if (!await _supplierRepository.SupplierNameExist(supplier.Name))
-                {
-                    return new ApiResponse { Success = true, Data = await _supplierRepository.UpdateSupplier() };
-                }
-                return new ApiResponse { Success = false, Message = "Supplier with the same name already exists" };
+                return new ApiResponse { Success = true, Data = await _supplierRepository.UpdateSupplier() };
             }
             else
                 return new ApiResponse { Success = false, Message = "Supplier to be updated does not exist" };
