@@ -50,7 +50,7 @@ namespace SSIS.Controllers
             return Ok(_orderService.DeleteOrder(orderId).Result);
         }
 
-        [HttpGet("{startDate}/{endDate}")]
+        [HttpPost("{startDate}/{endDate}")]
         public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateFormatConverter))] DateTime endDate, [FromBody] List<string> categories)
         {
             return Ok(_orderService.GetOrderTrend(startDate, endDate, categories).Result);
