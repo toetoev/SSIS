@@ -149,7 +149,7 @@ const Add = ({ setLoading }) => {
 
 	const onValuesChange = (val) => {
 		if (val.supplier) setSupplier(val.supplier);
-		if (val.phone) setPhone(val.phone);
+		if (val.phonde) setPhone(val.phone);
 		if (val.contactName) setContactName(val.contactName);
 		if (val.GST) setGST(val.GST);
 		if (val.address) setAddress(val.address);
@@ -352,6 +352,7 @@ const Edit = ({ setLoading, text }) => {
 
 	const handleSubmit = () => {
 		let data = {
+			//name: form.getFieldValue('supplier'),
 			name: supplier,
 			phone: phone,
 			contactName: contactName,
@@ -423,10 +424,7 @@ const Edit = ({ setLoading, text }) => {
 						<Col span={11}>
 							<Form.Item
 								name="supplier"
-								label="Supplier Name"
-								defaultValue={[
-									supplierData.name
-								]} >
+								label="Supplier Name">
 								<Input defaultValue={supplierData.name} />
 							</Form.Item>
 						</Col>
