@@ -392,9 +392,8 @@ const Edit = ({ setLoading, text }) => {
 		if (val.GST) setGST(val.GST);
 		if (val.address) setAddress(val.address);
 		if (val.fax) setFax(val.fax);
-
-		console.log("```````" + val);
 	};
+	console.log(supplier);
 	useEffect(() => {
 		form.setFieldsValue({
 			supplier: supplierData.name,
@@ -409,7 +408,6 @@ const Edit = ({ setLoading, text }) => {
 			<Modal
 				title="Create Supplier"
 				visible={visible}
-				onOk={handleSubmit}
 				onCancel={handleCancel}
 				footer={[
 					<Button key="cancel" onClick={handleCancel}>
@@ -425,15 +423,18 @@ const Edit = ({ setLoading, text }) => {
 						<Col span={11}>
 							<Form.Item
 								name="supplier"
-								label="Supplier Name">
-								<Input />
+								label="Supplier Name"
+								defaultValue={[
+									supplierData.name
+								]} >
+								<Input defaultValue={supplierData.name} />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
 								name="phone"
 								label="Phone Number">
-								<Input placeholder="Enter Phone Number" />
+								<Input defaultValue={supplierData.phone} />
 							</Form.Item>
 						</Col>
 					</Row>
@@ -443,14 +444,14 @@ const Edit = ({ setLoading, text }) => {
 							<Form.Item
 								name="contactName"
 								label="Contact Name">
-								<Input placeholder="Enter Contact Name" defaultValue={supplierData.contactName} />
+								<Input defaultValue={supplierData.contactName} />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
 								name="GST"
 								label="GST Registration No">
-								<Input placeholder="Enter GST No" defaultValue={supplierData.gst} />
+								<Input defaultValue={supplierData.gst} />
 							</Form.Item>
 						</Col>
 					</Row>
@@ -460,14 +461,14 @@ const Edit = ({ setLoading, text }) => {
 							<Form.Item
 								name="address"
 								label="Address">
-								<Input placeholder="Enter address..." defaultValue={supplierData.address} />
+								<Input defaultValue={supplierData.address} />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
 								name="fax"
 								label="Fax No :">
-								<Input placeholder="Enter Fax No" defaultValue={supplierData.fax} />
+								<Input defaultValue={supplierData.fax} />
 							</Form.Item>
 						</Col>
 					</Row>
