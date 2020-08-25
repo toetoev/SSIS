@@ -18,9 +18,9 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<SupplierTenderItem>> GetSupplierTenderByItemId(Guid itemId)
+        public async Task<List<SupplierTenderItem>> GetSupplierTenderBySupplierId(Guid supplierId)
         {
-            return await _dbContext.SupplierTenderItems.Where(sti => sti.ItemId == itemId).ToListAsync();
+            return await _dbContext.SupplierTenderItems.Where(sti => sti.SupplierId == supplierId).ToListAsync();
         }
     }
 }

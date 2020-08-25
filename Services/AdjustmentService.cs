@@ -124,5 +124,10 @@ namespace SSIS.Services
             else
                 return new ApiResponse { Success = false, Message = "Cannot find adjustment to delete" };
         }
+
+        public Task<ApiResponse> GetAdjustmentByStoreStaff()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

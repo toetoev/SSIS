@@ -15,9 +15,9 @@ namespace SSIS.Services
             _supplierTenderItemRepository = supplierTenderItemRepository;
         }
 
-        public async Task<ApiResponse> GetSupplierTenderByItemId(Guid itemId)
+        public async Task<ApiResponse> GetSupplierTenderBySupplierId(Guid supplierId)
         {
-            return new ApiResponse { Success = true, Data = await _supplierTenderItemRepository.GetSupplierTenderByItemId(itemId) };
+            return new ApiResponse { Success = true, Data = await _supplierTenderItemRepository.GetSupplierTenderBySupplierId(supplierId) };
         }
     }
 }

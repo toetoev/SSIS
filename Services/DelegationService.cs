@@ -53,15 +53,7 @@ namespace SSIS.Services
         public async Task<ApiResponse> GetDelegation(string deptStaffEmail)
         {
             DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffByEmail(deptStaffEmail);
-            if (deptStaffFromRepo.Role == DeptRole.DeptHead)
-            {
-                return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDepartment(deptStaffFromRepo.DepartmentName) };
-            }
-            else
-            {
-
-            }
-            return new ApiResponse { Success = false };
+            return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDepartment(deptStaffFromRepo.DepartmentName) };
         }
 
         public async Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail)

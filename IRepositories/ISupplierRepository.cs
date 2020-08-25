@@ -15,5 +15,6 @@ namespace SSIS.IRepositories
         Task<List<Supplier>> GetAllSuppliers();
         Task<int> UpdateSupplier();
         Task<int> DeleteSupplier(Supplier supplier);
+        Task<bool> SupplierExistById(Guid id);
     }
 }

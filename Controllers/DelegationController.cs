@@ -28,10 +28,10 @@ namespace SSIS.Controllers
 
         [HttpGet("")]
         [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult GetDelegationByDeptHeadEmail()
+        public IActionResult GetDelegation()
         {
-            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.GetDelegation(delegatedByEmail).Result);
+            string deptStaffEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.GetDelegation(deptStaffEmail).Result);
         }
 
         [HttpPut("")]

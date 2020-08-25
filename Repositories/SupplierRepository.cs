@@ -54,5 +54,10 @@ namespace SSIS.Repositories
             _dbContext.Suppliers.Remove(supplier);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> SupplierExistById(Guid id)
+        {
+            return await _dbContext.Suppliers.AnyAsync(s => s.Id == id);
+        }
     }
 }

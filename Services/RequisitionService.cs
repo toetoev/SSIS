@@ -38,7 +38,7 @@ namespace SSIS.Services
                 RequestedOn = DateTime.Now,
                 Status = RequisitionStatus.APPLIED,
                 RequestedBy = requestedBy,
-                DepartmentName = requestedBy.DepartmentName,
+                Department = requestedBy.Department,
             };
 
             foreach (var requisitionItem in requisitionItems)
@@ -50,6 +50,7 @@ namespace SSIS.Services
                 requisitionItem.RequisitionId = requisition.Id;
                 requisitionItem.Actual = -1;
             }
+
             requisition.RequisitionItems = requisitionItems;
             await _requisitionRepository.CreateRequisition(requisition);
             return new ApiResponse { Success = true };
