@@ -1,15 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using SSIS.IService;
 using SSIS.Models;
-using SSIS.Payloads;
 
 namespace SSIS.Controllers
 {
@@ -49,7 +42,7 @@ namespace SSIS.Controllers
         [Authorize(Roles = StoreRole.Manager)]
         public IActionResult UpdateSupplier([FromBody] Supplier supplier, [FromRoute] Guid supplierId)
         {
-            return Ok(_supplierService.UpdateSupplier(supplierId, supplier));
+            return Ok(_supplierService.UpdateSupplier(supplierId, supplier).Result);
         }
 
         [HttpDelete("{supplierId}")]

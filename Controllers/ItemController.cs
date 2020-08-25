@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSIS.IService;
@@ -35,7 +33,7 @@ namespace SSIS.Controllers
 
         public IActionResult CreateItem([FromBody] Item item)
         {
-            return Ok(_itemService.CreateItem(item));
+            return Ok(_itemService.CreateItem(item).Result);
         }
 
         [HttpDelete("{itemId}")]

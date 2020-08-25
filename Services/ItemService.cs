@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using SSIS.Databases;
 using SSIS.IRepositories;
 using SSIS.IService;
 using SSIS.Models;
@@ -88,7 +85,7 @@ namespace SSIS.Services
             {
                 return new ApiResponse { Success = true, Data = await _itemRepository.DeleteItem(itemFromRepo) };
             }
-            return new ApiResponse { Success = false, Message = "Supplier does not exist" };
+            return new ApiResponse { Success = false, Message = "Item to be deleted does not exist" };
         }
     }
 }

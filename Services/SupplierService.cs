@@ -32,29 +32,34 @@ namespace SSIS.Services
         {
             if (!await _supplierRepository.SupplierExist(supplier.Name))
             {
+                if (supplier.Name.Equals("") || supplier.ContactName.Equals("") || supplier.Phone.Equals(""))
+                    return new ApiResponse { Success = false, Message = "Please provide supplier name, contact name and phone number" };
                 return new ApiResponse { Success = true, Data = await _supplierRepository.CreateSupplier(supplier) };
             }
-            return new ApiResponse { Success = false, Message = "Supplier with the same name already exists" };
+            else
+                return new ApiResponse { Success = false, Message = "Supplier with the same name already exists" };
         }
         public async Task<ApiResponse> UpdateSupplier(Guid supplierId, Supplier supplier)
         {
             Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplier.Id);
             if (supplierFromRepo != null)
             {
+                if (supplier.Name.Equals("") || supplier.ContactName.Equals("") || supplier.Phone.Equals(""))
+                    return new ApiResponse { Success = false, Message = "Please provide supplier name, contact name and phone number" };
                 supplierFromRepo.Name = supplier.Name;
                 supplierFromRepo.ContactName = supplier.ContactName;
                 supplierFromRepo.Phone = supplier.Phone;
                 supplierFromRepo.Fax = supplier.Fax;
                 supplierFromRepo.GST = supplier.GST;
                 supplierFromRepo.Address = supplier.Address;
-
                 if (!await _supplierRepository.SupplierExist(supplier.Name))
                 {
                     return new ApiResponse { Success = true, Data = await _supplierRepository.UpdateSupplier() };
                 }
                 return new ApiResponse { Success = false, Message = "Supplier with the same name already exists" };
             }
-            return new ApiResponse { Success = false, Message = "Supplier does not exist" };
+            else
+                return new ApiResponse { Success = false, Message = "Supplier to be updated does not exist" };
         }
 
         public async Task<ApiResponse> DeleteSupplier(Guid supplierId)
@@ -64,7 +69,7 @@ namespace SSIS.Services
             {
                 return new ApiResponse { Success = true, Data = await _supplierRepository.DeleteSupplier(supplierFromRepo) };
             }
-            return new ApiResponse { Success = false, Message = "Supplier does not exist" };
+            return new ApiResponse { Success = false, Message = "Supplier to be deleted does not exist" };
         }
     }
 }
