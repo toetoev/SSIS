@@ -68,7 +68,6 @@ namespace SSIS.Services
             StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (adjustmentFromRepo != null && adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
             {
-                // TODO: check voucher price by role
                 bool itemsValid = true;
                 foreach (var adjustmentItem in adjustmentFromRepo.AdjustmentItems)
                 {
