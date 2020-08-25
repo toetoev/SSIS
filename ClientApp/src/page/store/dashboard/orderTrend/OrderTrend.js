@@ -1,6 +1,7 @@
 import { Button, Card, DatePicker, Form, Row, Select } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Error from "../../../component/Error";
 import ReactEcharts from "echarts-for-react";
 import axios from "axios";
 import moment from "moment";
@@ -35,91 +36,93 @@ export default function OrderTrend() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					let xAxisData = [];
-					for (
-						let i = 0;
-						i <=
-						Math.floor(moment.duration(dateRange[1].diff(dateRange[0])).asMonths());
-						i++
-					) {
-						xAxisData.push(dateRange[0].clone().add(i, "M").format("yyyy-MM"));
-					}
-					let lineChartData = [];
-					result.data.forEach((el) => {
-						lineChartData.push({
-							name: el.category,
-							type: "line",
-							stack: "Total",
-							data: el.monthlyTotalQty,
+					if (result.data.length !== 0) {
+						let xAxisData = [];
+						for (
+							let i = 0;
+							i <=
+							Math.floor(moment.duration(dateRange[1].diff(dateRange[0])).asMonths());
+							i++
+						) {
+							xAxisData.push(dateRange[0].clone().add(i, "M").format("yyyy-MM"));
+						}
+						let lineChartData = [];
+						result.data.forEach((el) => {
+							lineChartData.push({
+								name: el.category,
+								type: "line",
+								stack: "Total",
+								data: el.monthlyTotalQty,
+							});
 						});
-					});
-					setLineChartOption({
-						tooltip: {
-							trigger: "axis",
-						},
-						legend: {
-							data: categories,
-						},
-						grid: {
-							left: "3%",
-							right: "4%",
-							bottom: "3%",
-							containLabel: true,
-						},
-						xAxis: {
-							type: "category",
-							boundaryGap: false,
-							data: xAxisData,
-							name: "Month",
-						},
-						yAxis: {
-							type: "value",
-							name: "Ordered Qty",
-						},
-						series: lineChartData,
-					});
-					let pieChartData = [];
-					result.data.forEach((el) => {
-						pieChartData.push({
-							name: el.category,
-							value: el.monthlyTotalQty.reduce((acc, val) => acc + val, 0),
-						});
-					});
-					setPieChartOption({
-						tooltip: {
-							trigger: "item",
-							formatter: "{a} <br/>{b}: {c} ({d}%)",
-						},
-						legend: {
-							orient: "vertical",
-							left: 10,
-							data: categories,
-						},
-						series: [
-							{
-								name: "Pie Chart Heading",
-								type: "pie",
-								radius: ["50%", "70%"],
-								avoidLabelOverlap: false,
-								label: {
-									show: false,
-									position: "center",
-								},
-								emphasis: {
-									label: {
-										show: true,
-										fontSize: "30",
-										fontWeight: "bold",
-									},
-								},
-								labelLine: {
-									show: false,
-								},
-								data: pieChartData,
+						setLineChartOption({
+							tooltip: {
+								trigger: "axis",
 							},
-						],
-					});
-				}
+							legend: {
+								data: categories,
+							},
+							grid: {
+								left: "3%",
+								right: "4%",
+								bottom: "3%",
+								containLabel: true,
+							},
+							xAxis: {
+								type: "category",
+								boundaryGap: false,
+								data: xAxisData,
+								name: "Month",
+							},
+							yAxis: {
+								type: "value",
+								name: "Ordered Qty",
+							},
+							series: lineChartData,
+						});
+						let pieChartData = [];
+						result.data.forEach((el) => {
+							pieChartData.push({
+								name: el.category,
+								value: el.monthlyTotalQty.reduce((acc, val) => acc + val, 0),
+							});
+						});
+						setPieChartOption({
+							tooltip: {
+								trigger: "item",
+								formatter: "{a} <br/>{b}: {c} ({d}%)",
+							},
+							legend: {
+								orient: "vertical",
+								left: 10,
+								data: categories,
+							},
+							series: [
+								{
+									name: "Total Qty",
+									type: "pie",
+									radius: ["50%", "70%"],
+									avoidLabelOverlap: false,
+									label: {
+										show: false,
+										position: "center",
+									},
+									emphasis: {
+										label: {
+											show: true,
+											fontSize: "30",
+											fontWeight: "bold",
+										},
+									},
+									labelLine: {
+										show: false,
+									},
+									data: pieChartData,
+								},
+							],
+						});
+					}
+				} else Error("Sorry, seems like we don't have records for the time range chosen");
 			})
 			.catch(function (error) {
 				console.log(error);
