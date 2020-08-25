@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SSIS.ViewModel
 {
-    public class OrderTrend
+    public class TrendViewModel
     {
         public string Category { get; set; }
         public List<int> MonthlyTotalQty { get; set; }

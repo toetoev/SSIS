@@ -15,5 +15,6 @@ namespace SSIS.IService
         Task<ApiResponse> UpdateRequisitionStatus(Guid requisitionId, RequisitionStatus status, string email, string comment);
         Task<ApiResponse> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId);
         Task<ApiResponse> GetPopularItems(string deptName);
+        Task<ApiResponse> GetRequisitionTrend(DateTime startDate, DateTime endDate, string department);
     }
 }

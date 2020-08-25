@@ -6,6 +6,7 @@
 		"@ant-design/icons": "^4.2.2",
 		"antd": "^4.5.4",
 		"axios": "^0.19.2",
+		"echarts-for-react": "^2.0.16",
 		"fuse.js": "^6.4.1",
 		"jquery": "^3.5.1",
 		"merge": "^1.2.1",

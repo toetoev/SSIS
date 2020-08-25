@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json;
 using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
+using SSIS.Utils;
 
 namespace SSIS.Controllers
 {
@@ -67,6 +69,13 @@ namespace SSIS.Controllers
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_requisitionService.GetPopularItems(email).Result);
+        }
+
+        [HttpPost("{startDate}/{endDate}")]
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetRequisitionTrend([FromRoute][JsonConverter(typeof(DateConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateConverter))] DateTime endDate, [FromBody] string department)
+        {
+            return Ok(_requisitionService.GetRequisitionTrend(startDate, endDate, department).Result);
         }
     }
 }

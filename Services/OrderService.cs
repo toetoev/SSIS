@@ -107,10 +107,8 @@ namespace SSIS.Services
             if (startDate.CompareTo(endDate) < 0)
             {
                 foreach (var category in categories)
-                {
                     if (!await _categoryRepository.CategoryExist(category))
                         return new ApiResponse { Success = false, Message = "Some of the categories doesn't exist" };
-                }
                 return new ApiResponse { Success = true, Data = await _orderItemRepository.GetOrderTrend(startDate, endDate, categories) };
             }
             else

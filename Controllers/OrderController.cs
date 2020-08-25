@@ -37,6 +37,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPut("{orderId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult ReceiveOrder([FromRoute] Guid orderId, [FromBody] List<OrderItem> orderItems)
         {
             orderItems.ForEach(el => System.Console.WriteLine(el.ToString()));
@@ -45,13 +46,15 @@ namespace SSIS.Controllers
         }
 
         [HttpDelete("{orderId}")]
+        [Authorize(Roles = StoreRole.Clerk)]
         public IActionResult DeleteOrder([FromRoute] Guid orderId)
         {
             return Ok(_orderService.DeleteOrder(orderId).Result);
         }
 
         [HttpPost("{startDate}/{endDate}")]
-        public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateTimeConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateTimeConverter))] DateTime endDate, [FromBody] List<string> categories)
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetOrderTrend([FromRoute][JsonConverter(typeof(DateConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateConverter))] DateTime endDate, [FromBody] List<string> categories)
         {
             return Ok(_orderService.GetOrderTrend(startDate, endDate, categories).Result);
         }
