@@ -37,7 +37,7 @@ namespace SSIS.Controllers
         public IActionResult GetAdjustmentByStoreStaff()
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.GetAdjustmentByStoreStaff());
+            return Ok(_adjustmentService.GetAdjustmentByStoreStaff().Result);
         }
 
         [HttpPost("")]
