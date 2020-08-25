@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using SSIS.Databases;
 using SSIS.IRepositories;
@@ -14,13 +16,11 @@ namespace SSIS.Services
     {
         private readonly IItemRepository _itemRepository;
         private readonly ISupplierRepository _supplierRepository;
-        private readonly ICategoryRepository _categoryRepository;
 
-        public ItemService(IItemRepository itemRepository, ISupplierRepository supplierRepository, ICategoryRepository categoryRepository)
+        public ItemService(IItemRepository itemRepository, ISupplierRepository supplierRepository)
         {
             _itemRepository = itemRepository;
             _supplierRepository = supplierRepository;
-            _categoryRepository = categoryRepository;
         }
         public async Task<ApiResponse> GetItemById(Guid itemId)
         {
@@ -29,7 +29,6 @@ namespace SSIS.Services
                 return new ApiResponse { Success = true, Data = await _itemRepository.GetItemById(itemId) };
             }
             return new ApiResponse { Success = false, Message = "item does not exist" };
-
         }
 
         public async Task<ApiResponse> GetAllItems()
@@ -47,36 +46,49 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _itemRepository.GetLowStockItems() };
         }
 
-        public async Task<ApiResponse> UpdateItem(Guid itemId, Item item)
+        public async Task<ApiResponse> CreateItem(Item newItem)
         {
-            Item itemFromRepo = await _itemRepository.GetItemById(itemId);
-            //List<SupplierTenderItem> SupplierTenderItemsFromRepo = (List<SupplierTenderItem>) itemFromRepo.SupplierTenderItems;
-            if (itemFromRepo != null)
-            {
-                itemFromRepo.Description = item.Description;
-                itemFromRepo.UoM = item.UoM;
-                itemFromRepo.Bin = item.Bin;
-                itemFromRepo.ReorderLevel = item.ReorderLevel;
-                itemFromRepo.ReorderQty = item.ReorderQty;
+            List<int> priorities = new List<int>();
 
-                if (await _categoryRepository.CategoryExist(item.Category.Name))
+            if (newItem.ReorderLevel < newItem.Stock)
+            {
+                foreach (var newSupplyTenderItem in newItem.SupplierTenderItems)
                 {
-                    itemFromRepo.Category.Name = item.Category.Name;
+                    priorities.Add(newSupplyTenderItem.Priority);
                 }
 
-                foreach (var supplierTenderItem in itemFromRepo.SupplierTenderItems)
-                {
+                bool priorityIsUnique = priorities.Distinct().Count() == priorities.Count();
 
-                    SupplierTenderItem supplierTenderItemInput = item.SupplierTenderItems.First(i => i.SupplierId == supplierTenderItem.SupplierId);
-                    if (supplierTenderItemInput != null && await _supplierRepository.SupplierExist(supplierTenderItem.SupplierId))
+                if (priorityIsUnique)
+                {
+                    foreach (var supplierTenderItem in newItem.SupplierTenderItems)
                     {
-                        supplierTenderItem.Price = supplierTenderItem.Price;
-                        supplierTenderItem.Priority = supplierTenderItem.Priority;
+                        if (await _supplierRepository.SupplierExist(supplierTenderItem.Supplier.Name))
+                        {
+                            return new ApiResponse { Success = true, Data = await _itemRepository.CreateItem(newItem) };
+                        }
+                        else
+                        {
+                            return new ApiResponse { Success = true, Message = "Cannot find supplier" };
+                        }
                     }
                 }
-                return new ApiResponse { Success = true, Data = await _itemRepository.UpdateItem() };
+                else
+                {
+                    return new ApiResponse { Success = true, Message = "Supplier priorities must be unique" };
+                }
             }
-            return new ApiResponse { Success = false, Message = "item does not exist" };
+            return new ApiResponse { Success = true, Message = "Reorder level must be less than Stock" };
+        }
+
+        public async Task<ApiResponse> DeleteItem(Guid itemId)
+        {
+            Item itemFromRepo = await _itemRepository.GetItemById(itemId);
+            if (itemFromRepo != null)
+            {
+                return new ApiResponse { Success = true, Data = await _itemRepository.DeleteItem(itemFromRepo) };
+            }
+            return new ApiResponse { Success = false, Message = "Supplier does not exist" };
         }
     }
 }
