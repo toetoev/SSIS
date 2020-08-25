@@ -2,9 +2,9 @@ using Newtonsoft.Json.Converters;
 
 namespace SSIS.Utils
 {
-    public class DateFormatConverter : IsoDateTimeConverter
+    public class DateTimeConverter : IsoDateTimeConverter
     {
-        public DateFormatConverter()
+        public DateTimeConverter()
         {
             DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
         }

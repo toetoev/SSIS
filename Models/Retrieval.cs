@@ -17,7 +17,7 @@ namespace SSIS.Models
         [Required]
         public string CreatedByEmail { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime CreatedOn { get; set; }
 
         [ForeignKey("CreatedByEmail")]
