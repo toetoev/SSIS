@@ -24,12 +24,12 @@ namespace SSIS.Repositories
             return await _dbContext.OrderItems.Where(oi => oi.ItemId == itemId && oi.OrderId == orderId).FirstOrDefaultAsync();
         }
 
-        public async Task<List<OrderTrend>> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories)
+        public async Task<List<TrendViewModel>> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories)
         {
             List<OrderItem> validOrderItems = await _dbContext.OrderItems
                 .Where(oi => oi.Order.OrderedOn.Month.CompareTo(startDate.Month) >= 0 && oi.Order.OrderedOn.Month.CompareTo(endDate.Month) <= 0)
                 .Where(oi => categories.Contains(oi.Item.CategoryName)).ToListAsync();
-            List<OrderTrend> orderTrends = new List<OrderTrend>();
+            List<TrendViewModel> orderTrends = new List<TrendViewModel>();
             foreach (var category in categories)
             {
                 var tmp = validOrderItems.Where(oi => oi.Item.CategoryName == category)
@@ -44,7 +44,7 @@ namespace SSIS.Repositories
                     else
                         monthlyTotalQty.Add(0);
                 }
-                orderTrends.Add(new OrderTrend { Category = category, MonthlyTotalQty = monthlyTotalQty });
+                orderTrends.Add(new TrendViewModel { Category = category, MonthlyTotalQty = monthlyTotalQty });
             }
             return orderTrends;
         }

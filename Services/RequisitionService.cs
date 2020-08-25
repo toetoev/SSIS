@@ -14,19 +14,21 @@ namespace SSIS.Services
     {
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IRequisitionRepository _requisitionRepository;
+        private readonly IRequisitionItemRepository _requisitionItemRepository;
         private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
         private readonly IDeptRepository _deptRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository, IRequisitionItemRepository requisitionItemRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
             _retrievalRepository = retrievalRepository;
             _deptRepository = deptRepository;
+            _requisitionItemRepository = requisitionItemRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -141,6 +143,18 @@ namespace SSIS.Services
             }
             else
                 return new ApiResponse { Success = false, Message = "Popular items you are searching for does not exist" };
+        }
+
+        public async Task<ApiResponse> GetRequisitionTrend(DateTime startDate, DateTime endDate, string department)
+        {
+            if (startDate.CompareTo(endDate) < 0)
+            {
+                if (!await _deptRepository.DepartmentExist(department))
+                    return new ApiResponse { Success = false, Data = "Some of the departments doesn't exist" };
+                return new ApiResponse { Success = true, Data = await _requisitionItemRepository.GetRequisitionTrend(startDate, endDate, department) };
+            }
+            else
+                return new ApiResponse { Success = false, Message = "End date should be after start date" };
         }
     }
 }

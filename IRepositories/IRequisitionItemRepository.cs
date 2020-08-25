@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SSIS.Models;
+using SSIS.ViewModel;
 
 namespace SSIS.IRepositories
 {
@@ -9,5 +10,6 @@ namespace SSIS.IRepositories
     {
         Task<int> UpdateRequisitionItems();
         Task<RequisitionItem> GetRequisitionItemByPK(Guid requisitionId, Guid itemId);
+        Task<List<TrendViewModel>> GetRequisitionTrend(DateTime startDate, DateTime endDate, string department);
     }
 }
