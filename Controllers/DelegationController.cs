@@ -27,7 +27,7 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        [Authorize(Roles = DeptRole.DeptHead)]
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.Employee)]
         public IActionResult GetDelegation()
         {
             string deptStaffEmail = User.FindFirst(ClaimTypes.Email).Value;
