@@ -32,9 +32,9 @@ namespace SSIS.Services
                     {
 
                         Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
-                        if (delegationFromRepo != null)
+                        if (delegationFromRepo == null)
                         {
-                            Delegation newDelegation = new Delegation { DelegatedBy = delegatedBy, StartDate = delegation.StartDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
+                            Delegation newDelegation = new Delegation { DelegatedBy = delegatedBy, DelegatedTo = delegatedTo, StartDate = delegation.StartDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
                             return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
                         }
                         else

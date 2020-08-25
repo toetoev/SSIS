@@ -12,6 +12,6 @@ namespace SSIS.IService
         Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems);
         Task<ApiResponse> ReviewAdjustment(Guid adjustmentId, AdjustmentStatus status, string email);
         Task<ApiResponse> DeleteAdjustment(Guid adjustmentId, string deletedByemail);
-        Task<ApiResponse> GetAdjustmentByStoreStaff();
+        Task<ApiResponse> GetAdjustmentByStoreStaff(string email);
     }
 }

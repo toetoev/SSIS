@@ -125,9 +125,14 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Cannot find adjustment to delete" };
         }
 
-        public Task<ApiResponse> GetAdjustmentByStoreStaff()
+        public async Task<ApiResponse> GetAdjustmentByStoreStaff(string email)
         {
-            throw new NotImplementedException();
+            StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            if (storeStaffFromRepo.Role == StoreRole.Supervisor)
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(true) };
+            else
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(false) };
+
         }
     }
 }
