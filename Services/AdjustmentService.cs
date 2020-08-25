@@ -129,9 +129,10 @@ namespace SSIS.Services
             StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (storeStaffFromRepo.Role == StoreRole.Supervisor)
                 return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(true) };
-            else
+            else if (storeStaffFromRepo.Role == StoreRole.Manager)
                 return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(false) };
-
+            else
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
     }
 }

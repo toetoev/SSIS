@@ -99,6 +99,10 @@ const Add = ({ setLoading }) => {
 	};
 
 	const hideModal = (e) => {
+		setDateRange([]);
+		setDelegatedTo("");
+		setComment("");
+		deptRepOptions([]);
 		setVisible(false);
 	};
 

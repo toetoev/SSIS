@@ -25,12 +25,6 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetAllAdjustments()
-        {
-            return Ok(_adjustmentService.GetAllAdjustments().Result);
-        }
-
-        [HttpGet("")]
         [Authorize(Roles = StoreRole.All)]
         public IActionResult GetAdjustmentByStoreStaff()
         {
