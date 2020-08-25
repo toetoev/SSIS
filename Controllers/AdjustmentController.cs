@@ -30,14 +30,12 @@ namespace SSIS.Controllers
             return Ok(_adjustmentService.GetAllAdjustments().Result);
         }
 
-        // TODO: GetAdjustmentByStoreStaff [Manager, Supervisor] return according to total price $250
-
         [HttpGet("")]
         [Authorize(Roles = StoreRole.All)]
         public IActionResult GetAdjustmentByStoreStaff()
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.GetAdjustmentByStoreStaff().Result);
+            return Ok(_adjustmentService.GetAdjustmentByStoreStaff(email).Result);
         }
 
         [HttpPost("")]

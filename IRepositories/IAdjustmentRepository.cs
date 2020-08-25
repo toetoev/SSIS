@@ -13,6 +13,7 @@ namespace SSIS.IRepositories
         Task<int> UpdateAdjustmentStatus();
         Task<int> UpdateAdjustment();
         Task<int> DeleteAdjustment(Adjustment adjustment);
+        Task<List<Adjustment>> GetAdjustmentByTotalPrice(bool isLowerThan);
     }
 
 }
