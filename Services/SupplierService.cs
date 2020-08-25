@@ -30,7 +30,7 @@ namespace SSIS.Services
         }
         public async Task<ApiResponse> CreateSupplier(Supplier supplier)
         {
-            if (!await _supplierRepository.SupplierExist(supplier.Name))
+            if (!await _supplierRepository.SupplierNameExist(supplier.Name))
             {
                 if (supplier.Name.Equals("") || supplier.ContactName.Equals("") || supplier.Phone.Equals(""))
                     return new ApiResponse { Success = false, Message = "Please provide supplier name, contact name and phone number" };
@@ -52,7 +52,7 @@ namespace SSIS.Services
                 supplierFromRepo.Fax = supplier.Fax;
                 supplierFromRepo.GST = supplier.GST;
                 supplierFromRepo.Address = supplier.Address;
-                if (!await _supplierRepository.SupplierExist(supplier.Name))
+                if (!await _supplierRepository.SupplierNameExist(supplier.Name))
                 {
                     return new ApiResponse { Success = true, Data = await _supplierRepository.UpdateSupplier() };
                 }

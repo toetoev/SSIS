@@ -22,5 +22,10 @@ namespace SSIS.Repositories
         {
             return await _dbContext.SupplierTenderItems.Where(sti => sti.SupplierId == supplierId).ToListAsync();
         }
+
+        public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority)
+        {
+            return await _dbContext.SupplierTenderItems.Where(sti => sti.ItemId == itemId && sti.Priority == priority).FirstOrDefaultAsync();
+        }
     }
 }
