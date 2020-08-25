@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Confirm from "../../component/Confirm";
 import Success from "../../component/Success";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 
 // IMPROVE: search bar
 export default function StockAdjustment() {
@@ -14,22 +15,27 @@ export default function StockAdjustment() {
 		{
 			title: "Submitted On",
 			dataIndex: "submittedOn",
+			sorter: (a, b) => sorter(a.submittedOn, b.submittedOn),
 		},
 		{
 			title: "Submitted By",
 			dataIndex: "submittedBy",
+			sorter: (a, b) => sorter(a.submittedBy, b.submittedBy),
 		},
 		{
 			title: "Issued By",
 			dataIndex: "issuedBy",
+			sorter: (a, b) => sorter(a.issuedBy, b.issuedBy),
 		},
 		{
 			title: "Issued On",
 			dataIndex: "issuedOn",
+			sorter: (a, b) => sorter(a.issuedOn, b.issuedOn),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -376,7 +382,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 				}
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	const handleCancel = (e) => {

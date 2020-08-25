@@ -2,6 +2,7 @@ import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../util/sorter";
 
 export default function StationeryCatalogue() {
 	const [dataSource, setDataSource] = useState([]);
@@ -11,22 +12,27 @@ export default function StationeryCatalogue() {
 		{
 			title: "Category",
 			dataIndex: "category",
+			sorter: (a, b) => sorter(a.category, b.category),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "UoM",
 			dataIndex: "uoM",
+			sorter: (a, b) => sorter(a.uoM, b.uoM),
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
+			sorter: (a, b) => sorter(a.reorderQuantity, b.reorderQuantity),
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
+			sorter: (a, b) => sorter(a.reorderLevel, b.reorderLevel),
 		},
 		{
 			title: "Action",
@@ -44,14 +50,6 @@ export default function StationeryCatalogue() {
 			),
 		},
 	];
-
-	/*const onClickRow = (data) => {
-		return {
-			onClick: () => {
-				showModal();
-			},
-		};
-	}*/
 
 	useEffect(() => {
 		axios
@@ -110,7 +108,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -242,7 +240,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);

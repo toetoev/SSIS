@@ -5,6 +5,7 @@ import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
 import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 
 export const LowStock = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -17,36 +18,37 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 		{
 			title: "Category",
 			dataIndex: "category",
-			sorter: (a, b) => a.categoryName - b.categoryName,
+			sorter: (a, b) => sorter(a.category, b.category),
 		},
 		{
 			title: "Bin",
 			dataIndex: "bin",
-			sorter: (a, b) => a.categoryName - b.categoryName,
+			sorter: (a, b) => sorter(a.bin, b.bin),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			sorter: (a, b) => a.description - b.description,
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "UoM",
 			dataIndex: "uoM",
+			sorter: (a, b) => sorter(a.uoM, b.uoM),
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reorderLevel, b.reorderLevel),
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQty",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reorderQty, b.reorderQty),
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
-			sorter: true,
+			sorter: (a, b) => sorter(a.stock, b.stock),
 		},
 		{
 			title: "Action",

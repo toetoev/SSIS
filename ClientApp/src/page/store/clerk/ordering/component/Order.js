@@ -6,6 +6,7 @@ import Error from "../../../../component/Error";
 import axios from "axios";
 import toTitleCase from "../../../../../util/toTitleCase";
 import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 
 export const Order = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -21,26 +22,32 @@ export const Order = ({ loading, setLoading, keyword }) => {
 		{
 			title: "Supplier",
 			dataIndex: "supplier",
+			sorter: (a, b) => sorter(a.supplier, b.supplier),
 		},
 		{
 			title: "Ordered By",
 			dataIndex: "orderedBy",
+			sorter: (a, b) => sorter(a.orderedBy, b.orderedBy),
 		},
 		{
 			title: "Ordered Date",
 			dataIndex: "orderedOn",
+			sorter: (a, b) => sorter(a.orderedOn, b.orderedOn),
 		},
 		{
 			title: "Received By",
 			dataIndex: "receivedBy",
+			sorter: (a, b) => sorter(a.receivedBy, b.receivedBy),
 		},
 		{
 			title: "Received Date",
 			dataIndex: "receivedOn",
+			sorter: (a, b) => sorter(a.receivedOn, b.receivedOn),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -51,8 +58,8 @@ export const Order = ({ loading, setLoading, keyword }) => {
 					{text.status == "Ordered" ? (
 						<Remove text={text} setLoading={setLoading} />
 					) : (
-						<></>
-					)}
+							<></>
+						)}
 				</Space>
 			),
 		},
@@ -138,12 +145,12 @@ const OrderModal = ({ text, setLoading }) => {
 			render:
 				text.status === "Ordered"
 					? (text, record) => (
-							<InputNumber
-								min={0}
-								max={record.orderedQty}
-								onChange={(val) => onChange(val, record)}
-							/>
-					  )
+						<InputNumber
+							min={0}
+							max={record.orderedQty}
+							onChange={(val) => onChange(val, record)}
+						/>
+					)
 					: undefined,
 		},
 		{
@@ -152,8 +159,8 @@ const OrderModal = ({ text, setLoading }) => {
 			render:
 				text.status === "Ordered"
 					? (text, record) => (
-							<Input type="text" onChange={(val) => onChange(val, record)} />
-					  )
+						<Input type="text" onChange={(val) => onChange(val, record)} />
+					)
 					: null,
 		},
 	];
@@ -205,13 +212,13 @@ const OrderModal = ({ text, setLoading }) => {
 				footer={
 					text.status === "Ordered"
 						? [
-								<Button key="cancel" onClick={hideModal}>
-									Cancel
+							<Button key="cancel" onClick={hideModal}>
+								Cancel
 								</Button>,
-								<Button key="submit" type="primary" onClick={handleSubmit}>
-									Submit
+							<Button key="submit" type="primary" onClick={handleSubmit}>
+								Submit
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>

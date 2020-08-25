@@ -3,6 +3,7 @@ import { default as React, useEffect, useState } from "react";
 import { Table } from "antd";
 import axios from "axios";
 import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 
 export const Stock = ({ keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -16,36 +17,37 @@ export const Stock = ({ keyword }) => {
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
+			sorter: (a, b) => sorter(a.category, b.category),
 		},
 		{
 			title: "Bin",
 			dataIndex: "bin",
-			key: "bin",
+			sorter: (a, b) => sorter(a.bin, b.bin),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "UoM",
 			dataIndex: "uoM",
+			sorter: (a, b) => sorter(a.uoM, b.uoM),
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
+			sorter: (a, b) => sorter(a.reorderLevel, b.reorderLevel),
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
+			sorter: (a, b) => sorter(a.reorderQuantity, b.reorderQuantity),
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
-			key: "stock",
+			sorter: (a, b) => sorter(a.stock, b.stock),
 		},
 	];
 	const handleDataChange = (data) => {

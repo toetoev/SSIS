@@ -70,9 +70,9 @@ namespace SSIS.Databases
         {
             ICollection<Item> items = new List<Item>
             {
-                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
-                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
-                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
+                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
+                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
                 new Item("C4", "Clips Paper Large", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C5", "Clips Paper Medium ", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C6", "Clips Paper Small", "Box", 50, 30, 100, GetCategoryByName("Clip")),

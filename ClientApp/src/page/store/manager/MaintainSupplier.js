@@ -2,6 +2,7 @@ import { Button, Input, Space, Table, Row, Col, Form, Modal, Descriptions } from
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../util/sorter";
 
 export default function MaintainSupplier() {
 	const { Search } = Input;
@@ -10,14 +11,17 @@ export default function MaintainSupplier() {
 		{
 			title: "Supplier Name",
 			dataIndex: "supplierName",
+			sorter: (a, b) => sorter(a.supplierName, b.supplierName),
 		},
 		{
 			title: "Contact Name",
 			dataIndex: "contactName",
+			sorter: (a, b) => sorter(a.contactName, b.contactName),
 		},
 		{
 			title: "Phone No",
 			dataIndex: "phone",
+			sorter: (a, b) => sorter(a.phone, b.phone),
 		},
 		{
 			title: "Action",
@@ -98,7 +102,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
@@ -210,7 +214,7 @@ const Details = ({ text }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
