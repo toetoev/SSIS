@@ -235,7 +235,6 @@ const Delete = ({ dataSource, handleDataChange, text }) => {
 
 const Submit = ({ dataSource, handleDataChange }) => {
 	const handleSubmit = () => {
-		console.log("Submit");
 		if (dataSource.length > 0) {
 			const data = dataSource.map((val) => {
 				return { itemId: val.key, need: val.quantity };

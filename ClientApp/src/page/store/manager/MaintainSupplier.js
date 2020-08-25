@@ -1,10 +1,10 @@
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
-import axios from "axios";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
+import axios from "axios";
 import sorter from "../../../util/sorter";
 
 export default function MaintainSupplier() {
@@ -97,7 +97,7 @@ const Add = ({ setLoading }) => {
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
 
-	const [supplier, setSupplier] = useState("");
+	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
 	const [contactName, setContactName] = useState("");
 	const [GST, setGST] = useState("");
@@ -112,15 +112,13 @@ const Add = ({ setLoading }) => {
 		form.validateFields()
 			.then((val) => {
 				let data = {
-					Name: supplier,
+					name: name,
 					phone: phone,
 					contactName: contactName,
 					gst: GST,
 					address: address,
 					fax: fax,
 				};
-				console.log(data);
-
 				axios
 					.post("https://localhost:5001/api/supplier", data, {
 						headers: {
@@ -148,8 +146,8 @@ const Add = ({ setLoading }) => {
 	};
 
 	const onValuesChange = (val) => {
-		if (val.supplier) setSupplier(val.supplier);
-		if (val.phonde) setPhone(val.phone);
+		if (val.name) setName(val.name);
+		if (val.phone) setPhone(val.phone);
 		if (val.contactName) setContactName(val.contactName);
 		if (val.GST) setGST(val.GST);
 		if (val.address) setAddress(val.address);
@@ -172,16 +170,17 @@ const Add = ({ setLoading }) => {
 					</Button>,
 					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
-					</Button>
+					</Button>,
 				]}
 			>
 				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								name="supplier"
+								name="name"
 								label="Supplier Name"
-								rules={[{ required: true, message: "Please fill supplier name" }]}>
+								rules={[{ required: true, message: "Please fill supplier name" }]}
+							>
 								<Input placeholder="Enter Supplier Name" />
 							</Form.Item>
 						</Col>
@@ -189,7 +188,8 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="phone"
 								label="Phone Number"
-								rules={[{ required: true, message: "Please fill phone number" }]}>
+								rules={[{ required: true, message: "Please fill phone number" }]}
+							>
 								<Input placeholder="Enter Phone Number" />
 							</Form.Item>
 						</Col>
@@ -200,7 +200,8 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="contactName"
 								label="Contact Name"
-								rules={[{ required: true, message: "Please fill contact name" }]}>
+								rules={[{ required: true, message: "Please fill contact name" }]}
+							>
 								<Input placeholder="Enter Contact Name" />
 							</Form.Item>
 						</Col>
@@ -208,7 +209,8 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="GST"
 								label="GST Registration No"
-								rules={[{ required: true, message: "Please fill GST number" }]}>
+								rules={[{ required: true, message: "Please fill GST number" }]}
+							>
 								<Input placeholder="Enter GST No" />
 							</Form.Item>
 						</Col>
@@ -219,7 +221,8 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="address"
 								label="Address"
-								rules={[{ required: true, message: "Please fill address" }]}>
+								rules={[{ required: true, message: "Please fill address" }]}
+							>
 								<Input placeholder="Enter address..." />
 							</Form.Item>
 						</Col>
@@ -227,7 +230,8 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="fax"
 								label="Fax No :"
-								rules={[{ required: true, message: "Please fill fax number" }]}>
+								rules={[{ required: true, message: "Please fill fax number" }]}
+							>
 								<Input placeholder="Enter Fax No" />
 							</Form.Item>
 						</Col>
@@ -254,7 +258,7 @@ const Details = ({ text }) => {
 		},
 		{
 			title: "Unit Of Measurement",
-			dataIndex: "uom",
+			dataIndex: "uoM",
 		},
 	];
 
@@ -266,7 +270,6 @@ const Details = ({ text }) => {
 		setVisible(false);
 	};
 
-	// TODO: call GetSupplierTenderBySupplierId and set to table dataSource
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/supplierTenderItem/" + supplierDetails.id, {
@@ -276,16 +279,17 @@ const Details = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
+				console.log("Details -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, supplierTender) => {
 							return [
 								...rows,
 								{
-									key: supplierTender.supplierId,
+									key: supplierTender.supplier.id,
 									description: supplierTender.description,
 									price: supplierTender.price,
-									uom: supplierTender.uoM,
+									uoM: supplierTender.uoM,
 								},
 							];
 						}, [])
@@ -328,23 +332,28 @@ const Details = ({ text }) => {
 				<Descriptions>
 					<Descriptions.Item label="Items"></Descriptions.Item>
 				</Descriptions>
-				<Table columns={columns} pagination={false} scroll={{ y: 400 }} size="small" dataSource={dataSource} />
+				<Table
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 400 }}
+					size="small"
+					dataSource={dataSource}
+				/>
 			</Modal>
 		</>
 	);
 };
 
 const Edit = ({ setLoading, text }) => {
-	const supplierData = text.action;
-	console.log(supplierData);
+	const supplier = text.action;
 	const [form] = Form.useForm();
 	const [visible, setVisible] = useState(false);
-	const [supplier, setSupplier] = useState("");
-	const [phone, setPhone] = useState("");
-	const [contactName, setContactName] = useState("");
-	const [GST, setGST] = useState("");
-	const [address, setAddress] = useState("");
-	const [fax, setFax] = useState("");
+	const [name, setName] = useState(supplier.name);
+	const [phone, setPhone] = useState(supplier.phone);
+	const [contactName, setContactName] = useState(supplier.contactName);
+	const [GST, setGST] = useState(supplier.gst);
+	const [address, setAddress] = useState(supplier.address);
+	const [fax, setFax] = useState(supplier.fax);
 
 	const showModal = () => {
 		setVisible(true);
@@ -352,18 +361,15 @@ const Edit = ({ setLoading, text }) => {
 
 	const handleSubmit = () => {
 		let data = {
-			//name: form.getFieldValue('supplier'),
-			name: supplier,
+			name: name,
 			phone: phone,
 			contactName: contactName,
 			gst: GST,
 			address: address,
 			fax: fax,
 		};
-		console.log(data);
-
 		axios
-			.put("https://localhost:5001/api/supplier/" + supplierData.id, data, {
+			.put("https://localhost:5001/api/supplier/" + supplier.id, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -382,25 +388,30 @@ const Edit = ({ setLoading, text }) => {
 		setVisible(false);
 	};
 
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
 	const onValuesChange = (val) => {
-		if (val.supplier) setSupplier(val.supplier);
+		if (val.name) setName(val.name);
 		if (val.phone) setPhone(val.phone);
 		if (val.contactName) setContactName(val.contactName);
-		if (val.GST) setGST(val.GST);
+		if (val.gst) setGST(val.gst);
 		if (val.address) setAddress(val.address);
 		if (val.fax) setFax(val.fax);
 	};
 	console.log(supplier);
 	useEffect(() => {
 		form.setFieldsValue({
-			supplier: supplierData.name,
-			phone: supplierData.phone
-		})
-	}, [])
+			name: supplier.name,
+			phone: supplier.phone,
+			contactName: supplier.contactName,
+			gst: supplier.gst,
+			address: supplier.address,
+			fax: supplier.fax,
+		});
+	}, []);
+
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
@@ -409,64 +420,52 @@ const Edit = ({ setLoading, text }) => {
 			<Modal
 				title="Create Supplier"
 				visible={visible}
-				onCancel={handleCancel}
+				onCancel={hideModal}
 				footer={[
-					<Button key="cancel" onClick={handleCancel}>
+					<Button key="cancel" onClick={hideModal}>
 						Cancel
 					</Button>,
 					<Button key="submit" type="primary" onClick={handleSubmit}>
 						Submit
-					</Button>
+					</Button>,
 				]}
 			>
 				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								name="supplier"
-								label="Supplier Name">
-								<Input defaultValue={supplierData.name} />
+							<Form.Item name="name" label="Supplier Name">
+								<Input />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								name="phone"
-								label="Phone Number">
-								<Input defaultValue={supplierData.phone} />
+							<Form.Item name="phone" label="Phone Number">
+								<Input placeholder="Enter Phone Number" />
 							</Form.Item>
 						</Col>
 					</Row>
 
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								name="contactName"
-								label="Contact Name">
-								<Input defaultValue={supplierData.contactName} />
+							<Form.Item name="contactName" label="Contact Name">
+								<Input placeholder="Enter Contact Name" />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								name="GST"
-								label="GST Registration No">
-								<Input defaultValue={supplierData.gst} />
+							<Form.Item name="gst" label="GST Registration No">
+								<Input placeholder="Enter GST No" />
 							</Form.Item>
 						</Col>
 					</Row>
 
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								name="address"
-								label="Address">
-								<Input defaultValue={supplierData.address} />
+							<Form.Item name="address" label="Address">
+								<Input placeholder="Enter address..." />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								name="fax"
-								label="Fax No :">
-								<Input defaultValue={supplierData.fax} />
+							<Form.Item name="fax" label="Fax No :">
+								<Input placeholder="Enter Fax No" />
 							</Form.Item>
 						</Col>
 					</Row>
@@ -497,7 +496,7 @@ const Delete = ({ text, setLoading }) => {
 
 	return (
 		<Button type="danger" onClick={handleDelete}>
-			Delete
+			Delete{" "}
 		</Button>
 	);
 };

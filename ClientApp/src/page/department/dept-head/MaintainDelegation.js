@@ -99,6 +99,10 @@ const Add = ({ setLoading }) => {
 	};
 
 	const hideModal = (e) => {
+		setDateRange([]);
+		setDelegatedTo("");
+		setComment("");
+		deptRepOptions([]);
 		setVisible(false);
 	};
 
@@ -227,8 +231,6 @@ const Edit = ({ text, setLoading }) => {
 			endDate: dateRange[1],
 			delegatedToEmail: delegatedTo,
 		};
-		console.log(data);
-
 		axios
 			.put("https://localhost:5001/api/delegation", data, {
 				headers: {
@@ -329,7 +331,6 @@ const Delete = ({ text, setLoading }) => {
 				})
 				.then((res) => {
 					const result = res.data;
-					console.log(result);
 					if (result.success) {
 						setLoading(true);
 					} else Error(result.message);

@@ -29,10 +29,24 @@ namespace SSIS.Repositories
         }
         public async Task<List<Adjustment>> GetAdjustmentByTotalPrice(bool isLowerThan)
         {
+            Dictionary<Guid, double> adjustmentTotalPrices = new Dictionary<Guid, double>();
+            List<Adjustment> adjustments = await _dbContext.Adjustments.ToListAsync();
+            foreach (var adjustment in adjustments)
+            {
+                double totalPrice = 0;
+                foreach (var adjustmentItem in adjustment.AdjustmentItems)
+                {
+                    double avgPrice = 0;
+                    foreach (var item in adjustmentItem.Item.SupplierTenderItems)
+                        avgPrice += item.Price;
+                    totalPrice += Math.Abs(adjustmentItem.AdjustedQty) * avgPrice;
+                }
+                adjustmentTotalPrices[adjustment.Id] = totalPrice;
+            }
             if (isLowerThan)
-                return await _dbContext.Adjustments.Where(a => a.AdjustmentItems.Sum(ai => ai.Item.SupplierTenderItems.Average(sti => sti.Price) * Math.Abs(ai.AdjustedQty)) <= 250).ToListAsync();
+                return adjustments.Where(a => adjustmentTotalPrices[a.Id] <= 250).ToList();
             else
-                return await _dbContext.Adjustments.Where(a => a.AdjustmentItems.Sum(ai => ai.Item.SupplierTenderItems.Average(sti => sti.Price) * Math.Abs(ai.AdjustedQty)) > 250).ToListAsync();
+                return adjustments.Where(a => adjustmentTotalPrices[a.Id] > 250).ToList();
         }
     }
 }
