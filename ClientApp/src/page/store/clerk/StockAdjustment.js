@@ -248,7 +248,6 @@ const CreateAdjustmentVoucher = ({ setLoading }) => {
 
 	const handleSubmit = () => {
 		let data = [];
-		console.log(dataSource);
 		dataSource.forEach((el) =>
 			data.push({
 				itemId: el.key,
@@ -382,7 +381,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 				}
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	const handleCancel = (e) => {

@@ -2,8 +2,8 @@ import { default as React, useEffect, useState } from "react";
 
 import { Table } from "antd";
 import axios from "axios";
-import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Stock = ({ keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -64,7 +64,6 @@ export const Stock = ({ keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, items) => {

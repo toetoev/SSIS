@@ -368,8 +368,6 @@ const Edit = ({ setLoading, text }) => {
 			address: address,
 			fax: fax,
 		};
-		console.log(data);
-
 		axios
 			.put("https://localhost:5001/api/supplier/" + supplier.id, data, {
 				headers: {
