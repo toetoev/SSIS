@@ -50,10 +50,18 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Department name of the DeptHead and the DeptStaff getting delegated MUST be the same." };
         }
 
-        public async Task<ApiResponse> GetDelegationByDeptHeadEmail(string delegatedByEmail)
+        public async Task<ApiResponse> GetDelegation(string deptStaffEmail)
         {
+            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffByEmail(deptStaffEmail);
+            if (deptStaffFromRepo.Role == DeptRole.DeptHead)
+            {
+                return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDepartment(deptStaffFromRepo.DepartmentName) };
+            }
+            else
+            {
 
-            return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDeptHeadEmail(delegatedByEmail) };
+            }
+            return new ApiResponse { Success = false };
         }
 
         public async Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail)
