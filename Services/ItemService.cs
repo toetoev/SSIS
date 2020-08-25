@@ -114,7 +114,7 @@ namespace SSIS.Services
                             }
                             if (isPriorityValid.All(f => f == true))
                             {
-                                itemFromRepo.Category.Name = item.Category.Name;
+                                itemFromRepo.Category = categoryFromRepo;
                                 itemFromRepo.Description = item.Description;
                                 itemFromRepo.UoM = item.UoM;
                                 itemFromRepo.Bin = item.Bin;
