@@ -1,4 +1,4 @@
-import { Button, Input, Space, Table, Row, Col, Form, Modal, Descriptions } from "antd";
+import { Button, Col, Descriptions, Form, Input, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -29,9 +29,11 @@ export default function MaintainSupplier() {
 			render: (text) => (
 				<Space>
 					<Details text={text} />
+					{/* // TODO: make edit separate component */}
 					<Button type="primary">
 						<a>Edit</a>
 					</Button>
+					{/* // TODO: make delete separate component and write onClick={handleDelete} call delete supplier */}
 					<Button type="danger">
 						<a>Delete</a>
 					</Button>
@@ -40,6 +42,7 @@ export default function MaintainSupplier() {
 		},
 	];
 
+	// TODO: loading effect
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/supplier", {
@@ -66,7 +69,6 @@ export default function MaintainSupplier() {
 					);
 				}
 			})
-
 			.catch(function (error) {
 				console.log(error);
 			});
@@ -75,7 +77,6 @@ export default function MaintainSupplier() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Supplier List</h3>
-
 			<Row justify="space-between" style={{ float: "right" }}>
 				<Col>
 					<Space>
@@ -88,7 +89,6 @@ export default function MaintainSupplier() {
 					</Space>
 				</Col>
 			</Row>
-
 			<Table columns={columns} dataSource={dataSource} size="middle" />
 		</Space>
 	);
@@ -102,33 +102,17 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
+	// TODO: call create supplier
 	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
-
-	const { TextArea } = Input;
-
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
 				Add
 			</Button>
-
 			<Modal
 				title="Create Supplier"
 				visible={visible}
@@ -173,7 +157,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item label="Address">
-								<TextArea rows={4} placeholder="Enter address..." />
+								<Input placeholder="Enter address..." />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
@@ -187,6 +171,8 @@ const Add = ({ dataSource, handleDataChange }) => {
 		</>
 	);
 };
+
+// TODO: add one more component for edit
 
 const Details = ({ text }) => {
 	const [visible, setVisible] = useState(false);
@@ -214,15 +200,14 @@ const Details = ({ text }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => { };
-
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: call GetSupplierTenderBySupplierId and set to table dataSource
 	useEffect(() => {
 		axios
-			//supplier tender 
+			//supplier tender
 			.get("https://localhost:5001/api/supplier/" + text.key, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
@@ -242,26 +227,16 @@ const Details = ({ text }) => {
 	return (
 		<>
 			<Button onClick={showModal}>View</Button>
-
-			<Modal
-				title="Stationery Details"
-				visible={visible}
-				onOk={handleSubmit}
-				onCancel={handleCancel}
-				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
-						Submit
-					</Button>,
-				]}
-			>
+			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Supplier Name">{supplierDetails.name}</Descriptions.Item>
+					<Descriptions.Item label="Supplier Name">
+						{supplierDetails.name}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Contact Name">{supplierDetails.contactName}</Descriptions.Item>
+					<Descriptions.Item label="Contact Name">
+						{supplierDetails.contactName}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Phone No">{supplierDetails.phone}</Descriptions.Item>
@@ -270,7 +245,9 @@ const Details = ({ text }) => {
 					<Descriptions.Item label="Fax No">{supplierDetails.fax}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="GST Registration No">{supplierDetails.gst}</Descriptions.Item>
+					<Descriptions.Item label="GST Registration No">
+						{supplierDetails.gst}
+					</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Address">{supplierDetails.address}</Descriptions.Item>
@@ -278,13 +255,7 @@ const Details = ({ text }) => {
 				<Descriptions>
 					<Descriptions.Item label="Items"></Descriptions.Item>
 				</Descriptions>
-
-				<Table
-					columns={columns}
-					pagination={false}
-					scroll={{ y: 100 }}
-					size="small"
-				/>
+				<Table columns={columns} pagination={false} scroll={{ y: 400 }} size="small" />
 			</Modal>
 		</>
 	);

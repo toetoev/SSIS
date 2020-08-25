@@ -40,9 +40,11 @@ export default function StationeryCatalogue() {
 			render: () => (
 				<Space>
 					<Details dataSource={dataSource} />
+					{/* // TODO: make edit separate component and call update item when submit */}
 					<Button type="primary">
 						<a>Edit</a>
 					</Button>
+					{/* // TODO: make delete separate component and call delete item after confirm */}
 					<Button type="danger">
 						<a>Delete</a>
 					</Button>
@@ -51,6 +53,14 @@ export default function StationeryCatalogue() {
 		},
 	];
 
+	/*const onClickRow = (data) => {
+		return {
+			onClick: () => {
+				showModal();
+			},
+		};
+	}*/
+	// TODO: call get all items set to table
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/requisition", {
@@ -108,12 +118,14 @@ const Add = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
+	// TODO: call create item
 	const handleSubmit = () => { };
 
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
 
+	// TODO: call get all categories and get all supplier set to categoryOptions and supplierOptions
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -240,9 +252,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		setVisible(true);
 	};
 
-	const handleSubmit = () => { };
-
-	const handleCancel = (e) => {
+	const hideModal = (e) => {
 		setVisible(false);
 	};
 
@@ -259,6 +269,7 @@ const Details = ({ dataSource, handleDataChange }) => {
 		},
 	];
 
+	// TODO: get data from text, set to modal and table dataSource
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item")
@@ -276,20 +287,8 @@ const Details = ({ dataSource, handleDataChange }) => {
 		<>
 			<Button onClick={showModal}>View</Button>
 
-			<Modal
-				title="Stationery Details"
-				visible={visible}
-				onOk={handleSubmit}
-				onCancel={handleCancel}
-				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
-						Submit
-					</Button>,
-				]}
-			>
+			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
+				{/* // TODO: migrate to description */}
 				<p>Description : File-Brown w/o Logo</p>
 				<p>Bin : A7</p>
 				<p>Category : File</p>
