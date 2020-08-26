@@ -520,14 +520,13 @@ const Edit = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-
 	const [category, setCategory] = useState(item.categoryName);
 	const [description, setDescription] = useState(item.description);
 	const [bin, setBin] = useState(item.bin);
 	const [uoM, setUoM] = useState(item.uoM);
-	const [supplier1, setSupplier1] = useState((dataSource.slice(0, 1).map(data => data.supplierName)).toString());
-	const [supplier2, setSupplier2] = useState((dataSource.slice(1, 2).map(data => data.supplierName)).toString());
-	const [supplier3, setSupplier3] = useState((dataSource.slice(2, 3).map(data => data.supplierName)).toString());
+	const [supplier1, setSupplier1] = useState((dataSource.slice(0, 1).map(data => data.key)).toString());
+	const [supplier2, setSupplier2] = useState((dataSource.slice(1, 2).map(data => data.key)).toString());
+	const [supplier3, setSupplier3] = useState((dataSource.slice(2, 3).map(data => data.key)).toString());
 	const [price1, setPrice1] = useState(Number(dataSource.slice(0, 1).map(data => data.price)));
 	const [price2, setPrice2] = useState(Number(dataSource.slice(1, 2).map(data => data.price)));
 	const [price3, setPrice3] = useState(Number(dataSource.slice(2, 3).map(data => data.price)));
@@ -556,7 +555,6 @@ const Edit = ({ text, setLoading }) => {
 	const handleCancel = (e) => {
 		setVisible(false);
 	};
-
 
 	const handleSubmit = () => {
 		form.validateFields()
@@ -588,7 +586,7 @@ const Edit = ({ text, setLoading }) => {
 				console.log(data);
 
 				axios
-					.put("https://localhost:5001/api/item/" + item.itemId, data, {
+					.put("https://localhost:5001/api/item/" + item.id, data, {
 						headers: {
 							Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 							"Content-type": "application/json",
@@ -596,8 +594,9 @@ const Edit = ({ text, setLoading }) => {
 					})
 					.then((res) => {
 						const result = res.data;
+						console.log(result.data);
 						if (result.success) {
-							Success("Supplier updated successfully");
+							Success("Catalogue updated successfully");
 							setLoading(true);
 						} else {
 							Error(result.message);
@@ -655,9 +654,9 @@ const Edit = ({ text, setLoading }) => {
 			description: item.description,
 			reorderLevel: item.reorderLevel,
 			reorderQuantity: item.reorderQty,
-			supplier1: (dataSource.slice(0, 1).map(data => data.supplierName)).toString(),
-			supplier2: (dataSource.slice(1, 2).map(data => data.supplierName)).toString(),
-			supplier3: (dataSource.slice(2, 3).map(data => data.supplierName)).toString(),
+			supplier1: (dataSource.slice(0, 1).map(data => data.key)).toString(),
+			supplier2: (dataSource.slice(1, 2).map(data => data.key)).toString(),
+			supplier3: (dataSource.slice(2, 3).map(data => data.key)).toString(),
 			price1: Number(dataSource.slice(0, 1).map(data => data.price)),
 			price2: Number(dataSource.slice(1, 2).map(data => data.price)),
 			price3: Number(dataSource.slice(2, 3).map(data => data.price)),
