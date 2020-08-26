@@ -1,8 +1,11 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table, Descriptions } from "antd";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import sorter from "../../../util/sorter";
+import Confirm from "../../component/Confirm";
+import Error from "../../component/Error";
+import Success from "../../component/Success";
 
 export default function StationeryCatalogue() {
 	const [dataSource, setDataSource] = useState([]);
@@ -38,51 +41,50 @@ export default function StationeryCatalogue() {
 		{
 			title: "Action",
 			key: "action",
-			render: () => (
+			render: (text) => (
 				<Space>
-					<Details dataSource={dataSource} />
-					{/* // TODO: make edit separate component and call update item when submit */}
-					<Button type="primary">
-						<a>Edit</a>
-					</Button>
-					{/* // TODO: make delete separate component and call delete item after confirm */}
-					<Button type="danger">
-						<a>Delete</a>
-					</Button>
+					<Details text={text} />
+					<Edit text={text} setLoading={setLoading} />
+					<Delete text={text} setLoading={setLoading} />
 				</Space>
 			),
 		},
 	];
 
-	// TODO: call get all items set to table
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/requisition", {
+			.get("https://localhost:5001/api/item", {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 				},
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
-						result.data.reduce((rows, requisition) => {
+						result.data.reduce((rows, item) => {
 							return [
 								...rows,
 								{
-									key: requisition.id,
+									key: item.id,
+									category: item.categoryName,
+									description: item.description,
+									uoM: item.uoM,
+									reorderQuantity: item.reorderQty,
+									reorderLevel: item.reorderLevel,
+									action: item,
 								},
 							];
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
-
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
@@ -110,7 +112,7 @@ const Add = ({ setLoading }) => {
 
 	const [itemOptions, setItemOptions] = useState([]);
 	const [supplierOptions, setSupplierOptions] = useState([]);
-	const [item, setItem] = useState("");
+	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
 	const [bin, setBin] = useState("");
 	const [uoM, setUoM] = useState("");
@@ -122,13 +124,14 @@ const Add = ({ setLoading }) => {
 	const [price3, setPrice3] = useState("");
 	const [reorderLevel, setReorderLevel] = useState("");
 	const [reorderQuantity, setReorderQuantity] = useState("");
+	const [stock, setStock] = useState("");
 
 	const showModal = () => {
 		setVisible(true);
 	};
 
 	const onValuesChange = (val) => {
-		if (val.item) setItem(val.item);
+		if (val.category) setCategory(val.category);
 		if (val.description) setDescription(val.description);
 		if (val.bin) setBin(val.bin);
 		if (val.uoM) setUoM(val.uoM);
@@ -140,6 +143,7 @@ const Add = ({ setLoading }) => {
 		if (val.price3) setPrice3(val.price3);
 		if (val.reorderLevel) setReorderLevel(val.reorderLevel);
 		if (val.reorderQuantity) setReorderQuantity(val.reorderQuantity);
+		if (val.stock) setStock(val.stock);
 	};
 
 	const handleCancel = (e) => {
@@ -151,19 +155,30 @@ const Add = ({ setLoading }) => {
 		form.validateFields()
 			.then((val) => {
 				let data = {
-					item: item,
+					categoryName: category,
 					description: description,
+					UoM: uoM,
 					bin: bin,
-					supplier1: supplier1,
-					supplier2: supplier2,
-					supplier3: supplier3,
-					price1: price1,
-					price2: price2,
-					price3: price3,
+					supplierTenderItems: [{
+						priority: 1,
+						supplierId: supplier1,
+						price: price1,
+					},
+					{
+						priority: 2,
+						supplierId: supplier2,
+						price: price2,
+					},
+					{
+						priority: 3,
+						supplierId: supplier3,
+						price: price3,
+					},
+					],
 					reorderLevel: reorderLevel,
-					reorderQuantity: reorderQuantity,
+					reorderQty: reorderQuantity,
+					stock: stock,
 				};
-				console.log(data);
 
 				axios
 					.post("https://localhost:5001/api/item", data, {
@@ -189,7 +204,7 @@ const Add = ({ setLoading }) => {
 
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/item", {
+			.get("https://localhost:5001/api/category", {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 				},
@@ -198,8 +213,8 @@ const Add = ({ setLoading }) => {
 				const result = res.data;
 				if (result.success) {
 					setItemOptions(
-						result.data.reduce((options, item) => {
-							return [...options, { label: item.description, value: item.id }];
+						result.data.reduce((options, category) => {
+							return [...options, { label: category.name, value: category.name }];
 						}, [])
 					);
 				}
@@ -252,7 +267,7 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								name="item"
+								name="category"
 								label="Select Item Category"
 								rules={[{ required: true, message: "Please choose one item" }]}>
 								<Select options={itemOptions} style={{ width: "100%" }} placeholder="Select a category"></Select>
@@ -346,14 +361,37 @@ const Add = ({ setLoading }) => {
 							</Form.Item>
 						</Col>
 					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Stock Level" name="stock"
+								rules={[{ required: true, message: "Please fill current stock" }]}>
+								<InputNumber placeholder="0" style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+					</Row>
 				</Form>
 			</Modal>
 		</>
 	);
 };
 
-const Details = ({ dataSource, handleDataChange }) => {
+const Details = ({ text }) => {
+	const item = text.action;
 	const [visible, setVisible] = useState(false);
+
+	const [dataSource] = useState(
+		item.supplierTenderItems.reduce((rows, supplierItem) => {
+			return [
+				...rows,
+				{
+					key: supplierItem.supplierId,
+					supplierName: supplierItem.supplier.name,
+					price: supplierItem.price,
+				},
+			];
+		}, [])
+	);
 
 	const showModal = () => {
 		setVisible(true);
@@ -367,44 +405,333 @@ const Details = ({ dataSource, handleDataChange }) => {
 		{
 			title: "Supplier Name",
 			dataIndex: "supplierName",
-			key: "supplierName",
 		},
 		{
 			title: "Price",
 			dataIndex: "price",
-			key: "price",
 		},
 	];
-
-	// TODO: get data from text, set to modal and table dataSource
-	useEffect(() => {
-		axios
-			.get("https://localhost:5001/api/item")
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
 
 	return (
 		<>
 			<Button onClick={showModal}>View</Button>
 
 			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
-				{/* // TODO: migrate to description */}
-				<p>Description : File-Brown w/o Logo</p>
-				<p>Bin : A7</p>
-				<p>Category : File</p>
-				<p>Unit Of Measure : Each</p>
-				<p>Reorder Level : 200</p>
-				<p>Reorder Quantity : 150</p>
-
-				<Table columns={columns} dataSource={dataSource} pagination={false} size="small" />
+				<Descriptions>
+					<Descriptions.Item label="Description">
+						{item.description}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Bin">
+						{item.bin}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Category">
+						{item.categoryName}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Unit Of Measure">
+						{item.uoM}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Reorder Level">
+						{item.reorderLevel}
+					</Descriptions.Item>
+				</Descriptions>
+				<Descriptions>
+					<Descriptions.Item label="Reorder Quantity">
+						{item.reorderQty}
+					</Descriptions.Item>
+				</Descriptions>
+				<Table columns={columns} pagination={false} size="small" dataSource={dataSource} />
 			</Modal>
 		</>
+	);
+};
+
+const Edit = ({ text, setLoading }) => {
+	const [form] = Form.useForm();
+	const [visible, setVisible] = useState(false);
+	const [itemOptions, setItemOptions] = useState([]);
+	const [supplierOptions, setSupplierOptions] = useState([]);
+
+	const item = text.action;
+
+	const [category, setCategory] = useState(item.categoryName);
+	const [description, setDescription] = useState(item.description);
+	const [bin, setBin] = useState(item.bin);
+	const [uoM, setUoM] = useState(item.uoM);
+	const [supplier1, setSupplier1] = useState("");
+	const [supplier2, setSupplier2] = useState("");
+	const [supplier3, setSupplier3] = useState("");
+	const [price1, setPrice1] = useState("");
+	const [price2, setPrice2] = useState("");
+	const [price3, setPrice3] = useState("");
+	const [reorderLevel, setReorderLevel] = useState(item.reorderLevel);
+	const [reorderQuantity, setReorderQuantity] = useState(item.reorderQty);
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	const onValuesChange = (val) => {
+		if (val.category) setCategory(val.category);
+		if (val.description) setDescription(val.description);
+		if (val.bin) setBin(val.bin);
+		if (val.uoM) setUoM(val.uoM);
+		if (val.supplier1) setSupplier1(val.supplier1);
+		if (val.supplier2) setSupplier2(val.supplier2);
+		if (val.supplier3) setSupplier3(val.supplier3);
+		if (val.price1) setPrice1(val.price1);
+		if (val.price2) setPrice2(val.price2);
+		if (val.price3) setPrice3(val.price3);
+		if (val.reorderLevel) setReorderLevel(val.reorderLevel);
+		if (val.reorderQuantity) setReorderQuantity(val.reorderQuantity);
+	};
+
+	const handleCancel = (e) => {
+		setVisible(false);
+	};
+
+
+	const handleSubmit = () => {
+		form.validateFields()
+			.then((val) => {
+				let data = {
+					categoryName: category,
+					description: description,
+					UoM: uoM,
+					bin: bin,
+					supplierTenderItems: [{
+						priority: 1,
+						supplierId: supplier1,
+						price: price1,
+					},
+					{
+						priority: 2,
+						supplierId: supplier2,
+						price: price2,
+					},
+					{
+						priority: 3,
+						supplierId: supplier3,
+						price: price3,
+					},
+					],
+					reorderLevel: reorderLevel,
+					reorderQty: reorderQuantity,
+				};
+				console.log(data);
+
+				axios
+					.put("https://localhost:5001/api/item/" + item.itemId, data, {
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+							"Content-type": "application/json",
+						},
+					})
+					.then((res) => {
+						const result = res.data;
+						if (result.success) {
+							Success("Supplier updated successfully");
+							setLoading(true);
+						} else {
+							Error(result.message);
+						}
+					});
+			})
+			.catch((err) => { });
+	};
+
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/category", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setItemOptions(
+						result.data.reduce((options, category) => {
+							return [...options, { label: category.name, value: category.name }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+		axios
+			.get("https://localhost:5001/api/supplier", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setSupplierOptions(
+						result.data.reduce((options, supplier) => {
+							return [...options, { label: supplier.name, value: supplier.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+		form.setFieldsValue({
+			category: item.categoryName,
+			bin: item.bin,
+			uoM: item.uoM,
+			description: item.description,
+			reorderLevel: item.reorderLevel,
+			reorderQuantity: item.reorderQty,
+
+		});
+	}, []);
+
+	return (
+		<>
+			<Button type="primary" onClick={showModal}>
+				Edit
+			</Button>
+			<Modal
+				title="Add Stationery"
+				visible={visible}
+				onOk={handleSubmit}
+				onCancel={handleCancel}
+				footer={[
+					<Button key="cancel" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" onClick={handleSubmit}>
+						Submit
+					</Button>,
+				]}
+			>
+				<Form form={form} layout="vertical" size="medium" onValuesChange={onValuesChange}>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								name="category"
+								label="Select Item Category">
+								<Select options={itemOptions} style={{ width: "100%" }}></Select>
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Bin" name="bin">
+								<Input />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Unit of Measure" name="uoM">
+								<Input />
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Description" name="description">
+								<Input />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Supplier 1" name="supplier1">
+								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Tender Price" name="price1">
+								<InputNumber style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Supplier 2" name="supplier2">
+								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Tender Price" name="price2">
+								<InputNumber style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Supplier 3" name="supplier3">
+								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Tender Price" name="price3">
+								<InputNumber style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row justify="space-between">
+						<Col span={11}>
+							<Form.Item
+								label="Reorder Level" name="reorderLevel">
+								<InputNumber style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Reorder Quantity" name="reorderQuantity">
+								<InputNumber style={{ width: "100%" }} />
+							</Form.Item>
+						</Col>
+					</Row>
+				</Form>
+			</Modal>
+		</>
+	);
+};
+
+const Delete = ({ text, setLoading }) => {
+	const item = text.action;
+	const handleDelete = () => {
+		Confirm("Are you sure about deleting this item?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/item/" + item.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
+	};
+
+	return (
+		<Button type="danger" onClick={handleDelete}>
+			Delete{" "}
+		</Button>
 	);
 };
