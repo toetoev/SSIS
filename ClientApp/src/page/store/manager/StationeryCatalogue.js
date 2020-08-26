@@ -520,19 +520,17 @@ const Edit = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-	console.log(dataSource);
-
 
 	const [category, setCategory] = useState(item.categoryName);
 	const [description, setDescription] = useState(item.description);
 	const [bin, setBin] = useState(item.bin);
 	const [uoM, setUoM] = useState(item.uoM);
-	const [supplier1, setSupplier1] = useState("");
-	const [supplier2, setSupplier2] = useState("");
-	const [supplier3, setSupplier3] = useState("");
-	const [price1, setPrice1] = useState("");
-	const [price2, setPrice2] = useState("");
-	const [price3, setPrice3] = useState("");
+	const [supplier1, setSupplier1] = useState((dataSource.slice(0, 1).map(data => data.supplierName)).toString());
+	const [supplier2, setSupplier2] = useState((dataSource.slice(1, 2).map(data => data.supplierName)).toString());
+	const [supplier3, setSupplier3] = useState((dataSource.slice(2, 3).map(data => data.supplierName)).toString());
+	const [price1, setPrice1] = useState(Number(dataSource.slice(0, 1).map(data => data.price)));
+	const [price2, setPrice2] = useState(Number(dataSource.slice(1, 2).map(data => data.price)));
+	const [price3, setPrice3] = useState(Number(dataSource.slice(2, 3).map(data => data.price)));
 	const [reorderLevel, setReorderLevel] = useState(item.reorderLevel);
 	const [reorderQuantity, setReorderQuantity] = useState(item.reorderQty);
 
@@ -657,7 +655,12 @@ const Edit = ({ text, setLoading }) => {
 			description: item.description,
 			reorderLevel: item.reorderLevel,
 			reorderQuantity: item.reorderQty,
-
+			supplier1: (dataSource.slice(0, 1).map(data => data.supplierName)).toString(),
+			supplier2: (dataSource.slice(1, 2).map(data => data.supplierName)).toString(),
+			supplier3: (dataSource.slice(2, 3).map(data => data.supplierName)).toString(),
+			price1: Number(dataSource.slice(0, 1).map(data => data.price)),
+			price2: Number(dataSource.slice(1, 2).map(data => data.price)),
+			price3: Number(dataSource.slice(2, 3).map(data => data.price)),
 		});
 	}, []);
 
@@ -713,7 +716,8 @@ const Edit = ({ text, setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Supplier 1" name="supplier1">
+								name="supplier1"
+								label="Supplier 1">
 								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
 							</Form.Item>
 						</Col>
