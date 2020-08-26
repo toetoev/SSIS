@@ -6,7 +6,6 @@ import axios from "axios";
 import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
-import Success from "../../component/Success";
 
 export default function StationeryCatalogue() {
 	const [dataSource, setDataSource] = useState([]);
@@ -199,7 +198,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	useEffect(() => {
@@ -509,6 +508,20 @@ const Edit = ({ text, setLoading }) => {
 	const [supplierOptions, setSupplierOptions] = useState([]);
 
 	const item = text.action;
+	const [dataSource] = useState(
+		item.supplierTenderItems.reduce((rows, supplierItem) => {
+			return [
+				...rows,
+				{
+					key: supplierItem.supplierId,
+					supplierName: supplierItem.supplier.name,
+					price: supplierItem.price,
+				},
+			];
+		}, [])
+	);
+	console.log(dataSource);
+
 
 	const [category, setCategory] = useState(item.categoryName);
 	const [description, setDescription] = useState(item.description);
