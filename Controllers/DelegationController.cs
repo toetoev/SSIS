@@ -34,20 +34,19 @@ namespace SSIS.Controllers
             return Ok(_delegationService.GetDelegation(deptStaffEmail).Result);
         }
 
-        [HttpPut("")]
+        [HttpPut("{delegationId}")]
         [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult UpdateDelegation([FromBody] Delegation delegation)
+        public IActionResult UpdateDelegation([FromRoute] Guid delegationId, [FromBody] Delegation delegation)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.UpdateDelegation(delegation, delegatedByEmail).Result);
+            return Ok(_delegationService.UpdateDelegation(delegation, delegationId, delegatedByEmail).Result);
         }
 
-        [HttpDelete("{startDate}")]
+        [HttpDelete("{delegationId}")]
         [Authorize(Roles = DeptRole.DeptHead)]
-        public IActionResult DeleteDelegation([FromRoute] DateTime startDate)
+        public IActionResult DeleteDelegation([FromRoute] Guid delegationId)
         {
-            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.DeleteDelegation(startDate, delegatedByEmail).Result);
+            return Ok(_delegationService.DeleteDelegation(delegationId).Result);
         }
     }
 }

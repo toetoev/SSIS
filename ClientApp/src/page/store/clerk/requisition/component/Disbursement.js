@@ -1,7 +1,6 @@
 import { Button, InputNumber, Modal, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
@@ -153,6 +152,7 @@ const DisburseModal = ({ text, setLoading }) => {
 			)
 			.then((res) => {
 				const result = res.data;
+				console.log("DisburseModal -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -185,10 +185,10 @@ const DisburseModal = ({ text, setLoading }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={[
-					<Button type="secondary" onClick={hideModal}>
+					<Button key="cancel" type="secondary" onClick={hideModal}>
 						Cancel
 					</Button>,
-					<Button type="primary" onClick={handleConfirm}>
+					<Button key="confirm" type="primary" onClick={handleConfirm}>
 						Confirm
 					</Button>,
 				]}
