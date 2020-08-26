@@ -18,6 +18,11 @@ namespace SSIS.Services
             _deptStaffRepository = deptStaffRepository;
         }
 
+        public async Task<ApiResponse> GetAllDepartment()
+        {
+            return new ApiResponse { Success = true, Data = await _deptRepository.GetAllDepartment() };
+        }
+
         public async Task<ApiResponse> GetCollectionPointByStaff(string currentUser)
         {
             return new ApiResponse { Success = true, Data = await _deptStaffRepository.GetCollectionPointByStaff(currentUser) };

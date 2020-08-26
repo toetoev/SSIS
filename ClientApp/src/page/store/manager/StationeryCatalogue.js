@@ -1,6 +1,7 @@
 import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table, Descriptions } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Success from "../../component/Success";
 import axios from "axios";
 import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
@@ -150,7 +151,6 @@ const Add = ({ setLoading }) => {
 		setVisible(false);
 	};
 
-
 	const handleSubmit = () => {
 		form.validateFields()
 			.then((val) => {
@@ -199,7 +199,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	useEffect(() => {
@@ -269,14 +269,21 @@ const Add = ({ setLoading }) => {
 							<Form.Item
 								name="category"
 								label="Select Item Category"
-								rules={[{ required: true, message: "Please choose one item" }]}>
-								<Select options={itemOptions} style={{ width: "100%" }} placeholder="Select a category"></Select>
+								rules={[{ required: true, message: "Please choose one item" }]}
+							>
+								<Select
+									options={itemOptions}
+									style={{ width: "100%" }}
+									placeholder="Select a category"
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Bin" name="bin"
-								rules={[{ required: true, message: "Please fill bin value" }]}>
+								label="Bin"
+								name="bin"
+								rules={[{ required: true, message: "Please fill bin value" }]}
+							>
 								<Input placeholder="Enter Bin" />
 							</Form.Item>
 						</Col>
@@ -284,15 +291,19 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Unit of Measure" name="uoM"
-								rules={[{ required: true, message: "Please fill unit of measure" }]}>
+								label="Unit of Measure"
+								name="uoM"
+								rules={[{ required: true, message: "Please fill unit of measure" }]}
+							>
 								<Input placeholder="Enter Unit of Measure" />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Description" name="description"
-								rules={[{ required: true, message: "Please fill description" }]}>
+								label="Description"
+								name="description"
+								rules={[{ required: true, message: "Please fill description" }]}
+							>
 								<Input placeholder="Enter description..." />
 							</Form.Item>
 						</Col>
@@ -300,15 +311,23 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Supplier 1" name="supplier1"
-								rules={[{ required: true, message: "Please choose one supplier" }]}>
-								<Select options={supplierOptions} style={{ width: "100%" }} placeholder="Select a supplier"></Select>
+								label="Supplier 1"
+								name="supplier1"
+								rules={[{ required: true, message: "Please choose one supplier" }]}
+							>
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+									placeholder="Select a supplier"
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Tender Price" name="price1"
-								rules={[{ required: true, message: "Please fill tender price" }]}>
+								label="Tender Price"
+								name="price1"
+								rules={[{ required: true, message: "Please fill tender price" }]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
@@ -316,15 +335,23 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Supplier 2" name="supplier2"
-								rules={[{ required: true, message: "Please choose one supplier" }]}>
-								<Select options={supplierOptions} style={{ width: "100%" }} placeholder="Select a supplier"></Select>
+								label="Supplier 2"
+								name="supplier2"
+								rules={[{ required: true, message: "Please choose one supplier" }]}
+							>
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+									placeholder="Select a supplier"
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Tender Price" name="price2"
-								rules={[{ required: true, message: "Please fill tender price" }]}>
+								label="Tender Price"
+								name="price2"
+								rules={[{ required: true, message: "Please fill tender price" }]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
@@ -332,15 +359,23 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Supplier 3" name="supplier3"
-								rules={[{ required: true, message: "Please choose one supplier" }]}>
-								<Select options={supplierOptions} style={{ width: "100%" }} placeholder="Select a supplier"></Select>
+								label="Supplier 3"
+								name="supplier3"
+								rules={[{ required: true, message: "Please choose one supplier" }]}
+							>
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+									placeholder="Select a supplier"
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Tender Price" name="price3"
-								rules={[{ required: true, message: "Please fill tender price" }]}>
+								label="Tender Price"
+								name="price3"
+								rules={[{ required: true, message: "Please fill tender price" }]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
@@ -348,15 +383,29 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Reorder Level" name="reorderLevel"
-								rules={[{ required: true, message: "Please fill number of reorder amount" }]}>
+								label="Reorder Level"
+								name="reorderLevel"
+								rules={[
+									{
+										required: true,
+										message: "Please fill number of reorder amount",
+									},
+								]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Reorder Quantity" name="reorderQuantity"
-								rules={[{ required: true, message: "Please fill number of reorder quantity" }]}>
+								label="Reorder Quantity"
+								name="reorderQuantity"
+								rules={[
+									{
+										required: true,
+										message: "Please fill number of reorder quantity",
+									},
+								]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>

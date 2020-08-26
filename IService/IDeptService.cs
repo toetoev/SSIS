@@ -8,5 +8,6 @@ namespace SSIS.IService
     {
         Task<ApiResponse> UpdateCollectionPoint(string currentUser, string collectionPoint);
         Task<ApiResponse> GetCollectionPointByStaff(string currentUser);
+        Task<ApiResponse> GetAllDepartment();
     }
 }

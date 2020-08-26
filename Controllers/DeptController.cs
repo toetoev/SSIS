@@ -25,6 +25,13 @@ namespace SSIS.Controllers
             return Ok(_deptService.GetCollectionPointByStaff(currentUser).Result);
         }
 
+        [HttpGet("all")]
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetAllDepartment()
+        {
+            return Ok(_deptService.GetAllDepartment().Result);
+        }
+
         [HttpPost("")]
         [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult UpdateCollectionPoint([FromBody] string collectionPoint)

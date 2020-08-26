@@ -35,7 +35,14 @@ namespace SSIS.Repositories
                 .Where(ri => ri.Requisition.RequestedOn.Month.CompareTo(startDate.Month) >= 0 && ri.Requisition.RequestedOn.Month.CompareTo(endDate.Month) <= 0)
                 .Where(ri => department == ri.Requisition.DepartmentName).ToListAsync();
             List<TrendViewModel> requisitionTrends = new List<TrendViewModel>();
-            List<Category> categories = await _dbContext.Categories.Where(c => validRequisitionItems.Any(ri => ri.Item.CategoryName == c.Name)).OrderBy(c => c.Name).ToListAsync();
+            List<Category> categories = new List<Category>();
+            foreach (var requisitionItem in validRequisitionItems)
+            {
+                if (categories.Contains(requisitionItem.Item.Category))
+                    continue;
+                else
+                    categories.Add(requisitionItem.Item.Category);
+            }
             foreach (var category in categories)
             {
                 var tmp = validRequisitionItems

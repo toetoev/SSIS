@@ -1,61 +1,134 @@
 import { Button, Card, DatePicker, Form, Row, Select } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Error from "../../../component/Error";
 import ReactEcharts from "echarts-for-react";
 import axios from "axios";
+import moment from "moment";
 
 export default function OrderTrend() {
+	const { RangePicker } = DatePicker;
 	const [dateRange, setDateRange] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const [categoryOptions, setCategoryOptions] = useState([]);
-	const { RangePicker } = DatePicker;
-	const [orderData, setOrderData] = useState([]);
-	const layout = {
-		labelCol: { span: 3 },
-		wrapperCol: { span: 16 },
-	};
-	const dateFormat = "yyyy-MM-DD HH:mm:ss";
+	const [lineChartOption, setLineChartOption] = useState({});
+	const [pieChartOption, setPieChartOption] = useState({});
+	const dateFormat = "yyyy-MM-DD";
 	const onValuesChange = (val) => {
-		if (val.dateRange) setDateRange(val.dateRange.map((val) => val.format(dateFormat)));
+		if (val.dateRange) setDateRange(val.dateRange);
 		if (val.categories) setCategories(val.categories);
 	};
 
-	const showCategories = () => {
-		categories.forEach((element) => {
-			return (
-				"{ name: " +
-				categories[element] +
-				', type: "line", stack: "Total", data: ' +
-				[1, 2, 3] +
-				"} ,"
-			);
-		});
-	};
-
-	// TODO: call chart generator OrderController GetOrderTrend /startDate/endDate [categories]
 	const onFinish = () => {
 		axios
-			.post(`https://localhost:5001/api/order/${dateRange[0]}/${dateRange[1]}`, categories, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					"Content-type": "application/json",
-				},
-			})
+			.post(
+				`https://localhost:5001/api/order/${dateRange[0].format(
+					dateFormat
+				)}/${dateRange[1].format(dateFormat)}`,
+				categories,
+				{
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				}
+			)
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
-					setCategoryOptions(
-						result.data.reduce((options, categories) => {
-							return [...options, { label: categories.name, value: categories.name }];
-						}, [])
-					);
-				}
+					if (result.data.length !== 0) {
+						let xAxisData = [];
+						for (
+							let i = 0;
+							i <=
+							Math.floor(moment.duration(dateRange[1].diff(dateRange[0])).asMonths());
+							i++
+						) {
+							xAxisData.push(dateRange[0].clone().add(i, "M").format("yyyy-MM"));
+						}
+						let lineChartData = [];
+						result.data.forEach((el) => {
+							lineChartData.push({
+								name: el.category,
+								type: "line",
+								stack: "Total",
+								data: el.monthlyTotalQty,
+							});
+						});
+						setLineChartOption({
+							tooltip: {
+								trigger: "axis",
+							},
+							legend: {
+								data: categories,
+							},
+							grid: {
+								left: "3%",
+								right: "4%",
+								bottom: "3%",
+								containLabel: true,
+							},
+							xAxis: {
+								type: "category",
+								boundaryGap: false,
+								data: xAxisData,
+								name: "Month",
+							},
+							yAxis: {
+								type: "value",
+								name: "Ordered Qty",
+							},
+							series: lineChartData,
+						});
+						let pieChartData = [];
+						result.data.forEach((el) => {
+							pieChartData.push({
+								name: el.category,
+								value: el.monthlyTotalQty.reduce((acc, val) => acc + val, 0),
+							});
+						});
+						setPieChartOption({
+							tooltip: {
+								trigger: "item",
+								formatter: "{a} <br/>{b}: {c} ({d}%)",
+							},
+							legend: {
+								orient: "vertical",
+								left: 10,
+								data: categories,
+							},
+							series: [
+								{
+									name: "Total Qty",
+									type: "pie",
+									radius: ["50%", "70%"],
+									avoidLabelOverlap: false,
+									label: {
+										show: false,
+										position: "center",
+									},
+									emphasis: {
+										label: {
+											show: true,
+											fontSize: "30",
+											fontWeight: "bold",
+										},
+									},
+									labelLine: {
+										show: false,
+									},
+									data: pieChartData,
+								},
+							],
+						});
+					}
+				} else Error("Sorry, seems like we don't have records for the time range chosen");
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	};
+
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/category", {
@@ -77,6 +150,7 @@ export default function OrderTrend() {
 				console.log(error);
 			});
 	}, []);
+
 	return (
 		<>
 			<Row>
@@ -88,7 +162,7 @@ export default function OrderTrend() {
 						<Form.Item label="Item Category" name="categories">
 							<Select
 								mode="multiple"
-								style={{ width: "300px" }}
+								style={{ width: "500px" }}
 								placeholder="Please select"
 								options={categoryOptions}
 							></Select>
@@ -101,142 +175,13 @@ export default function OrderTrend() {
 					</Form>
 				</Card>
 			</Row>
+			<br />
 			<Row>
 				<Card bordered={false} style={{ width: "50%" }}>
-					<ReactEcharts
-						// setSeries = showCategories();
-						option={{
-							title: {
-								text: "Order Trends",
-							},
-							tooltip: {
-								trigger: "axis",
-							},
-							legend: {
-								data: categories,
-							},
-							grid: {
-								left: "3%",
-								right: "4%",
-								bottom: "3%",
-								containLabel: true,
-							},
-							toolbox: {
-								feature: {
-									saveAsImage: {},
-								},
-							},
-							xAxis: {
-								type: "category",
-								boundaryGap: false,
-								data: ["Month1", "Month2", "Month3"],
-							},
-							yAxis: {
-								type: "value",
-							},
-							series: [
-								showCategories(),
-
-								// {
-								// 	name: categories[0],
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [1, 2, 3],
-								// },
-								// {
-								// 	name: categories[1],
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [4, 5, 6],
-								// },
-								// {
-								// 	name: categories[2],
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [7, 8, 9],
-								// },
-								// {
-								// 	name: categories[3],
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [4, 2, 1],
-								// },
-								// {
-								// 	name: categories[4],
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [7, 9, 3],
-								// },
-
-								// {
-								// 	for (i = 0; i<categories.length; i++) {
-								// 		name: categories[i],
-								// 		type: "line",
-								// 		stack: "Total",
-								// 		data: [1, 2, 3],
-								// 	},
-								// }
-
-								// {
-								// 	name: categories,
-								// 	type: "line",
-								// 	stack: "Total",
-								// 	data: [1, 2, 3],
-								// },
-
-								// [
-								// 	categories.forEach((element) => {
-								// 		name: categories[element];
-								// 		type: "line";
-								// 		stack: "Total";
-								// 		data: [element.data];
-								// 	}),
-								// ],
-							],
-						}}
-					/>
+					<ReactEcharts option={lineChartOption} />
 				</Card>
 				<Card bordered={false} style={{ width: "50%" }}>
-					<ReactEcharts
-						option={{
-							tooltip: {
-								trigger: "item",
-								formatter: "{a} <br/>{b}: {c} ({d}%)",
-							},
-							legend: {
-								orient: "vertical",
-								left: 10,
-								data: ["Clips", "Trays", "Pens"],
-							},
-							series: [
-								{
-									name: "Pie Chart Heading",
-									type: "pie",
-									radius: ["50%", "70%"],
-									avoidLabelOverlap: false,
-									label: {
-										show: false,
-										position: "center",
-									},
-									emphasis: {
-										label: {
-											show: true,
-											fontSize: "30",
-											fontWeight: "bold",
-										},
-									},
-									labelLine: {
-										show: false,
-									},
-									data: [
-										{ value: 335, name: "Clips" },
-										{ value: 310, name: "Trays" },
-										{ value: 234, name: "Pens" },
-									],
-								},
-							],
-						}}
-					/>
+					<ReactEcharts option={pieChartOption} />
 				</Card>
 			</Row>
 		</>
