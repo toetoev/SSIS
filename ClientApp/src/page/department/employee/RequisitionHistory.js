@@ -1,7 +1,6 @@
 import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
@@ -124,9 +123,9 @@ const RequisitionModal = ({ text, setLoading }) => {
 		}, [])
 	);
 	const [status, setStatus] = useState(requisition.status);
+	const [isDelegated, setIsDelegated] = useState(false);
 	const [visible, setVisible] = useState(false);
 	const [rejectReason, setRejectReason] = useState("");
-	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -178,6 +177,21 @@ const RequisitionModal = ({ text, setLoading }) => {
 			});
 		setVisible(false);
 	};
+	useEffect(() => {
+		axios
+			.get("https://localhost:5001/api/delegation", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) setIsDelegated(result.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, []);
 	// TODO: authorized people can review requisition (api not done yet)
 	return (
 		<div>
@@ -189,7 +203,7 @@ const RequisitionModal = ({ text, setLoading }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={
-					status === "APPLIED"
+					isDelegated && status === "APPLIED"
 						? [
 								<Button
 									key="reject"
@@ -283,7 +297,7 @@ const RequisitionModal = ({ text, setLoading }) => {
 					scroll={{ y: 400 }}
 					size="small"
 				/>
-				{status === "APPLIED" ? (
+				{isDelegated && status === "APPLIED" ? (
 					<>
 						<Divider dashed />
 						<Input
