@@ -1,12 +1,11 @@
 import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
-import Confirm from "../../../../component/Confirm";
-import Error from "../../../../component/Error";
 import axios from "axios";
-import toTitleCase from "../../../../../util/toTitleCase";
+import { default as React, useEffect, useState } from "react";
 import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
+import toTitleCase from "../../../../../util/toTitleCase";
+import Confirm from "../../../../component/Confirm";
+import Error from "../../../../component/Error";
 
 export const Order = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -15,9 +14,6 @@ export const Order = ({ loading, setLoading, keyword }) => {
 		keys: ["supplier", "orderedBy", "orderedOn", "receivedBy", "receivedOn"],
 	};
 	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 	const columns = [
 		{
 			title: "Supplier",
@@ -55,11 +51,11 @@ export const Order = ({ loading, setLoading, keyword }) => {
 			render: (text) => (
 				<Space>
 					<OrderModal text={text} setLoading={setLoading} />
-					{text.status == "Ordered" ? (
+					{text.status === "Ordered" ? (
 						<Remove text={text} setLoading={setLoading} />
 					) : (
-							<></>
-						)}
+						<></>
+					)}
 				</Space>
 			),
 		},
@@ -145,12 +141,12 @@ const OrderModal = ({ text, setLoading }) => {
 			render:
 				text.status === "Ordered"
 					? (text, record) => (
-						<InputNumber
-							min={0}
-							max={record.orderedQty}
-							onChange={(val) => onChange(val, record)}
-						/>
-					)
+							<InputNumber
+								min={0}
+								max={record.orderedQty}
+								onChange={(val) => onChange(val, record)}
+							/>
+					  )
 					: undefined,
 		},
 		{
@@ -159,8 +155,8 @@ const OrderModal = ({ text, setLoading }) => {
 			render:
 				text.status === "Ordered"
 					? (text, record) => (
-						<Input type="text" onChange={(val) => onChange(val, record)} />
-					)
+							<Input type="text" onChange={(val) => onChange(val, record)} />
+					  )
 					: null,
 		},
 	];
@@ -171,7 +167,7 @@ const OrderModal = ({ text, setLoading }) => {
 	const handleSubmit = () => {
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.deliveredQty !== null && item.deliveredQty != -1)
+			if (item.deliveredQty !== null && item.deliveredQty !== -1)
 				data = [
 					...data,
 					{ itemId: item.key, deliveredQty: item.deliveredQty, remarks: item.remarks },
@@ -212,13 +208,13 @@ const OrderModal = ({ text, setLoading }) => {
 				footer={
 					text.status === "Ordered"
 						? [
-							<Button key="cancel" onClick={hideModal}>
-								Cancel
+								<Button key="cancel" onClick={hideModal}>
+									Cancel
 								</Button>,
-							<Button key="submit" type="primary" onClick={handleSubmit}>
-								Submit
+								<Button key="submit" type="primary" onClick={handleSubmit}>
+									Submit
 								</Button>,
-						]
+						  ]
 						: null
 				}
 			>

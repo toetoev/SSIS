@@ -6,7 +6,6 @@ import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
 
-
 const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
 
@@ -272,7 +271,7 @@ const Edit = ({ text, setLoading }) => {
 
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
-						delegatedTo: delegation.delegatedTo.email,
+						delegatedTo: delegatedTo,
 					});
 				}
 			})
