@@ -138,7 +138,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	const handleCancel = (e) => {
@@ -399,9 +399,8 @@ const Edit = ({ setLoading, text }) => {
 		if (val.gst) setGST(val.gst);
 		if (val.address) setAddress(val.address);
 		if (val.fax) setFax(val.fax);
-
-		console.log("```````" + val);
 	};
+	console.log(supplier);
 	useEffect(() => {
 		form.setFieldsValue({
 			name: supplier.name,
