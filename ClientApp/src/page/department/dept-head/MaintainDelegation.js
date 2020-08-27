@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
 
 export default function MaintainDelegation() {
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
 	const [keyword, setKeyword] = useState("");
 	const options = {
@@ -84,8 +85,19 @@ export default function MaintainDelegation() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<Row justify="space-between">
-				<h3>Authority Delegation</h3>
-				<Add setLoading={setLoading} />
+				<Col>
+					<h3>Authority Delegation</h3>
+				</Col>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							onSearch={setKeyword}
+							style={{ width: 200 }}
+						/>
+						<Add setLoading={setLoading} />
+					</Space>
+				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>

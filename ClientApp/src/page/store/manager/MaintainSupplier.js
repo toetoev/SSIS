@@ -86,7 +86,7 @@ export default function MaintainSupplier() {
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
+							onSearch={setKeyword}
 							style={{ width: 200 }}
 						/>
 						<Add setLoading={setLoading} />
