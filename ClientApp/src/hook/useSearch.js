@@ -14,7 +14,7 @@ const useSearch = ({ keyword, options }) => {
 			setDataSource(result.map((val) => val.item));
 		}
 	}, [keyword]);
-	return { dataSource, setDataSource };
+	return [dataSource, setDataSource];
 };
 
 export default useSearch;

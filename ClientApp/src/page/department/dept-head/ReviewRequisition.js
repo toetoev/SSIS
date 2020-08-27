@@ -1,4 +1,4 @@
-import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
+import { Button, Col, Descriptions, Divider, Input, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
 import useSearch from "../../../hook/useSearch";
@@ -7,6 +7,7 @@ import toTitleCase from "../../../util/toTitleCase";
 import Error from "../../component/Error";
 
 export default function ReviewRequisition() {
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
 	const [keyword, setKeyword] = useState("");
 	const options = {

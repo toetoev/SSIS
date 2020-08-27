@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } fro
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
@@ -10,8 +11,13 @@ const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
 
 export default function MaintainDelegation() {
-	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["startDate", "endDate", "delegatedTo", "comment"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Start Date",

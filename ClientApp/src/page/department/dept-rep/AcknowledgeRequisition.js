@@ -1,4 +1,4 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
+import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
 import useSearch from "../../../hook/useSearch";
@@ -6,6 +6,7 @@ import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
 export default function AcknowledgeRequisition() {
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
 	const [keyword, setKeyword] = useState("");
 	const options = {
