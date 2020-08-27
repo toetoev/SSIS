@@ -132,7 +132,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 				}
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	const showModal = () => {
@@ -207,12 +207,10 @@ const Add = ({ dataSource, handleDataChange }) => {
 								required: true,
 								type: "number",
 								transform: (val) => Number(val),
-								min: 1,
-								message: "Please choose at least one item",
 							},
 						]}
 					>
-						<Input type="number" placeholder="0" />
+						<Input type="number" placeholder="0" min={1} />
 					</Form.Item>
 				</Form>
 			</Modal>

@@ -122,6 +122,7 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 	);
 	const [status, setStatus] = useState(requisition.status);
 	const [visible, setVisible] = useState(false);
+	console.log(status);
 	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
@@ -184,17 +185,17 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-								<Button key="cancel" type="danger" onClick={hideModal}>
-									Cancel
+							<Button key="cancel" type="danger" onClick={hideModal}>
+								Cancel
 								</Button>,
-								<Button
-									key="acknowledge"
-									type="primary"
-									onClick={handleAcknowledge}
-								>
-									Acknowledge
+							<Button
+								key="acknowledge"
+								type="primary"
+								onClick={handleAcknowledge}
+							>
+								Acknowledge
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>

@@ -101,7 +101,7 @@ const Add = ({ setLoading }) => {
 		setDateRange([]);
 		setDelegatedTo("");
 		setComment("");
-		deptRepOptions([]);
+		setDeptRepOptions([]);
 		setVisible(false);
 	};
 
@@ -271,7 +271,7 @@ const Edit = ({ text, setLoading }) => {
 
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
-						delegatedTo: delegatedTo,
+						delegatedTo: delegation.delegatedTo.name,
 					});
 				}
 			})
