@@ -12,7 +12,7 @@ namespace SSIS.Models
 
         [Key]
         public Guid SupplierId { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
 
         [Range(1, 3)]
         public int Priority { get; set; }
