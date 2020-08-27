@@ -1,6 +1,9 @@
 import Fuse from "fuse.js";
-import { useEffect } from "react";
-const useSearch = ({ keyword, options, dataSource, setDataSource, backupData, setBackupData }) => {
+import { useEffect, useState } from "react";
+
+const useSearch = ({ keyword, options }) => {
+	const [dataSource, setDataSource] = useState([]);
+	const [backupData, setBackupData] = useState([]);
 	useEffect(() => {
 		if (keyword === "") setDataSource(backupData);
 		else {

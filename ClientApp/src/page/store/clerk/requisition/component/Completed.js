@@ -1,11 +1,15 @@
 import { Button, Modal, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
 
-// IMPROVE: search bar
-export const Completed = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const Completed = ({ keyword }) => {
+	const options = {
+		keys: ["departmentName", "requestedBy", "requestedOn", "collectionPoint"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
@@ -19,8 +23,8 @@ export const Completed = ({ loading, setLoading }) => {
 		},
 		{
 			title: "Requested Date",
-			dataIndex: "requestedDate",
-			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
+			dataIndex: "requestedOn",
+			sorter: (a, b) => sorter(a.requestedOn, b.requestedOn),
 		},
 		{
 			title: "Collection Point",
@@ -56,7 +60,7 @@ export const Completed = ({ loading, setLoading }) => {
 										requisition.requestedBy === null
 											? ""
 											: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
+									requestedOn: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
 									action: requisition,
 								},

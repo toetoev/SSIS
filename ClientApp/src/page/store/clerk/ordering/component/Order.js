@@ -8,12 +8,11 @@ import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
 
 export const Order = ({ loading, setLoading, keyword }) => {
-	const [dataSource, setDataSource] = useState([]);
-	const [backupData, setBackupData] = useState([]);
 	const options = {
 		keys: ["supplier", "orderedBy", "orderedOn", "receivedBy", "receivedOn"],
 	};
-	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Supplier",

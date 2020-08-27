@@ -1,14 +1,18 @@
 import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 import Error from "../../component/Error";
 
-// IMPROVE: add search bar
 export default function ReviewRequisition() {
-	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["requestedBy", "requestedDate"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 	const columns = [
 		{
 			title: "Requested By",
@@ -70,7 +74,20 @@ export default function ReviewRequisition() {
 
 	return (
 		<Space direction="vertical">
-			<h3>Review Requisitions</h3>
+			<Row justify="space-between">
+				<Col>
+					<h3>Review Requisitions</h3>
+				</Col>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							onSearch={setKeyword}
+							style={{ width: 200 }}
+						/>
+					</Space>
+				</Col>
+			</Row>
 			<Table
 				loading={loading}
 				dataSource={dataSource}

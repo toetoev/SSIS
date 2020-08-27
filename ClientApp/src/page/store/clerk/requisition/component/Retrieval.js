@@ -1,14 +1,18 @@
 import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 
-// IMPROVE: search bar
-export const Retrieval = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const Retrieval = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["createdBy", "createdOn"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Created By",

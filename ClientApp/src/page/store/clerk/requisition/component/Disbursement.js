@@ -1,12 +1,16 @@
 import { Button, InputNumber, Modal, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
 import Success from "../../../../component/Success";
 
-// IMPROVE: search bar
-export const Disbursement = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const Disbursement = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["retrievedItem", "amountRetrieved"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Retrieved Item",
