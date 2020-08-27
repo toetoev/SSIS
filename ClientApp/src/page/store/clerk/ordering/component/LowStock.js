@@ -1,11 +1,9 @@
 import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import sorter from "../../../../../util/sorter";
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
-import axios from "axios";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
 
 export const LowStock = ({ loading, setLoading, keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -13,7 +11,7 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 	const options = {
 		keys: ["category", "description", "uoM"],
 	};
-	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
+	// useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
 	const columns = [
 		{
 			title: "Category",

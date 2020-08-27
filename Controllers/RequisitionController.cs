@@ -26,7 +26,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPut("{requisitionId}")]
-        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep)]
+        [Authorize(Roles = DeptRole.All)]
         public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] Requisition requisition)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
