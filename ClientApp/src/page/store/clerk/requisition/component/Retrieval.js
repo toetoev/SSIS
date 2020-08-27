@@ -186,7 +186,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 				</Button>
 			</Space>
 			<Modal
-				title="Requisition Details"
+				title="Retrieval Details"
 				visible={visible}
 				onCancel={hideModal}
 				footer={null}

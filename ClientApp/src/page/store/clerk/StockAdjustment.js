@@ -283,10 +283,10 @@ const CreateAdjustmentVoucher = ({ setLoading }) => {
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Create Adjustment Voucher
+				Create Adjustment Request
 			</Button>
 			<Modal
-				title="Create Adjustment Voucher"
+				title="Create Adjustment Request"
 				visible={visible}
 				onOk={handleSubmit}
 				onCancel={handleCancel}

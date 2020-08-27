@@ -15,8 +15,8 @@ export default function Manager() {
 	// IMPROVE: customize icon
 	const items = [
 		{ to: `${path}`, title: "Dashboard" },
-		{ to: `${path}/stationary-catalogue`, title: "Stationary Catalogue" },
-		{ to: `${path}/supplier`, title: "Maintain Supplier" },
+		{ to: `${path}/stationary-catalogue`, title: "Stationery Catalogue" },
+		{ to: `${path}/supplier`, title: "Maintain Suppliers" },
 		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
 	];
 	return (
