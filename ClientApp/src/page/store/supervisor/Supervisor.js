@@ -5,15 +5,25 @@ import { Navbar } from "../../component/Navbar";
 import Sidebar from "../../component/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
 import StockAdjustment from "./StockAdjustment";
+import { AreaChartOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 export default function Supervisor() {
 	let { path } = useRouteMatch();
-	// IMPROVE: customize icon
+
 	const items = [
-		{ to: `${path}/dashboard`, title: "Dashboard" },
-		{ to: `${path}`, title: "Stock Adjustment" },
+		{
+			to: `${path}/dashboard`,
+			title: "Dashboard",
+			icon: <AreaChartOutlined />,
+		},
+		{
+			to: `${path}`,
+			title: "Stock Adjustment",
+			icon: <MenuUnfoldOutlined />,
+		},
 	];
+
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">

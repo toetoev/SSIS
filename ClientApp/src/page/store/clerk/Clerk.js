@@ -7,16 +7,33 @@ import Dashboard from "../dashboard/Dashboard";
 import Ordering from "./ordering/Ordering";
 import Requisition from "./requisition/Requisition";
 import StockAdjustment from "./StockAdjustment";
+import { AreaChartOutlined, FileTextOutlined, ShoppingOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 export default function Clerk() {
 	let { path } = useRouteMatch();
-	// IMPROVE: customize icon
+
 	const items = [
-		{ to: `${path}/dashboard`, title: "Dashboard" },
-		{ to: `${path}`, title: "Requisitions" },
-		{ to: `${path}/ordering`, title: "Ordering" },
-		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
+		{
+			to: `${path}/dashboard`,
+			title: "Dashboard",
+			icon: <AreaChartOutlined />,
+		},
+		{
+			to: `${path}`,
+			title: "Requisitions",
+			icon: <FileTextOutlined />,
+		},
+		{
+			to: `${path}/ordering`,
+			title: "Ordering",
+			icon: <ShoppingOutlined />,
+		},
+		{
+			to: `${path}/stock-adjustment`,
+			title: "Stock Adjustment",
+			icon: <MenuUnfoldOutlined />,
+		},
 	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>

@@ -1,5 +1,4 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-
 import Dashboard from "../dashboard/Dashboard";
 import { Layout } from "antd";
 import MaintainSupplier from "./MaintainSupplier";
@@ -8,17 +7,35 @@ import React from "react";
 import Sidebar from "../../component/Sidebar";
 import StationeryCatalogue from "./StationeryCatalogue";
 import StockAdjustment from "./StockAdjustment";
+import { AreaChartOutlined, FileTextOutlined, UsergroupAddOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 export default function Manager() {
 	let { path } = useRouteMatch();
-	// IMPROVE: customize icon
+
 	const items = [
-		{ to: `${path}`, title: "Dashboard" },
-		{ to: `${path}/stationary-catalogue`, title: "Stationary Catalogue" },
-		{ to: `${path}/supplier`, title: "Maintain Supplier" },
-		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
+		{
+			to: `${path}`,
+			title: "Dashboard",
+			icon: <AreaChartOutlined />,
+		},
+		{
+			to: `${path}/stationary-catalogue`,
+			title: "Stationary Catalogue",
+			icon: <FileTextOutlined />,
+		},
+		{
+			to: `${path}/supplier`,
+			title: "Maintain Supplier",
+			icon: <UsergroupAddOutlined />,
+		},
+		{
+			to: `${path}/stock-adjustment`,
+			title: "Stock Adjustment",
+			icon: <MenuUnfoldOutlined />,
+		},
 	];
+
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">
