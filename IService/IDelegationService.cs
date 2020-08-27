@@ -10,7 +10,7 @@ namespace SSIS.IService
     {
         Task<ApiResponse> GetDelegation(string deptStaffEmail);
         Task<ApiResponse> CreateDelegation(Delegation delegation, string delegatedByEmail);
-        Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail);
-        Task<ApiResponse> DeleteDelegation(DateTime startDate, string delegatedByEmail);
+        Task<ApiResponse> UpdateDelegation(Delegation delegation, Guid delegationId, string delegatedByEmail);
+        Task<ApiResponse> DeleteDelegation(Guid delegationId);
     }
 }

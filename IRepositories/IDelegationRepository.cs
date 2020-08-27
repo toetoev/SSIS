@@ -14,5 +14,6 @@ namespace SSIS.IRepositories
         Task<int> UpdateDelegation();
         Task<int> DeleteDelegation(Delegation delegationFromRepo);
         Task<bool> IsDelegated(string deptStaffEmail);
+        Task<Delegation> GetDelegationsById(Guid delegationId);
     }
 }

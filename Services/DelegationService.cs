@@ -34,7 +34,7 @@ namespace SSIS.Services
                         Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
                         if (delegationFromRepo == null)
                         {
-                            Delegation newDelegation = new Delegation { DelegatedBy = delegatedBy, DelegatedTo = delegatedTo, StartDate = delegation.StartDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
+                            Delegation newDelegation = new Delegation { Id = Guid.NewGuid(), DelegatedBy = delegatedBy, DelegatedTo = delegatedTo, StartDate = delegation.StartDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
                             return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
                         }
                         else
@@ -59,10 +59,10 @@ namespace SSIS.Services
                 return new ApiResponse { Success = true, Data = await _delegationRepository.IsDelegated(deptStaffEmail) };
         }
 
-        public async Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail)
+        public async Task<ApiResponse> UpdateDelegation(Delegation delegation, Guid delegationId, string delegatedByEmail)
         {
             DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegatedByEmail);
-            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
+            Delegation delegationFromRepo = await _delegationRepository.GetDelegationsById(delegationId);
             if (delegationFromRepo != null)
             {
                 DeptStaff delegatedTo = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedToEmail);
@@ -71,8 +71,8 @@ namespace SSIS.Services
                     if (delegationFromRepo.StartDate.CompareTo(delegation.EndDate) < 0 && DateTime.Now.CompareTo(delegation.EndDate) < 0)
                     {
                         delegationFromRepo.DelegatedTo = delegatedTo;
+                        delegationFromRepo.StartDate = delegation.StartDate;
                         delegationFromRepo.EndDate = delegation.EndDate;
-                        delegationFromRepo.Comment = delegation.Comment;
                         return new ApiResponse { Success = true, Data = await _delegationRepository.UpdateDelegation() };
                     }
                     else
@@ -85,9 +85,9 @@ namespace SSIS.Services
                 return new ApiResponse { Success = false, Message = "Cannot find the delegation to be updated" };
         }
 
-        public async Task<ApiResponse> DeleteDelegation(DateTime startDate, string delegatedByEmail)
+        public async Task<ApiResponse> DeleteDelegation(Guid delegationId)
         {
-            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, startDate);
+            Delegation delegationFromRepo = await _delegationRepository.GetDelegationsById(delegationId);
             if (delegationFromRepo != null)
                 return new ApiResponse { Success = true, Data = await _delegationRepository.DeleteDelegation(delegationFromRepo) };
             else

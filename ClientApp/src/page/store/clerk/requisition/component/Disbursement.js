@@ -1,7 +1,6 @@
 import { Button, InputNumber, Modal, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
@@ -40,9 +39,12 @@ export const Disbursement = ({ loading, setLoading }) => {
 							return [
 								...rows,
 								{
-									key: retrieval.itemId,
+									key: retrieval.retrievalId,
 									retrievedItem: retrieval.item.description,
-									amountRetrieved: retrieval.totalQtyRetrieved,
+									amountRetrieved:
+										retrieval.totalQtyRetrieved === -1
+											? ""
+											: retrieval.totalQtyRetrieved,
 									action: retrieval,
 								},
 							];
@@ -62,6 +64,7 @@ export const Disbursement = ({ loading, setLoading }) => {
 const DisburseModal = ({ text, setLoading }) => {
 	const retrieval = text.action;
 	const [visible, setVisible] = useState(false);
+	const [disable, setDisable] = useState(false);
 	const onChange = (val, row) => {
 		const newData = [...dataSource];
 		const index = dataSource.findIndex((item) => row.key === item.key);
@@ -114,7 +117,7 @@ const DisburseModal = ({ text, setLoading }) => {
 	const handleConfirm = (e) => {
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.actualAmount != -1)
+			if (item.actualAmount !== -1)
 				data = [
 					...data,
 					{
@@ -142,42 +145,45 @@ const DisburseModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 	useEffect(() => {
-		axios
-			.get(
-				`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
-				{
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					},
-				}
-			)
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setDataSource(
-						result.data.reduce((rows, requisition) => {
-							return [
-								...rows,
-								{
-									key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
-									department: requisition.department.name,
-									requestedBy: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
-									neededAmount: requisition.requisitionItems[0].need,
-									actualAmount: requisition.requisitionItems[0].actual,
-								},
-							];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+		if (text.amountRetrieved !== "") {
+			axios
+				.get(
+					`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						},
+					}
+				)
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setDataSource(
+							result.data.reduce((rows, requisition) => {
+								return [
+									...rows,
+									{
+										key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
+										department: requisition.department.name,
+										requestedBy: requisition.requestedBy.name,
+										requestedDate: requisition.requestedOn,
+										neededAmount: requisition.requisitionItems[0].need,
+										actualAmount: requisition.requisitionItems[0].actual,
+									},
+								];
+							}, [])
+						);
+						setDisable(false);
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		} else setDisable(true);
 	}, []);
 	return (
 		<div>
-			<Button type="primary" onClick={showModal}>
+			<Button type="primary" onClick={showModal} disabled={disable}>
 				Disburse
 			</Button>
 			<Modal
@@ -185,10 +191,10 @@ const DisburseModal = ({ text, setLoading }) => {
 				visible={visible}
 				onCancel={hideModal}
 				footer={[
-					<Button type="secondary" onClick={hideModal}>
+					<Button key="cancel" type="secondary" onClick={hideModal}>
 						Cancel
 					</Button>,
-					<Button type="primary" onClick={handleConfirm}>
+					<Button key="confirm" type="primary" onClick={handleConfirm}>
 						Confirm
 					</Button>,
 				]}

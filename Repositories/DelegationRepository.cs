@@ -47,5 +47,10 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Delegations.AnyAsync(d => d.DelegatedToEmail == deptStaffEmail && d.StartDate.CompareTo(DateTime.Now) <= 0 && d.EndDate.CompareTo(DateTime.Now) >= 0);
         }
+
+        public async Task<Delegation> GetDelegationsById(Guid delegationId)
+        {
+            return await _dbContext.Delegations.Where(d => d.Id == delegationId).FirstOrDefaultAsync();
+        }
     }
 }

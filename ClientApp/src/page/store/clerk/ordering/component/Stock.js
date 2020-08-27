@@ -1,9 +1,8 @@
-import { default as React, useEffect, useState } from "react";
-
 import { Table } from "antd";
 import axios from "axios";
-import sorter from "../../../../../util/sorter";
+import { default as React, useEffect, useState } from "react";
 import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 
 export const Stock = ({ keyword }) => {
 	const [dataSource, setDataSource] = useState([]);
@@ -50,9 +49,6 @@ export const Stock = ({ keyword }) => {
 			sorter: (a, b) => sorter(a.stock, b.stock),
 		},
 	];
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 
 	useEffect(() => {
 		setLoading(true);
