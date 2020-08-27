@@ -1,4 +1,4 @@
-import { ApartmentOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, SolutionOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
@@ -11,15 +11,23 @@ import ReviewRequisition from "./ReviewRequisition";
 const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
-	// IMPROVE: customize icon
+
 	const items = [
 		{
 			to: `${path}/maintain-department`,
 			title: "Maintain Department",
 			icon: <ApartmentOutlined />,
 		},
-		{ to: `${path}`, title: "Review Requisition" },
-		{ to: `${path}/delegation`, title: "Delegation" },
+		{
+			to: `${path}`,
+			title: "Review Requisition",
+			icon: <SolutionOutlined />,
+		},
+		{
+			to: `${path}/delegation`,
+			title: "Delegation",
+			icon: <UserSwitchOutlined />,
+		},
 	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>

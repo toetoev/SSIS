@@ -145,7 +145,6 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			];
 		}, [])
 	);
-
 	const columns = [
 		{
 			title: "Item Description",
@@ -207,17 +206,17 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-								<Button key="cancel" type="danger" onClick={hideModal}>
-									Cancel
+							<Button key="cancel" type="danger" onClick={hideModal}>
+								Cancel
 								</Button>,
-								<Button
-									key="acknowledge"
-									type="primary"
-									onClick={handleAcknowledge}
-								>
-									Acknowledge
+							<Button
+								key="acknowledge"
+								type="primary"
+								onClick={handleAcknowledge}
+							>
+								Acknowledge
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>

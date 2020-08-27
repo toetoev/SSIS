@@ -124,7 +124,7 @@ export default function RequisitionTrend() {
 							],
 						});
 					} else
-						Error("Sorry, seems like we don't have records for the time range chosen");
+						Error("No records exist for this department in the chosen time range");
 				}
 			})
 			.catch(function (error) {

@@ -1,5 +1,5 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-
+import { SolutionOutlined } from "@ant-design/icons";
 import AcknowledgeRequisition from "./AcknowledgeRequisition";
 import { Layout } from "antd";
 import { Navbar } from "../../component/Navbar";
@@ -10,8 +10,14 @@ const { Header, Sider, Content } = Layout;
 
 export default function DeptRep() {
 	let { path } = useRouteMatch();
-	// IMPROVE: customize icon
-	const items = [{ to: `${path}`, title: "Requisition History" }];
+
+	const items = [
+		{
+			to: `${path}`,
+			title: "Requisition History",
+			icon: <SolutionOutlined />,
+		},
+	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">

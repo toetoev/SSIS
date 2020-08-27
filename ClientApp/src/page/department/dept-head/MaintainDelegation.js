@@ -2,6 +2,7 @@ import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table 
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import sorter from "../../../util/sorter";
 import useSearch from "../../../hook/useSearch";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
@@ -23,18 +24,22 @@ export default function MaintainDelegation() {
 		{
 			title: "Start Date",
 			dataIndex: "startDate",
+			sorter: (a, b) => sorter(a.startDate, b.startDate),
 		},
 		{
 			title: "End Date",
 			dataIndex: "endDate",
+			sorter: (a, b) => sorter(a.endDate, b.endDate),
 		},
 		{
 			title: "Delegated To",
 			dataIndex: "delegatedTo",
+			sorter: (a, b) => sorter(a.delegatedTo, b.delegatedTo),
 		},
 		{
 			title: "Comment",
 			dataIndex: "comment",
+			sorter: (a, b) => sorter(a.comment, b.comment),
 		},
 		{
 			title: "Action",
@@ -119,7 +124,7 @@ const Add = ({ setLoading }) => {
 		setDateRange([]);
 		setDelegatedTo("");
 		setComment("");
-		deptRepOptions([]);
+		setDeptRepOptions([]);
 		setVisible(false);
 	};
 
@@ -287,7 +292,7 @@ const Edit = ({ text, setLoading }) => {
 					);
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
-						delegatedTo: delegatedTo,
+						delegatedTo: delegation.delegatedTo.name,
 					});
 				}
 			})

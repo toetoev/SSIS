@@ -215,7 +215,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	useEffect(() => {
@@ -624,9 +624,9 @@ const Edit = ({ text, setLoading }) => {
 							Error(result.message);
 						}
 					});
+				setVisible(false);
 			})
-			.catch((err) => {});
-		setVisible(false);
+			.catch((err) => { });
 	};
 
 	useEffect(() => {

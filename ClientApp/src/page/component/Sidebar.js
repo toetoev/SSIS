@@ -12,7 +12,6 @@ export default function Sidebar({ items }) {
 			defaultSelectedKeys={[path]}
 		>
 			{items.map((item) => (
-				// IMPROVE: accept icon input to customize
 				<Menu.Item key={item.to} icon={item.icon}>
 					<Link to={item.to}>{item.title}</Link>
 				</Menu.Item>
