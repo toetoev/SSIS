@@ -1,8 +1,6 @@
-import { Link, useRouteMatch } from "react-router-dom";
-
 import { Menu } from "antd";
 import React from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { Link, useRouteMatch } from "react-router-dom";
 
 export default function Sidebar({ items }) {
 	let { path } = useRouteMatch();
@@ -15,7 +13,7 @@ export default function Sidebar({ items }) {
 		>
 			{items.map((item) => (
 				// IMPROVE: accept icon input to customize
-				<Menu.Item key={item.to} icon={<UserOutlined />}>
+				<Menu.Item key={item.to} icon={item.icon}>
 					<Link to={item.to}>{item.title}</Link>
 				</Menu.Item>
 			))}
