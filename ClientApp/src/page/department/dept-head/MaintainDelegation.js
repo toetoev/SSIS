@@ -110,6 +110,7 @@ export default function MaintainDelegation() {
 }
 
 const Add = ({ setLoading }) => {
+	const [form] = Form.useForm();
 	const [dateRange, setDateRange] = useState([]);
 	const [delegatedTo, setDelegatedTo] = useState("");
 	const [comment, setComment] = useState("");
@@ -121,10 +122,6 @@ const Add = ({ setLoading }) => {
 	};
 
 	const hideModal = (e) => {
-		setDateRange([]);
-		setDelegatedTo("");
-		setComment("");
-		setDeptRepOptions([]);
 		setVisible(false);
 	};
 
@@ -154,6 +151,7 @@ const Add = ({ setLoading }) => {
 				if (result.success) {
 					Success("Delegation assigned successfully");
 					setLoading(true);
+					form.resetFields();
 				} else {
 					Error(result.message);
 				}
@@ -205,7 +203,7 @@ const Add = ({ setLoading }) => {
 					</Button>,
 				]}
 			>
-				<Form layout="vertical" onValuesChange={onValuesChange}>
+				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
 					<Form.Item label="Select Date" name="dateRange">
 						<RangePicker style={{ width: "100%" }} format={dateFormat} />
 					</Form.Item>

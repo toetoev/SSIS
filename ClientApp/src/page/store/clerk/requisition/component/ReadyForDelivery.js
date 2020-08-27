@@ -134,11 +134,6 @@ const ReadyForDeliveryModal = ({ text }) => {
 							size="small"
 						/>
 					</Row>
-					<Row justify="end">
-						<Space>
-							<Button type="primary">Print</Button>
-						</Space>
-					</Row>
 				</Space>
 			</Modal>
 		</div>
