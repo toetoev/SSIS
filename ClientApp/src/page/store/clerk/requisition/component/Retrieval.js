@@ -208,12 +208,9 @@ const RetrievalModal = ({ text, setLoading }) => {
 						/>
 					</Row>
 					<Row justify="end">
-						<Space>
-							<Button type="secondary">Print</Button>
-							<Button type="primary" onClick={handleConfirm}>
-								Confirm
-							</Button>
-						</Space>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
 					</Row>
 				</Space>
 			</Modal>

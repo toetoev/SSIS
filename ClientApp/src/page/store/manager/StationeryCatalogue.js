@@ -209,6 +209,7 @@ const Add = ({ setLoading }) => {
 						if (result.success) {
 							Success("Supplier created successfully");
 							setLoading(true);
+							form.resetFields();
 						} else {
 							Error(result.message);
 						}
