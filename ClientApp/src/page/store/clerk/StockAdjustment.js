@@ -385,7 +385,7 @@ const AddAdjustmentItem = ({ dataSource, handleDataChange }) => {
 				}
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	const handleCancel = (e) => {
@@ -469,7 +469,9 @@ const DeleteAdjustmentItem = ({ dataSource, handleDataChange, text }) => {
 const ClearAdjustmentItems = ({ dataSource, handleDataChange }) => {
 	const handleClick = () => {
 		if (dataSource.length > 0)
-			Confirm("Are you sure you want to clear all the items?", "", () => handleDataChange([]));
+			Confirm("Are you sure you want to clear all the items?", "", () =>
+				handleDataChange([])
+			);
 	};
 	return (
 		<Button type="danger" onClick={handleClick}>
