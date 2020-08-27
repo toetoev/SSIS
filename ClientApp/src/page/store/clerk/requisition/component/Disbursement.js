@@ -1,11 +1,17 @@
 import { Button, InputNumber, Modal, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import sorter from "../../../../../util/sorter";
 
-// IMPROVE: search bar
-export const Disbursement = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+import Success from "../../../../component/Success";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
+
+export const Disbursement = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["retrievedItem", "amountRetrieved"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Retrieved Item",
@@ -32,7 +38,6 @@ export const Disbursement = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Disbursement -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, retrieval) => {
@@ -137,8 +142,10 @@ const DisburseModal = ({ text, setLoading }) => {
 				})
 				.then((res) => {
 					const result = res.data;
-					if (result.success) setLoading(true);
-					else Error(result.message);
+					if (result.success) {
+						Success("Done item disbursement");
+						setLoading(true);
+					} else Error(result.message);
 				});
 			setVisible(false);
 		} else Error("Please enter disbursed quantity for all the items");
@@ -180,7 +187,7 @@ const DisburseModal = ({ text, setLoading }) => {
 					console.log(error);
 				});
 		} else setDisable(true);
-	}, []);
+	}, [visible]);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal} disabled={disable}>

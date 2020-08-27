@@ -5,12 +5,17 @@ import Confirm from "../../component/Confirm";
 import Success from "../../component/Success";
 import axios from "axios";
 import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
-// IMPROVE: search bar
 export default function StockAdjustment() {
 	const { Search } = Input;
-	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["submittedOn", "submittedBy", "issuedBy", "issuedOn"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Submitted On",
@@ -54,7 +59,6 @@ export default function StockAdjustment() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result);
 					setDataSource(
 						result.data.reduce((rows, stocks) => {
 							return [
@@ -90,7 +94,7 @@ export default function StockAdjustment() {
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
+							onSearch={setKeyword}
 							style={{ width: 200 }}
 						/>
 					</Space>
@@ -266,7 +270,7 @@ const CreateAdjustmentVoucher = ({ setLoading }) => {
 				const result = res.data;
 				if (result.success) {
 					setLoading(true);
-					Success("Adjustment Submit Successfully");
+					Success("Adjustment Submitted Successfully");
 					setVisible(false);
 				} else Error(result.message);
 			});
@@ -465,7 +469,9 @@ const DeleteAdjustmentItem = ({ dataSource, handleDataChange, text }) => {
 const ClearAdjustmentItems = ({ dataSource, handleDataChange }) => {
 	const handleClick = () => {
 		if (dataSource.length > 0)
-			Confirm("Are you sure clear all items?", "", () => handleDataChange([]));
+			Confirm("Are you sure you want to clear all the items?", "", () =>
+				handleDataChange([])
+			);
 	};
 	return (
 		<Button type="danger" onClick={handleClick}>

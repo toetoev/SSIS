@@ -1,13 +1,18 @@
-import { Button, Descriptions, Divider, Input, Modal, Space, Table } from "antd";
+import { Button, Col, Descriptions, Divider, Input, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-// IMPROVE: add search bar
 export default function RequisitionHistory() {
-	const [dataSource, setDataSource] = useState([]);
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["requestedDate", "reviewedBy", "reviewedDate", "acknowledgedBy", "acknowledgedDate"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 	const columns = [
 		{
 			title: "Requested Date",
@@ -90,7 +95,20 @@ export default function RequisitionHistory() {
 
 	return (
 		<Space direction="vertical">
-			<h3>Requisition History</h3>
+			<Row justify="space-between">
+				<Col>
+					<h3>Requisition History</h3>
+				</Col>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							onSearch={setKeyword}
+							style={{ width: 200 }}
+						/>
+					</Space>
+				</Col>
+			</Row>
 			<Table
 				dataSource={dataSource}
 				columns={columns}
@@ -192,7 +210,7 @@ const RequisitionModal = ({ text, setLoading }) => {
 				console.log(error);
 			});
 	}, []);
-	// TODO: authorized people can review requisition (api not done yet)
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

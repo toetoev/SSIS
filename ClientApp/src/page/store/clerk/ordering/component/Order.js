@@ -1,19 +1,19 @@
 import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
-import toTitleCase from "../../../../../util/toTitleCase";
+
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import toTitleCase from "../../../../../util/toTitleCase";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Order = ({ loading, setLoading, keyword }) => {
-	const [dataSource, setDataSource] = useState([]);
-	const [backupData, setBackupData] = useState([]);
 	const options = {
 		keys: ["supplier", "orderedBy", "orderedOn", "receivedBy", "receivedOn"],
 	};
-	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Supplier",
@@ -110,7 +110,7 @@ const OrderModal = ({ text, setLoading }) => {
 					description: orderItem.item.description,
 					orderedQty: orderItem.orderedQty,
 					deliveredQty: orderItem.deliveredQty,
-					remarks: "",
+					remarks: orderItem.remarks,
 				},
 			];
 		}, [])
@@ -119,6 +119,18 @@ const OrderModal = ({ text, setLoading }) => {
 		const newData = [...dataSource];
 		const index = dataSource.findIndex((item) => row.key === item.key);
 		newData[index].deliveredQty = val;
+		newData[index].remarks = row.remarks;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const onRemarksChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].remarks = val;
 		const item = newData[index];
 		newData.splice(index, 1, {
 			...item,
@@ -155,7 +167,10 @@ const OrderModal = ({ text, setLoading }) => {
 			render:
 				text.status === "Ordered"
 					? (text, record) => (
-							<Input type="text" onChange={(val) => onChange(val, record)} />
+							<Input
+								type="text"
+								onChange={(e) => onRemarksChange(e.target.value, record)}
+							/>
 					  )
 					: null,
 		},
@@ -167,7 +182,8 @@ const OrderModal = ({ text, setLoading }) => {
 	const handleSubmit = () => {
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.deliveredQty !== null && item.deliveredQty !== -1)
+			debugger;
+			if (item.deliveredQty !== null && item.deliveredQty != -1)
 				data = [
 					...data,
 					{ itemId: item.key, deliveredQty: item.deliveredQty, remarks: item.remarks },

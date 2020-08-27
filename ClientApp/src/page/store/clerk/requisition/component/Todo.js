@@ -5,11 +5,15 @@ import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
 import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-// IMPROVE: add search bar
-export const Todo = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const Todo = ({ loading, setLoading, keyword }) => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+	const options = {
+		keys: ["category", "description", "uoM"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
@@ -47,7 +51,6 @@ export const Todo = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Todo -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {

@@ -1,11 +1,16 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import sorter from "../../../../../util/sorter";
 
-// IMPROVE: search bar
-export const ReadyForDelivery = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
+
+export const ReadyForDelivery = ({ keyword }) => {
+	const options = {
+		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
@@ -42,7 +47,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("ReadyForDelivery -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -74,7 +78,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 
 const ReadyForDeliveryModal = ({ text }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [

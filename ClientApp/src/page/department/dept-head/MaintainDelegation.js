@@ -1,7 +1,9 @@
-import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
@@ -10,24 +12,34 @@ const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
 
 export default function MaintainDelegation() {
-	const [dataSource, setDataSource] = useState([]);
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["startDate", "endDate", "delegatedTo", "comment"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Start Date",
 			dataIndex: "startDate",
+			sorter: (a, b) => sorter(a.startDate, b.startDate),
 		},
 		{
 			title: "End Date",
 			dataIndex: "endDate",
+			sorter: (a, b) => sorter(a.endDate, b.endDate),
 		},
 		{
 			title: "Delegated To",
 			dataIndex: "delegatedTo",
+			sorter: (a, b) => sorter(a.delegatedTo, b.delegatedTo),
 		},
 		{
 			title: "Comment",
 			dataIndex: "comment",
+			sorter: (a, b) => sorter(a.comment, b.comment),
 		},
 		{
 			title: "Action",
@@ -78,8 +90,19 @@ export default function MaintainDelegation() {
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<Row justify="space-between">
-				<h3>Authority Delegation</h3>
-				<Add setLoading={setLoading} />
+				<Col>
+					<h3>Authority Delegation</h3>
+				</Col>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							onSearch={setKeyword}
+							style={{ width: 200 }}
+						/>
+						<Add setLoading={setLoading} />
+					</Space>
+				</Col>
 			</Row>
 			<Table columns={columns} dataSource={dataSource} size="middle" loading={loading} />
 		</Space>
@@ -101,7 +124,7 @@ const Add = ({ setLoading }) => {
 		setDateRange([]);
 		setDelegatedTo("");
 		setComment("");
-		deptRepOptions([]);
+		setDeptRepOptions([]);
 		setVisible(false);
 	};
 
@@ -205,7 +228,6 @@ const Add = ({ setLoading }) => {
 const Edit = ({ text, setLoading }) => {
 	const delegation = text.action;
 	const [form] = Form.useForm();
-
 	const [dateRange, setDateRange] = useState([]);
 	const [delegatedTo, setDelegatedTo] = useState("");
 	const [visible, setVisible] = useState(false);
@@ -226,8 +248,8 @@ const Edit = ({ text, setLoading }) => {
 
 	const handleSubmit = () => {
 		let data = {
-			startDate: dateRange[0],
-			endDate: dateRange[1],
+			startDate: moment(dateRange[0], dateFormat),
+			endDate: moment(dateRange[1], dateFormat),
 			delegatedToEmail: delegatedTo,
 		};
 		axios
@@ -268,16 +290,19 @@ const Edit = ({ text, setLoading }) => {
 							[]
 						)
 					);
-
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
-						delegatedTo: delegatedTo,
+						delegatedTo: delegation.delegatedTo.name,
 					});
 				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
+		setDateRange([
+			moment(delegation.startDate, dateFormat),
+			moment(delegation.endDate, dateFormat),
+		]);
 	}, []);
 
 	return (

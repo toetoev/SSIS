@@ -38,16 +38,16 @@ namespace SSIS.Services
                             return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
                         }
                         else
-                            return new ApiResponse { Success = false, Message = "Someone is already delegated during the date range selected" };
+                            return new ApiResponse { Success = false, Message = "A delegate has already been selected during this date range selected" };
                     }
                     else
-                        return new ApiResponse { Success = false, Message = "Delegation start date should at least after now" };
+                        return new ApiResponse { Success = false, Message = "The delegation start date should be after the current date" };
                 }
                 else
-                    return new ApiResponse { Success = false, Message = "End date should be after start date" };
+                    return new ApiResponse { Success = false, Message = "The delegation end date should be after the start date" };
             }
             else
-                return new ApiResponse { Success = false, Message = "Department name of the DeptHead and the DeptStaff getting delegated MUST be the same." };
+                return new ApiResponse { Success = false, Message = "The Department Head and Department Employee being delegated must be in the same department" };
         }
 
         public async Task<ApiResponse> GetDelegation(string deptStaffEmail)

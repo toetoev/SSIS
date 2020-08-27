@@ -52,7 +52,7 @@ namespace SSIS.Services
                 if (requisitionItem.Need < 1)
                     return new ApiResponse { Success = false, Message = "Item requested should at least have one" };
                 requisitionItem.RequisitionId = requisition.Id;
-                requisitionItem.Actual = -1;
+                requisitionItem.Actual = 0;
             }
 
             requisition.RequisitionItems = requisitionItems;

@@ -27,9 +27,7 @@ namespace SSIS.Services
             {
                 RequisitionItem requisitionItemFromRepo = await _requisitionItemRepository.GetRequisitionItemByPK(requisitionItem.RequisitionId, requisitionItem.ItemId);
                 if (requisitionItemFromRepo != null)
-                {
                     requisitionItemsFromRepo.Add(requisitionItemFromRepo);
-                }
             }
             if (requisitionItemsFromRepo.Count() == requisitionItems.Count())
             {
@@ -46,9 +44,10 @@ namespace SSIS.Services
                 if (totalQtyRetrieved >= totalQtyDisbursed)
                 {
                     requisitionItemsFromRepo.First().Requisition.Status = RequisitionStatus.PENDING_COLLECTION;
-                    await _requisitionItemRepository.UpdateRequisitionItems();
+                    return new ApiResponse { Success = true, Data = await _requisitionItemRepository.UpdateRequisitionItems() };
                 }
-                return new ApiResponse { Success = false, Message = "Total quantity retrieved doesn't match total quantity disbursed" };
+                else
+                    return new ApiResponse { Success = false, Message = "Total quantity retrieved doesn't match total quantity disbursed" };
             }
             else
                 return new ApiResponse { Success = false, Message = "Cannot find all the items to be disbursed" };

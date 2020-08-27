@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SSIS.IRepositories;
@@ -46,7 +47,6 @@ namespace SSIS.Services
             return new ApiResponse { Success = true, Data = await _itemRepository.GetLowStockItems() };
         }
 
-        // TODO: test
         public async Task<ApiResponse> CreateItem(Item item)
         {
             Category categoryFromRepo = await _categoryRepository.GetCategoryByName(item.CategoryName);
@@ -60,8 +60,10 @@ namespace SSIS.Services
                         Item newItem = new Item { Id = Guid.NewGuid(), Bin = item.Bin, Description = item.Description, UoM = item.UoM, ReorderLevel = item.ReorderLevel, ReorderQty = item.ReorderQty, Stock = item.Stock, Category = categoryFromRepo };
                         if (item.SupplierTenderItems.Count() == 3)
                         {
+                            HashSet<Guid> supplierIdSet = new HashSet<Guid>();
                             foreach (var supplierTenderItem in item.SupplierTenderItems)
                             {
+                                supplierIdSet.Add(supplierTenderItem.SupplierId);
                                 Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierTenderItem.SupplierId);
                                 if (supplierFromRepo != null)
                                 {
@@ -74,6 +76,8 @@ namespace SSIS.Services
                                 if (supplierTenderItem.Price <= 0)
                                     return new ApiResponse { Success = false, Message = "Price should be a positive number" };
                             }
+                            if (supplierIdSet.Count() != 3)
+                                return new ApiResponse { Success = false, Message = "Please choose three different suppliers" };
                         }
                         else
                             return new ApiResponse { Success = false, Message = "Three suppliers infomation must be provided" };
@@ -107,11 +111,15 @@ namespace SSIS.Services
                     {
                         if (item.ReorderLevel >= 0 && item.ReorderQty >= 0 && item.Stock >= 0)
                         {
+                            HashSet<Guid> supplierIdSet = new HashSet<Guid>();
                             foreach (var newSupplyTenderItem in item.SupplierTenderItems)
                             {
+                                supplierIdSet.Add(newSupplyTenderItem.SupplierId);
                                 if (newSupplyTenderItem.Priority >= 1 && newSupplyTenderItem.Priority <= 3)
                                     isPriorityValid[newSupplyTenderItem.Priority - 1] = true;
                             }
+                            if (supplierIdSet.Count() != 3)
+                                return new ApiResponse { Success = false, Message = "Please choose three different suppliers" };
                             if (isPriorityValid.All(f => f == true))
                             {
                                 itemFromRepo.Category = categoryFromRepo;

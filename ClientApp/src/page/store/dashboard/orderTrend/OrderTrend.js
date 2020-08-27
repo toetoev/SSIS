@@ -162,7 +162,7 @@ export default function OrderTrend() {
 						<Form.Item label="Item Category" name="categories">
 							<Select
 								mode="multiple"
-								style={{ width: "500px" }}
+								style={{ width: "350px" }}
 								placeholder="Please select"
 								options={categoryOptions}
 							></Select>
