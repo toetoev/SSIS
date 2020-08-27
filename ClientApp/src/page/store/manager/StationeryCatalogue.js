@@ -1,11 +1,22 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table, Descriptions } from "antd";
-import React, { useEffect, useState } from "react";
-
-import Success from "../../component/Success";
+import {
+	Button,
+	Col,
+	Descriptions,
+	Form,
+	Input,
+	InputNumber,
+	Modal,
+	Row,
+	Select,
+	Space,
+	Table,
+} from "antd";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
+import Success from "../../component/Success";
 
 export default function StationeryCatalogue() {
 	const [dataSource, setDataSource] = useState([]);
@@ -158,21 +169,22 @@ const Add = ({ setLoading }) => {
 					description: description,
 					UoM: uoM,
 					bin: bin,
-					supplierTenderItems: [{
-						priority: 1,
-						supplierId: supplier1,
-						price: price1,
-					},
-					{
-						priority: 2,
-						supplierId: supplier2,
-						price: price2,
-					},
-					{
-						priority: 3,
-						supplierId: supplier3,
-						price: price3,
-					},
+					supplierTenderItems: [
+						{
+							priority: 1,
+							supplierId: supplier1,
+							price: price1,
+						},
+						{
+							priority: 2,
+							supplierId: supplier2,
+							price: price2,
+						},
+						{
+							priority: 3,
+							supplierId: supplier3,
+							price: price3,
+						},
 					],
 					reorderLevel: reorderLevel,
 					reorderQty: reorderQuantity,
@@ -198,7 +210,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	useEffect(() => {
@@ -412,8 +424,10 @@ const Add = ({ setLoading }) => {
 					<Row justify="space-between">
 						<Col span={11}>
 							<Form.Item
-								label="Stock Level" name="stock"
-								rules={[{ required: true, message: "Please fill current stock" }]}>
+								label="Stock Level"
+								name="stock"
+								rules={[{ required: true, message: "Please fill current stock" }]}
+							>
 								<InputNumber placeholder="0" style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
@@ -466,29 +480,19 @@ const Details = ({ text }) => {
 
 			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
-					<Descriptions.Item label="Description">
-						{item.description}
-					</Descriptions.Item>
+					<Descriptions.Item label="Description">{item.description}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Bin">
-						{item.bin}
-					</Descriptions.Item>
+					<Descriptions.Item label="Bin">{item.bin}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Category">
-						{item.categoryName}
-					</Descriptions.Item>
+					<Descriptions.Item label="Category">{item.categoryName}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Unit Of Measure">
-						{item.uoM}
-					</Descriptions.Item>
+					<Descriptions.Item label="Unit Of Measure">{item.uoM}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
-					<Descriptions.Item label="Reorder Level">
-						{item.reorderLevel}
-					</Descriptions.Item>
+					<Descriptions.Item label="Reorder Level">{item.reorderLevel}</Descriptions.Item>
 				</Descriptions>
 				<Descriptions>
 					<Descriptions.Item label="Reorder Quantity">
@@ -524,12 +528,27 @@ const Edit = ({ text, setLoading }) => {
 	const [description, setDescription] = useState(item.description);
 	const [bin, setBin] = useState(item.bin);
 	const [uoM, setUoM] = useState(item.uoM);
-	const [supplier1, setSupplier1] = useState((dataSource.slice(0, 1).map(data => data.key)).toString());
-	const [supplier2, setSupplier2] = useState((dataSource.slice(1, 2).map(data => data.key)).toString());
-	const [supplier3, setSupplier3] = useState((dataSource.slice(2, 3).map(data => data.key)).toString());
-	const [price1, setPrice1] = useState(Number(dataSource.slice(0, 1).map(data => data.price)));
-	const [price2, setPrice2] = useState(Number(dataSource.slice(1, 2).map(data => data.price)));
-	const [price3, setPrice3] = useState(Number(dataSource.slice(2, 3).map(data => data.price)));
+	const [supplier1, setSupplier1] = useState(
+		dataSource
+			.slice(0, 1)
+			.map((data) => data.key)
+			.toString()
+	);
+	const [supplier2, setSupplier2] = useState(
+		dataSource
+			.slice(1, 2)
+			.map((data) => data.key)
+			.toString()
+	);
+	const [supplier3, setSupplier3] = useState(
+		dataSource
+			.slice(2, 3)
+			.map((data) => data.key)
+			.toString()
+	);
+	const [price1, setPrice1] = useState(Number(dataSource.slice(0, 1).map((data) => data.price)));
+	const [price2, setPrice2] = useState(Number(dataSource.slice(1, 2).map((data) => data.price)));
+	const [price3, setPrice3] = useState(Number(dataSource.slice(2, 3).map((data) => data.price)));
 	const [reorderLevel, setReorderLevel] = useState(item.reorderLevel);
 	const [reorderQuantity, setReorderQuantity] = useState(item.reorderQty);
 
@@ -564,27 +583,26 @@ const Edit = ({ text, setLoading }) => {
 					description: description,
 					UoM: uoM,
 					bin: bin,
-					supplierTenderItems: [{
-						priority: 1,
-						supplierId: supplier1,
-						price: price1,
-					},
-					{
-						priority: 2,
-						supplierId: supplier2,
-						price: price2,
-					},
-					{
-						priority: 3,
-						supplierId: supplier3,
-						price: price3,
-					},
+					supplierTenderItems: [
+						{
+							priority: 1,
+							supplierId: supplier1,
+							price: price1,
+						},
+						{
+							priority: 2,
+							supplierId: supplier2,
+							price: price2,
+						},
+						{
+							priority: 3,
+							supplierId: supplier3,
+							price: price3,
+						},
 					],
 					reorderLevel: reorderLevel,
 					reorderQty: reorderQuantity,
 				};
-				console.log(data);
-
 				axios
 					.put("https://localhost:5001/api/item/" + item.id, data, {
 						headers: {
@@ -594,7 +612,6 @@ const Edit = ({ text, setLoading }) => {
 					})
 					.then((res) => {
 						const result = res.data;
-						console.log(result.data);
 						if (result.success) {
 							Success("Catalogue updated successfully");
 							setLoading(true);
@@ -603,7 +620,8 @@ const Edit = ({ text, setLoading }) => {
 						}
 					});
 			})
-			.catch((err) => { });
+			.catch((err) => {});
+		setVisible(false);
 	};
 
 	useEffect(() => {
@@ -654,12 +672,21 @@ const Edit = ({ text, setLoading }) => {
 			description: item.description,
 			reorderLevel: item.reorderLevel,
 			reorderQuantity: item.reorderQty,
-			supplier1: (dataSource.slice(0, 1).map(data => data.key)).toString(),
-			supplier2: (dataSource.slice(1, 2).map(data => data.key)).toString(),
-			supplier3: (dataSource.slice(2, 3).map(data => data.key)).toString(),
-			price1: Number(dataSource.slice(0, 1).map(data => data.price)),
-			price2: Number(dataSource.slice(1, 2).map(data => data.price)),
-			price3: Number(dataSource.slice(2, 3).map(data => data.price)),
+			supplier1: dataSource
+				.slice(0, 1)
+				.map((data) => data.key)
+				.toString(),
+			supplier2: dataSource
+				.slice(1, 2)
+				.map((data) => data.key)
+				.toString(),
+			supplier3: dataSource
+				.slice(2, 3)
+				.map((data) => data.key)
+				.toString(),
+			price1: Number(dataSource.slice(0, 1).map((data) => data.price)),
+			price2: Number(dataSource.slice(1, 2).map((data) => data.price)),
+			price3: Number(dataSource.slice(2, 3).map((data) => data.price)),
 		});
 	}, []);
 
@@ -685,86 +712,81 @@ const Edit = ({ text, setLoading }) => {
 				<Form form={form} layout="vertical" size="medium" onValuesChange={onValuesChange}>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								name="category"
-								label="Select Item Category">
+							<Form.Item name="category" label="Select Item Category">
 								<Select options={itemOptions} style={{ width: "100%" }}></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Bin" name="bin">
+							<Form.Item label="Bin" name="bin">
 								<Input />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								label="Unit of Measure" name="uoM">
+							<Form.Item label="Unit of Measure" name="uoM">
 								<Input />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Description" name="description">
+							<Form.Item label="Description" name="description">
 								<Input />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								name="supplier1"
-								label="Supplier 1">
-								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							<Form.Item name="supplier1" label="Supplier 1">
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Tender Price" name="price1">
+							<Form.Item label="Tender Price" name="price1">
 								<InputNumber style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								label="Supplier 2" name="supplier2">
-								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							<Form.Item label="Supplier 2" name="supplier2">
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Tender Price" name="price2">
+							<Form.Item label="Tender Price" name="price2">
 								<InputNumber style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								label="Supplier 3" name="supplier3">
-								<Select options={supplierOptions} style={{ width: "100%" }}></Select>
+							<Form.Item label="Supplier 3" name="supplier3">
+								<Select
+									options={supplierOptions}
+									style={{ width: "100%" }}
+								></Select>
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Tender Price" name="price3">
+							<Form.Item label="Tender Price" name="price3">
 								<InputNumber style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row justify="space-between">
 						<Col span={11}>
-							<Form.Item
-								label="Reorder Level" name="reorderLevel">
+							<Form.Item label="Reorder Level" name="reorderLevel">
 								<InputNumber style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 						<Col span={11}>
-							<Form.Item
-								label="Reorder Quantity" name="reorderQuantity">
+							<Form.Item label="Reorder Quantity" name="reorderQuantity">
 								<InputNumber style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>

@@ -27,9 +27,7 @@ namespace SSIS.Services
             {
                 RequisitionItem requisitionItemFromRepo = await _requisitionItemRepository.GetRequisitionItemByPK(requisitionItem.RequisitionId, requisitionItem.ItemId);
                 if (requisitionItemFromRepo != null)
-                {
                     requisitionItemsFromRepo.Add(requisitionItemFromRepo);
-                }
             }
             if (requisitionItemsFromRepo.Count() == requisitionItems.Count())
             {
