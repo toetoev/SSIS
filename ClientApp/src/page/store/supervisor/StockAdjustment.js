@@ -1,7 +1,6 @@
 import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import sorter from "../../../util/sorter";
 
 // IMPROVE: search bar
@@ -172,13 +171,13 @@ const StockAdjustmentModal = ({ text, setLoading }) => {
 				visible={visible}
 				onCancel={handleCancel}
 				footer={
-					stocks.status === "APPLIED" ? (
+					status === "APPLIED" ? (
 						<Space>
 							<Button type="danger" onClick={() => handleReview("REJECTED")}>
-								<a>Reject</a>
+								Reject
 							</Button>
 							<Button type="primary" onClick={() => handleReview("ISSUED")}>
-								<a>Issue</a>
+								Issue
 							</Button>
 						</Space>
 					) : null
@@ -192,7 +191,7 @@ const StockAdjustmentModal = ({ text, setLoading }) => {
 				<Descriptions>
 					<Descriptions.Item label="Submitted On">{stocks.submittedOn}</Descriptions.Item>
 				</Descriptions>
-				{stocks.status === "ISSUED" ? (
+				{status === "ISSUED" ? (
 					<>
 						<Descriptions>
 							<Descriptions.Item label="Issued By">

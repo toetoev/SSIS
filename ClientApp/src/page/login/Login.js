@@ -13,11 +13,6 @@ export default function Login() {
 	const [nameOrEmail, setNameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("");
-
-	const layout = {
-		labelCol: { span: 8 },
-		wrapperCol: { span: 16 },
-	};
 	const tailLayout = {
 		wrapperCol: { span: 24 },
 	};

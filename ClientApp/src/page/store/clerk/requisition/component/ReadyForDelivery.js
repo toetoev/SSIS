@@ -1,7 +1,6 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
 import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
@@ -43,7 +42,7 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
+				console.log("ReadyForDelivery -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {

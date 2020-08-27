@@ -18,10 +18,11 @@ namespace SSIS.Services
         private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
         private readonly IDeptRepository _deptRepository;
+        private readonly IDelegationRepository _delegationRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository, IRequisitionItemRepository requisitionItemRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository, IRequisitionItemRepository requisitionItemRepository, IDelegationRepository delegationRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
@@ -29,6 +30,7 @@ namespace SSIS.Services
             _retrievalRepository = retrievalRepository;
             _deptRepository = deptRepository;
             _requisitionItemRepository = requisitionItemRepository;
+            _delegationRepository = delegationRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -118,6 +120,21 @@ namespace SSIS.Services
                             itemFromRepo.Stock -= requisitionItem.Actual;
                         }
                         return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+                    }
+                    if (deptStaff.Role == DeptRole.Employee && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
+                    {
+                        if (await _delegationRepository.IsDelegated(email))
+                        {
+                            requisition.Status = status;
+                            requisition.ReviewedBy = deptStaff;
+                            requisition.ReviewedOn = DateTime.Now;
+                            requisition.Comment = comment;
+                            return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+
+                        }
+                        else
+                            return new ApiResponse { Success = false, Message = "Sorry, only delegated employee can review requisition" };
+
                     }
 
                 }

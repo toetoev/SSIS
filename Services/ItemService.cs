@@ -122,12 +122,17 @@ namespace SSIS.Services
                                 itemFromRepo.ReorderQty = item.ReorderQty;
                                 foreach (var supplierTenderItem in item.SupplierTenderItems)
                                 {
-                                    Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierTenderItem.Supplier.Id);
+                                    Supplier supplierFromRepo = await _supplierRepository.GetSupplierById(supplierTenderItem.SupplierId);
                                     if (supplierFromRepo != null)
                                     {
                                         SupplierTenderItem supplierTenderItemFromRepo = await _supplierTenderItemRepository.GetSupplierTenderItemByItemIdAndPriority(itemFromRepo.Id, supplierTenderItem.Priority);
-                                        supplierTenderItemFromRepo.Supplier = supplierFromRepo;
-                                        supplierTenderItemFromRepo.Price = supplierTenderItem.Price;
+                                        if (supplierTenderItemFromRepo != null)
+                                        {
+                                            supplierTenderItemFromRepo.Supplier = supplierFromRepo;
+                                            supplierTenderItemFromRepo.Price = supplierTenderItem.Price;
+                                        }
+                                        else
+                                            itemFromRepo.SupplierTenderItems.Add(supplierTenderItem);
                                     }
                                     if (supplierTenderItem.Price <= 0)
                                         return new ApiResponse { Success = false, Message = "Price should be a positive number" };

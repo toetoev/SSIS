@@ -1,11 +1,10 @@
 import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
+import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
-import axios from "axios";
-import moment from "moment";
 
 const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
@@ -57,7 +56,7 @@ export default function MaintainDelegation() {
 							return [
 								...rows,
 								{
-									key: [delegation.delegatedByEmail, delegation.startDate],
+									key: delegation.id,
 									startDate: delegation.startDate,
 									endDate: delegation.endDate,
 									delegatedTo: delegation.delegatedTo.name,
@@ -121,7 +120,7 @@ const Add = ({ setLoading }) => {
 		};
 
 		axios
-			.post("https://localhost:5001/api/delegation", data, {
+			.post(`https://localhost:5001/api/delegation`, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -232,7 +231,7 @@ const Edit = ({ text, setLoading }) => {
 			delegatedToEmail: delegatedTo,
 		};
 		axios
-			.put("https://localhost:5001/api/delegation", data, {
+			.put(`https://localhost:5001/api/delegation/${delegation.id}`, data, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					"Content-type": "application/json",
@@ -272,7 +271,7 @@ const Edit = ({ text, setLoading }) => {
 
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
-						delegatedTo: delegation.delegatedTo.email,
+						delegatedTo: delegatedTo,
 					});
 				}
 			})
@@ -324,7 +323,7 @@ const Delete = ({ text, setLoading }) => {
 	const handleDelete = () => {
 		Confirm("Are you sure about deleting this delegation?", "", () => {
 			axios
-				.delete("https://localhost:5001/api/delegation/" + delegation.startDate, {
+				.delete(`https://localhost:5001/api/delegation/${delegation.id}`, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 					},

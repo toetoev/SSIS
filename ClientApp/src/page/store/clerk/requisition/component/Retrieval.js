@@ -1,10 +1,9 @@
 import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import sorter from "../../../../../util/sorter";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
-import axios from "axios";
-import sorter from "../../../../../util/sorter";
 
 // IMPROVE: search bar
 export const Retrieval = ({ loading, setLoading }) => {
@@ -156,7 +155,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 	const handleConfirm = (e) => {
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.retrieved != -1)
+			if (item.retrieved !== -1)
 				data = [...data, { itemId: item.key, totalQtyRetrieved: item.retrieved }];
 		});
 		if (data.length === dataSource.length) {
