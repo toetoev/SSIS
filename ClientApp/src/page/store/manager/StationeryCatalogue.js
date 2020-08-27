@@ -13,15 +13,20 @@ import {
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
 
 export default function StationeryCatalogue() {
-	const [dataSource, setDataSource] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const { Search } = Input;
+	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["category", "description", "uoM", "reorderQuantity", "reorderLevel"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 
 	const columns = [
 		{
@@ -105,7 +110,7 @@ export default function StationeryCatalogue() {
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
+							onSearch={setKeyword}
 							style={{ width: 200 }}
 						/>
 						<Add setLoading={setLoading} />

@@ -1,11 +1,15 @@
 import { Button, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
 
-// IMPROVE: search bar
-export const ReadyForDelivery = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const ReadyForDelivery = ({ keyword }) => {
+	const options = {
+		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",

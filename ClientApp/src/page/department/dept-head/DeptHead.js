@@ -1,19 +1,23 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-
+import { ApartmentOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
+import React from "react";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navbar } from "../../component/Navbar";
+import Sidebar from "../../component/Sidebar";
 import MaintainDelegation from "./MaintainDelegation";
 import MaintainDept from "./MaintainDept";
-import { Navbar } from "../../component/Navbar";
-import React from "react";
 import ReviewRequisition from "./ReviewRequisition";
-import Sidebar from "../../component/Sidebar";
 
 const { Header, Sider, Content } = Layout;
 export default function DeptHead() {
 	let { path } = useRouteMatch();
 	// IMPROVE: customize icon
 	const items = [
-		{ to: `${path}/maintain-department`, title: "Maintain Department" },
+		{
+			to: `${path}/maintain-department`,
+			title: "Maintain Department",
+			icon: <ApartmentOutlined />,
+		},
 		{ to: `${path}`, title: "Review Requisition" },
 		{ to: `${path}/delegation`, title: "Delegation" },
 	];

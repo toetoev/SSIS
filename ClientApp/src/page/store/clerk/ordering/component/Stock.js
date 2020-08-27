@@ -5,12 +5,10 @@ import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
 
 export const Stock = ({ keyword }) => {
-	const [dataSource, setDataSource] = useState([]);
-	const [backupData, setBackupData] = useState([]);
 	const options = {
 		keys: ["category", "bin", "description", "uoM"],
 	};
-	useSearch({ keyword, options, dataSource, setDataSource, backupData, setBackupData });
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 	const [loading, setLoading] = useState(false);
 	const columns = [
 		{

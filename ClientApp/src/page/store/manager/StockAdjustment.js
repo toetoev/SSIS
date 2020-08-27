@@ -1,15 +1,19 @@
 import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
-
-import Error from "../../component/Error";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import sorter from "../../../util/sorter";
+import Error from "../../component/Error";
 
-// IMPROVE: search bar
 export default function StockAdjustment() {
 	const { Search } = Input;
-	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["submittedOn", "submittedBy", "issuedBy", "issuedOn"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Submitted On",
@@ -88,7 +92,7 @@ export default function StockAdjustment() {
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
+							onSearch={setKeyword}
 							style={{ width: 200 }}
 						/>
 					</Space>

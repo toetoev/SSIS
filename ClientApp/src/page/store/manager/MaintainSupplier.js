@@ -1,16 +1,21 @@
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Space, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import useSearch from "../../../hook/useSearch";
+import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
-import axios from "axios";
-import sorter from "../../../util/sorter";
 
 export default function MaintainSupplier() {
 	const { Search } = Input;
-	const [dataSource, setDataSource] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["supplierName", "contactName", "phone"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Supplier Name",
@@ -81,7 +86,7 @@ export default function MaintainSupplier() {
 					<Space>
 						<Search
 							placeholder="input search text"
-							onSearch={(value) => console.log(value)}
+							onSearch={setKeyword}
 							style={{ width: 200 }}
 						/>
 						<Add setLoading={setLoading} />
@@ -138,7 +143,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	const handleCancel = (e) => {
