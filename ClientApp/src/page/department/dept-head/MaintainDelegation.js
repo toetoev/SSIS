@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input, Modal, Row, Select, Space, Table } fro
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import sorter from "../../../util/sorter";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
@@ -16,18 +17,22 @@ export default function MaintainDelegation() {
 		{
 			title: "Start Date",
 			dataIndex: "startDate",
+			sorter: (a, b) => sorter(a.startDate, b.startDate),
 		},
 		{
 			title: "End Date",
 			dataIndex: "endDate",
+			sorter: (a, b) => sorter(a.endDate, b.endDate),
 		},
 		{
 			title: "Delegated To",
 			dataIndex: "delegatedTo",
+			sorter: (a, b) => sorter(a.delegatedTo, b.delegatedTo),
 		},
 		{
 			title: "Comment",
 			dataIndex: "comment",
+			sorter: (a, b) => sorter(a.comment, b.comment),
 		},
 		{
 			title: "Action",
