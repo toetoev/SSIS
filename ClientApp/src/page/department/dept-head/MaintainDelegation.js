@@ -205,7 +205,6 @@ const Add = ({ setLoading }) => {
 const Edit = ({ text, setLoading }) => {
 	const delegation = text.action;
 	const [form] = Form.useForm();
-
 	const [dateRange, setDateRange] = useState([]);
 	const [delegatedTo, setDelegatedTo] = useState("");
 	const [visible, setVisible] = useState(false);
@@ -226,8 +225,8 @@ const Edit = ({ text, setLoading }) => {
 
 	const handleSubmit = () => {
 		let data = {
-			startDate: dateRange[0],
-			endDate: dateRange[1],
+			startDate: moment(dateRange[0], dateFormat),
+			endDate: moment(dateRange[1], dateFormat),
 			delegatedToEmail: delegatedTo,
 		};
 		axios
@@ -268,7 +267,6 @@ const Edit = ({ text, setLoading }) => {
 							[]
 						)
 					);
-
 					setDelegatedTo(delegation.delegatedTo.email);
 					form.setFieldsValue({
 						delegatedTo: delegatedTo,
@@ -278,6 +276,10 @@ const Edit = ({ text, setLoading }) => {
 			.catch(function (error) {
 				console.log(error);
 			});
+		setDateRange([
+			moment(delegation.startDate, dateFormat),
+			moment(delegation.endDate, dateFormat),
+		]);
 	}, []);
 
 	return (

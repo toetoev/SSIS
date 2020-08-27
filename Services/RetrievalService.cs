@@ -91,8 +91,11 @@ namespace SSIS.Services
                             retrievalItem.TotalQtyRetrieved = retrievalItemInput.TotalQtyRetrieved;
                             List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId, itemFromRepo.Id);
                             foreach (var requisition in requisitions)
+                            {
                                 foreach (var item in requisition.RequisitionItems)
                                     item.Actual = -1;
+                                requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
+                            }
                             await _retrievalRepository.UpdateRetrieval();
                         }
                         else

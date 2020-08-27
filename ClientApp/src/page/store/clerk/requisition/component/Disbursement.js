@@ -2,6 +2,7 @@ import { Button, InputNumber, Modal, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import sorter from "../../../../../util/sorter";
+import Success from "../../../../component/Success";
 
 // IMPROVE: search bar
 export const Disbursement = ({ loading, setLoading }) => {
@@ -137,8 +138,10 @@ const DisburseModal = ({ text, setLoading }) => {
 				})
 				.then((res) => {
 					const result = res.data;
-					if (result.success) setLoading(true);
-					else Error(result.message);
+					if (result.success) {
+						Success("Done item disbursement");
+						setLoading(true);
+					} else Error(result.message);
 				});
 			setVisible(false);
 		} else Error("Please enter disbursed quantity for all the items");
@@ -180,7 +183,7 @@ const DisburseModal = ({ text, setLoading }) => {
 					console.log(error);
 				});
 		} else setDisable(true);
-	}, []);
+	}, [visible]);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal} disabled={disable}>

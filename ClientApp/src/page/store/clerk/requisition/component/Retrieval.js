@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import sorter from "../../../../../util/sorter";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
+import Success from "../../../../component/Success";
 
 // IMPROVE: search bar
 export const Retrieval = ({ loading, setLoading }) => {
@@ -146,6 +147,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 				.then((res) => {
 					const result = res.data;
 					if (result.success) {
+						Success("Retrieval list deleted");
 						setLoading(true);
 					} else Error(result.message);
 				});

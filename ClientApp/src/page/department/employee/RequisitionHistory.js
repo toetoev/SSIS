@@ -192,7 +192,7 @@ const RequisitionModal = ({ text, setLoading }) => {
 				console.log(error);
 			});
 	}, []);
-	// TODO: authorized people can review requisition (api not done yet)
+
 	return (
 		<div>
 			<Button type="primary" onClick={showModal}>

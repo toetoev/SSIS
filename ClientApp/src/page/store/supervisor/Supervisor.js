@@ -1,20 +1,18 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-
-import Dashboard from "../dashboard/Dashboard";
 import { Layout } from "antd";
-import { Navbar } from "../../component/Navbar";
 import React from "react";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navbar } from "../../component/Navbar";
 import Sidebar from "../../component/Sidebar";
+import Dashboard from "../dashboard/Dashboard";
 import StockAdjustment from "./StockAdjustment";
 
 const { Header, Sider, Content } = Layout;
-// IMPROVE: make default page to be stock adjustment
 export default function Supervisor() {
 	let { path } = useRouteMatch();
 	// IMPROVE: customize icon
 	const items = [
-		{ to: `${path}`, title: "Dashboard" },
-		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
+		{ to: `${path}/dashboard`, title: "Dashboard" },
+		{ to: `${path}`, title: "Stock Adjustment" },
 	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
@@ -24,10 +22,10 @@ export default function Supervisor() {
 			<Layout>
 				<Sider width={200} className="site-layout-background">
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/dashboard`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
-						<Route exact path={`${path}/stock-adjustment`}>
+						<Route exact path={`${path}`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
 					</Switch>
@@ -41,10 +39,10 @@ export default function Supervisor() {
 					}}
 				>
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/dashboard`}>
 							<Dashboard></Dashboard>
 						</Route>
-						<Route exact path={`${path}/stock-adjustment`}>
+						<Route exact path={`${path}`}>
 							<StockAdjustment></StockAdjustment>
 						</Route>
 					</Switch>

@@ -1,7 +1,6 @@
 import { Button, Descriptions, Modal, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
@@ -106,6 +105,8 @@ export default function AcknowledgeRequisition() {
 
 const AcknowledgementModal = ({ text, setLoading }) => {
 	const requisition = text.action;
+	const [status, setStatus] = useState(requisition.status);
+	const [visible, setVisible] = useState(false);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, acknowledge) => {
 			return [
@@ -114,15 +115,19 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 					key: acknowledge.itemId,
 					itemDescription: acknowledge.item.description,
 					requestedQty: acknowledge.need,
-					receivedQty: acknowledge.actual,
-					unfulfilledQty: acknowledge.need - acknowledge.actual,
+					receivedQty:
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? acknowledge.actual
+							: null,
+					unfulfilledQty:
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? acknowledge.need - acknowledge.actual
+							: null,
 				},
 			];
 		}, [])
 	);
-	const [status, setStatus] = useState(requisition.status);
-	const [visible, setVisible] = useState(false);
-	// IMPROVE: conditional render column based on status
+
 	const columns = [
 		{
 			title: "Item Description",
