@@ -1,8 +1,9 @@
 import { Button, Modal, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
+
+import axios from "axios";
 import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Completed = ({ keyword }) => {
 	const options = {
@@ -47,7 +48,6 @@ export const Completed = ({ keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Completed -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {

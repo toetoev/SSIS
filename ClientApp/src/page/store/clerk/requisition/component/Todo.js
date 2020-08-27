@@ -1,10 +1,11 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
+
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Todo = ({ loading, setLoading, keyword }) => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -50,7 +51,6 @@ export const Todo = ({ loading, setLoading, keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Todo -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {

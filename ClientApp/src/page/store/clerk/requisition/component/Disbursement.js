@@ -1,9 +1,10 @@
 import { Button, InputNumber, Modal, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
+
 import Success from "../../../../component/Success";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Disbursement = ({ loading, setLoading, keyword }) => {
 	const options = {
@@ -37,7 +38,6 @@ export const Disbursement = ({ loading, setLoading, keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Disbursement -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, retrieval) => {

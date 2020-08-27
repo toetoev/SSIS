@@ -1,8 +1,9 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
+
+import axios from "axios";
 import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const ReadyForDelivery = ({ keyword }) => {
 	const options = {
@@ -46,7 +47,6 @@ export const ReadyForDelivery = ({ keyword }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("ReadyForDelivery -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -78,7 +78,6 @@ export const ReadyForDelivery = ({ keyword }) => {
 
 const ReadyForDeliveryModal = ({ text }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [

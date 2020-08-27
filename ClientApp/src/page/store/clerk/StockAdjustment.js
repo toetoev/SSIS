@@ -1,10 +1,11 @@
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
-import sorter from "../../../util/sorter";
+
 import Confirm from "../../component/Confirm";
 import Success from "../../component/Success";
+import axios from "axios";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
 export default function StockAdjustment() {
 	const { Search } = Input;
@@ -58,7 +59,6 @@ export default function StockAdjustment() {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					console.log(result);
 					setDataSource(
 						result.data.reduce((rows, stocks) => {
 							return [

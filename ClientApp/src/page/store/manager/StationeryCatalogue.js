@@ -11,13 +11,14 @@ import {
 	Space,
 	Table,
 } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
-import sorter from "../../../util/sorter";
+
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
+import axios from "axios";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
 export default function StationeryCatalogue() {
 	const { Search } = Input;
@@ -205,7 +206,6 @@ const Add = ({ setLoading }) => {
 					})
 					.then((res) => {
 						const result = res.data;
-						console.log(result);
 						if (result.success) {
 							Success("Supplier created successfully");
 							setLoading(true);

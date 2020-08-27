@@ -94,7 +94,6 @@ const Add = ({ dataSource, handleDataChange }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setPopularItems(
 						result.data.reduce((items, item) => {

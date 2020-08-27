@@ -1,11 +1,12 @@
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
-import sorter from "../../../util/sorter";
+
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
+import axios from "axios";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
 export default function MaintainSupplier() {
 	const { Search } = Input;
@@ -133,7 +134,6 @@ const Add = ({ setLoading }) => {
 					})
 					.then((res) => {
 						const result = res.data;
-						console.log(result);
 						if (result.success) {
 							Success("Supplier created successfully");
 							setLoading(true);
@@ -284,7 +284,6 @@ const Details = ({ text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Details -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, supplierTender) => {
@@ -405,7 +404,6 @@ const Edit = ({ setLoading, text }) => {
 		if (val.address) setAddress(val.address);
 		if (val.fax) setFax(val.fax);
 	};
-	console.log(supplier);
 	useEffect(() => {
 		form.setFieldsValue({
 			name: supplier.name,

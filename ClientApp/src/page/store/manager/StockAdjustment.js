@@ -1,9 +1,10 @@
 import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
-import sorter from "../../../util/sorter";
+
 import Error from "../../component/Error";
+import axios from "axios";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
 export default function StockAdjustment() {
 	const { Search } = Input;
@@ -157,7 +158,6 @@ const StockAdjustmentModal = ({ text, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setLoading(true);
 					setStatus(reviewResult);

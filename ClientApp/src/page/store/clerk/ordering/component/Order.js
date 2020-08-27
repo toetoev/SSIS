@@ -1,11 +1,12 @@
 import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
-import toTitleCase from "../../../../../util/toTitleCase";
+
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import toTitleCase from "../../../../../util/toTitleCase";
+import useSearch from "../../../../../hook/useSearch";
 
 export const Order = ({ loading, setLoading, keyword }) => {
 	const options = {
@@ -115,7 +116,6 @@ const OrderModal = ({ text, setLoading }) => {
 		}, [])
 	);
 	const onChange = (val, row) => {
-		console.log(val, row);
 		const newData = [...dataSource];
 		const index = dataSource.findIndex((item) => row.key === item.key);
 		newData[index].deliveredQty = val;
@@ -189,7 +189,6 @@ const OrderModal = ({ text, setLoading }) => {
 					{ itemId: item.key, deliveredQty: item.deliveredQty, remarks: item.remarks },
 				];
 		});
-		console.log(data);
 		if (data.length === dataSource.length) {
 			axios
 				.put("https://localhost:5001/api/order/" + order.id, data, {
@@ -200,7 +199,6 @@ const OrderModal = ({ text, setLoading }) => {
 				})
 				.then((res) => {
 					const result = res.data;
-					console.log("handleSubmit -> result", result);
 					if (result.success) {
 						setLoading(true);
 						setVisible(false);
