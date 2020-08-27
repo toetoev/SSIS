@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SSIS.IRepositories;
 using SSIS.IService;
@@ -39,13 +40,9 @@ namespace SSIS.Services
                     foreach (var requisitionItem in requisition.RequisitionItems)
                     {
                         if (totalItemQty.ContainsKey(requisitionItem.ItemId))
-                        {
                             totalItemQty[requisitionItem.ItemId] += requisitionItem.Need;
-                        }
                         else
-                        {
                             totalItemQty.Add(requisitionItem.ItemId, requisitionItem.Need);
-                        }
                     }
                 }
                 else
@@ -53,9 +50,7 @@ namespace SSIS.Services
 
             }
             foreach (var itemId in totalItemQty.Keys)
-            {
                 retrievalItems.Add(new RetrievalItem { ItemId = itemId, TotalQtyNeeded = totalItemQty[itemId], TotalQtyRetrieved = -1 });
-            }
             Retrieval retrieval = new Retrieval { Id = retrievalId, CreatedBy = storeStaff, CreatedOn = DateTime.Now, RetrievalItems = retrievalItems };
             return new ApiResponse { Success = true, Data = await _retrievalRepository.CreateRetrieval(retrieval) };
         }
@@ -94,6 +89,10 @@ namespace SSIS.Services
                         if (retrievalItemInput.TotalQtyRetrieved <= itemFromRepo.Stock)
                         {
                             retrievalItem.TotalQtyRetrieved = retrievalItemInput.TotalQtyRetrieved;
+                            List<Requisition> requisitions = await _requisitionRepository.GetRequisitionsByRetrievalId(retrievalId, itemFromRepo.Id);
+                            foreach (var requisition in requisitions)
+                                foreach (var item in requisition.RequisitionItems)
+                                    item.Actual = -1;
                             await _retrievalRepository.UpdateRetrieval();
                         }
                         else
