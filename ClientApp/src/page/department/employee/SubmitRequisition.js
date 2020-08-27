@@ -129,6 +129,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 						},
 					]);
 				}
+				form.resetFields();
 				setVisible(false);
 			})
 			.catch((err) => { });
@@ -196,7 +197,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 						label="Item Description : "
 						rules={[{ required: true, message: "Please choose one item" }]}
 					>
-						<Select options={itemOptions} style={{ width: "100%" }}></Select>
+						<Select options={itemOptions} style={{ width: "100%" }} placeholder="Select one item"></Select>
 					</Form.Item>
 					<Form.Item
 						name="quantity"

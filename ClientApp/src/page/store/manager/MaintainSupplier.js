@@ -137,13 +137,14 @@ const Add = ({ setLoading }) => {
 						if (result.success) {
 							Success("Supplier created successfully");
 							setLoading(true);
+							form.resetFields();
 						} else {
 							Error(result.message);
 						}
 					});
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
 	};
 
 	const handleCancel = (e) => {
