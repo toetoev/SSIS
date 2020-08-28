@@ -1,10 +1,12 @@
 import { Button, Col, Descriptions, Divider, Input, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
+
+import Error from "../../component/Error";
+import axios from "axios";
+import email from "../../../util/email";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
-import Error from "../../component/Error";
+import useSearch from "../../../hook/useSearch";
 
 export default function ReviewRequisition() {
 	const { Search } = Input;
@@ -173,6 +175,11 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				if (result.success) {
 					setLoading(true);
 					setStatus(reviewResult);
+					email(
+						requisition.requestedBy.email,
+						requisition.requestedBy.name,
+						`I've ${reviewResult.toLowerCase()} your requisition. Please check.`
+					);
 				} else Error(result.message);
 			});
 		setVisible(false);

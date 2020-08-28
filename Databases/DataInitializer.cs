@@ -34,12 +34,8 @@ namespace SSIS.Databases
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "Kai Huei", Email = "kaihueiboss@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
-
-                new DeptStaff { Name = "ABC", Email = "abc@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "DEF", Email = "def@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "GHI", Email = "ghi@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "Meka", Email = "pranammeka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "Kai Huei", Email = "taihuei0114@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -52,9 +48,9 @@ namespace SSIS.Databases
         {
             ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
             {
-                new StoreStaff { Name = "Win", Email = "win@gmail.com", Password = "1", Role = "CLERK" },
-                new StoreStaff { Name = "Kai", Email = "kai@gmail.com", Password = "1", Role = "SUPERVISOR" },
-                new StoreStaff { Name = "Zana", Email = "zana@gmail.com", Password = "1", Role = "MANAGER" }
+                new StoreStaff { Name = "Win", Email = "hkw1996@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "Chris", Email = "christophercolinfong@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "Zana", Email = "yuzanayushwe@gmail.com", Password = "1", Role = "MANAGER" }
             };
             foreach (var storeStaff in storeStaffs)
             {

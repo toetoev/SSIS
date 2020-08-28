@@ -44,7 +44,7 @@ export const Disbursement = ({ loading, setLoading, keyword }) => {
 							return [
 								...rows,
 								{
-									key: retrieval.retrievalId,
+									key: `${retrieval.retrievalId} ${retrieval.itemId}`,
 									retrievedItem: retrieval.item.description,
 									amountRetrieved:
 										retrieval.totalQtyRetrieved === -1
@@ -187,7 +187,7 @@ const DisburseModal = ({ text, setLoading }) => {
 					console.log(error);
 				});
 		} else setDisable(true);
-	}, [visible]);
+	}, []);
 	return (
 		<div>
 			<Button type="primary" onClick={showModal} disabled={disable}>

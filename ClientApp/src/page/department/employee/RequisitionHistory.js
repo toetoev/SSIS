@@ -1,9 +1,10 @@
 import { Button, Col, Descriptions, Divider, Input, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
+
+import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
+import useSearch from "../../../hook/useSearch";
 
 export default function RequisitionHistory() {
 	const { Search } = Input;
@@ -123,6 +124,10 @@ export default function RequisitionHistory() {
 
 const RequisitionModal = ({ text, setLoading }) => {
 	const requisition = text.action;
+	const [status, setStatus] = useState(requisition.status);
+	const [isDelegated, setIsDelegated] = useState(false);
+	const [visible, setVisible] = useState(false);
+	const [rejectReason, setRejectReason] = useState("");
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [
@@ -131,19 +136,18 @@ const RequisitionModal = ({ text, setLoading }) => {
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
 					requestedQty: requisitionItem.need,
-					receivedQty: requisitionItem.actual === -1 ? null : requisitionItem.actual,
+					receivedQty:
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? requisitionItem.actual
+							: null,
 					unfulfilledQty:
-						requisitionItem.actual === -1
-							? null
-							: requisitionItem.need - requisitionItem.actual,
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? requisitionItem.need - requisitionItem.actual
+							: null,
 				},
 			];
 		}, [])
 	);
-	const [status, setStatus] = useState(requisition.status);
-	const [isDelegated, setIsDelegated] = useState(false);
-	const [visible, setVisible] = useState(false);
-	const [rejectReason, setRejectReason] = useState("");
 	const columns = [
 		{
 			title: "Item Description",

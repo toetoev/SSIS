@@ -1,9 +1,10 @@
 import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../hook/useSearch";
+
+import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
+import useSearch from "../../../hook/useSearch";
 
 export default function AcknowledgeRequisition() {
 	const { Search } = Input;
@@ -206,17 +207,17 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-							<Button key="cancel" type="danger" onClick={hideModal}>
-								Cancel
+								<Button key="cancel" type="danger" onClick={hideModal}>
+									Cancel
 								</Button>,
-							<Button
-								key="acknowledge"
-								type="primary"
-								onClick={handleAcknowledge}
-							>
-								Acknowledge
+								<Button
+									key="acknowledge"
+									type="primary"
+									onClick={handleAcknowledge}
+								>
+									Acknowledge
 								</Button>,
-						]
+						  ]
 						: null
 				}
 			>
