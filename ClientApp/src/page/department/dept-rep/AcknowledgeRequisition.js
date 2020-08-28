@@ -1,15 +1,18 @@
-import { Button, Descriptions, Modal, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
+import { Button, Col, Descriptions, Input, Modal, Row, Space, Table } from "antd";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../hook/useSearch";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";
 
-// IMPROVE: add search bar
 export default function AcknowledgeRequisition() {
-	const [dataSource, setDataSource] = useState([]);
+	const { Search } = Input;
 	const [loading, setLoading] = useState(true);
-	// IMPROVE: make sorter work
+	const [keyword, setKeyword] = useState("");
+	const options = {
+		keys: ["requestedDate", "reviewedBy", "reviewedDate", "acknowledgedBy"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 	const columns = [
 		{
 			title: "Requested Date",
@@ -19,27 +22,27 @@ export default function AcknowledgeRequisition() {
 		{
 			title: "Reviewed By",
 			dataIndex: "reviewedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedBy, b.reviewedBy),
 		},
 		{
 			title: "Reviewed Date",
 			dataIndex: "reviewedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.reviewedDate, b.reviewedDate),
 		},
 		{
 			title: "Acknowledged By",
 			dataIndex: "acknowledgedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedBy, b.acknowledgedBy),
 		},
 		{
 			title: "Acknowledged Date",
 			dataIndex: "acknowledgedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.acknowledgedDate, b.acknowledgedDate),
 		},
 		{
 			title: "Status",
 			dataIndex: "status",
-			sorter: true,
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
@@ -84,7 +87,6 @@ export default function AcknowledgeRequisition() {
 				}
 				setLoading(false);
 			})
-
 			.catch(function (error) {
 				setLoading(false);
 				console.log(error);
@@ -93,7 +95,20 @@ export default function AcknowledgeRequisition() {
 
 	return (
 		<Space direction="vertical">
-			<h3>Requisition History</h3>
+			<Row justify="space-between">
+				<Col>
+					<h3>Requisition History</h3>
+				</Col>
+				<Col>
+					<Space>
+						<Search
+							placeholder="input search text"
+							onSearch={setKeyword}
+							style={{ width: 200 }}
+						/>
+					</Space>
+				</Col>
+			</Row>
 			<Table
 				loading={loading}
 				dataSource={dataSource}
@@ -108,6 +123,8 @@ export default function AcknowledgeRequisition() {
 
 const AcknowledgementModal = ({ text, setLoading }) => {
 	const requisition = text.action;
+	const [status, setStatus] = useState(requisition.status);
+	const [visible, setVisible] = useState(false);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, acknowledge) => {
 			return [
@@ -116,15 +133,18 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 					key: acknowledge.itemId,
 					itemDescription: acknowledge.item.description,
 					requestedQty: acknowledge.need,
-					receivedQty: acknowledge.actual,
-					unfulfilledQty: acknowledge.need - acknowledge.actual,
+					receivedQty:
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? acknowledge.actual
+							: null,
+					unfulfilledQty:
+						status === "PENDING_COLLECTION" || status === "DELIVERED"
+							? acknowledge.need - acknowledge.actual
+							: null,
 				},
 			];
 		}, [])
 	);
-	const [status, setStatus] = useState(requisition.status);
-	const [visible, setVisible] = useState(false);
-	// IMPROVE: conditional render column based on status
 	const columns = [
 		{
 			title: "Item Description",
@@ -143,12 +163,15 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 			dataIndex: "unfulfilledQty",
 		},
 	];
+
 	const showModal = () => {
 		setVisible(true);
 	};
+
 	const hideModal = (e) => {
 		setVisible(false);
 	};
+
 	const handleAcknowledge = (e) => {
 		axios
 			.put(
@@ -183,17 +206,17 @@ const AcknowledgementModal = ({ text, setLoading }) => {
 				footer={
 					status === "PENDING_COLLECTION"
 						? [
-								<Button key="cancel" type="danger" onClick={hideModal}>
-									Cancel
+							<Button key="cancel" type="danger" onClick={hideModal}>
+								Cancel
 								</Button>,
-								<Button
-									key="acknowledge"
-									type="primary"
-									onClick={handleAcknowledge}
-								>
-									Acknowledge
+							<Button
+								key="acknowledge"
+								type="primary"
+								onClick={handleAcknowledge}
+							>
+								Acknowledge
 								</Button>,
-						  ]
+						]
 						: null
 				}
 			>

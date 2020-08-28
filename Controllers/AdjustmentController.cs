@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -25,20 +25,19 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetAllAdjustments()
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetAdjustmentByStoreStaff()
         {
-            return Ok(_adjustmentService.GetAllAdjustments().Result);
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_adjustmentService.GetAdjustmentByStoreStaff(email).Result);
         }
-
-        // TODO: GetAdjustmentByStoreStaff [Manager, Supervisor] return according to total price $250
 
         [HttpPost("")]
         [Authorize(Roles = StoreRole.Clerk + "," + StoreRole.Manager)]
-        //  remarks and a List<AdjustmentItem> adjustmentItems
-        public IActionResult CreateAdjustment([FromBody] Adjustment adjustment)
+        public IActionResult CreateAdjustment([FromBody] List<AdjustmentItem> adjustmentItems)
         {
             string submittedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustment).Result);
+            return Ok(_adjustmentService.CreateAdjustment(submittedByEmail, adjustmentItems).Result);
         }
 
         [HttpPut("{adjustmentId}")]

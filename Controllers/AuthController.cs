@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Repositories;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -29,7 +29,6 @@ namespace SSIS.Controllers
         [HttpPost("")]
         public IActionResult Login([FromBody] User user)
         {
-            System.Console.WriteLine(user.ToString());
             return Ok(_authService.Login(user).Result);
         }
     }

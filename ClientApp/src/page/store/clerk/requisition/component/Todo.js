@@ -1,35 +1,39 @@
-import { Button, Descriptions, Modal, Row, Space, Table } from "antd";
+import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-// IMPROVE: add search bar
-export const Todo = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
+export const Todo = ({ loading, setLoading, keyword }) => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-	// IMPROVE: make sorter work
+	const options = {
+		keys: ["category", "description", "uoM"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
-			sorter: (a, b) => a - b,
+			sorter: (a, b) => sorter(a.departmentName, b.departmentName),
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
-			sorter: true,
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
-			sorter: true,
+			sorter: (a, b) => sorter(a.collectionPoint, b.collectionPoint),
 		},
 		{
 			title: "Action",
@@ -47,7 +51,6 @@ export const Todo = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -171,14 +174,6 @@ const TodoModal = ({ text }) => {
 				View
 			</Button>
 			<Modal title="Requisition Details" visible={visible} onCancel={hideModal} footer={null}>
-				<Descriptions>
-					<Descriptions.Item label="Collection Point">
-						{requisition.department.collectionPointId}
-					</Descriptions.Item>
-				</Descriptions>
-				<Descriptions>
-					<Descriptions.Item label="Requested Items"></Descriptions.Item>
-				</Descriptions>
 				<Table
 					dataSource={dataSource}
 					columns={columns}

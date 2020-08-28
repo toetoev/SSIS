@@ -3,20 +3,23 @@ import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
+import { PlusOutlined } from "@ant-design/icons";
 import Success from "../../component/Success";
 import axios from "axios";
+import sorter from "../../../util/sorter";
 
 export default function SubmitRequisition() {
 	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: add sorter to all field
 	const columns = [
 		{
 			title: "Product Description",
 			dataIndex: "description",
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "Quantity",
 			dataIndex: "quantity",
+			sorter: (a, b) => sorter(a.quantity, b.quantity),
 		},
 		{
 			title: "Action",
@@ -25,37 +28,30 @@ export default function SubmitRequisition() {
 				<Space>
 					<Delete
 						dataSource={dataSource}
-						handleDataChange={handleDataChange}
+						handleDataChange={(data) => setDataSource(data)}
 						text={text}
 					></Delete>
 				</Space>
 			),
 		},
 	];
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 	return (
 		<Space direction="vertical" style={{ width: "100%" }}>
 			<h3>Submit Requisition</h3>
-			{/* // TODO: recommendation */}
 			<Row justify="space-between">
-				<Col>
-					<Space>
-						<Button type="primary">Stapler</Button>
-						<Button type="primary">Tray</Button>
-						<Button type="primary">Clip</Button>
-					</Space>
-				</Col>
-				<Col>
-					<Add dataSource={dataSource} handleDataChange={handleDataChange} />
-				</Col>
+				<Add dataSource={dataSource} handleDataChange={(data) => setDataSource(data)} />
 			</Row>
 			<Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />
 			<Row justify="end">
 				<Space>
-					<Clear dataSource={dataSource} handleDataChange={handleDataChange}></Clear>
-					<Submit dataSource={dataSource} handleDataChange={handleDataChange} />
+					<Clear
+						dataSource={dataSource}
+						handleDataChange={(data) => setDataSource(data)}
+					></Clear>
+					<Submit
+						dataSource={dataSource}
+						handleDataChange={(data) => setDataSource(data)}
+					/>
 				</Space>
 			</Row>
 		</Space>
@@ -68,10 +64,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 	const [quantity, setQuantity] = useState(0);
 	const [visible, setVisible] = useState(false);
 	const [itemOptions, setItemOptions] = useState([]);
-
-	const showModal = () => {
-		setVisible(true);
-	};
+	const [popularItems, setPopularItems] = useState([]);
 
 	useEffect(() => {
 		axios
@@ -86,6 +79,25 @@ const Add = ({ dataSource, handleDataChange }) => {
 					setItemOptions(
 						result.data.reduce((options, item) => {
 							return [...options, { label: item.description, value: item.id }];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		axios
+			.get("https://localhost:5001/api/requisition/popular", {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+				},
+			})
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setPopularItems(
+						result.data.reduce((items, item) => {
+							return [...items, { id: item.id, description: item.description }];
 						}, [])
 					);
 				}
@@ -117,13 +129,26 @@ const Add = ({ dataSource, handleDataChange }) => {
 						},
 					]);
 				}
+				form.resetFields();
 				setVisible(false);
 			})
-			.catch((err) => {});
+			.catch((err) => { });
+	};
+
+	const showModal = () => {
+		setVisible(true);
 	};
 
 	const handleCancel = (e) => {
 		setVisible(false);
+	};
+
+	const showPopularItem = (id) => {
+		form.setFieldsValue({
+			item: id,
+		});
+		setItem(id);
+		setVisible(true);
 	};
 
 	const onValuesChange = (val) => {
@@ -133,9 +158,25 @@ const Add = ({ dataSource, handleDataChange }) => {
 
 	return (
 		<>
-			<Button type="primary" onClick={showModal}>
-				Add
-			</Button>
+			<Col>
+				<Space>
+					{popularItems.map((item) => (
+						<Button
+							type="primary"
+							key={item.id}
+							onClick={() => showPopularItem(item.id)}
+							icon={<PlusOutlined />}
+						>
+							{item.description}
+						</Button>
+					))}
+				</Space>
+			</Col>
+			<Col>
+				<Button type="primary" onClick={showModal}>
+					Add
+				</Button>
+			</Col>
 			<Modal
 				title="Stationery Catalogue"
 				visible={visible}
@@ -156,7 +197,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 						label="Item Description : "
 						rules={[{ required: true, message: "Please choose one item" }]}
 					>
-						<Select options={itemOptions} style={{ width: "100%" }}></Select>
+						<Select options={itemOptions} style={{ width: "100%" }} placeholder="Select one item"></Select>
 					</Form.Item>
 					<Form.Item
 						name="quantity"
@@ -166,12 +207,10 @@ const Add = ({ dataSource, handleDataChange }) => {
 								required: true,
 								type: "number",
 								transform: (val) => Number(val),
-								min: 1,
-								message: "Please choose at least one item",
 							},
 						]}
 					>
-						<Input type="number" placeholder="0" />
+						<Input type="number" placeholder="0" min={1} />
 					</Form.Item>
 				</Form>
 			</Modal>

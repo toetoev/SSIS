@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Repositories
@@ -25,6 +27,11 @@ namespace SSIS.Repositories
             if (await _dbContext.Departments.AnyAsync(x => x.Name == deptName))
                 return true;
             return false;
+        }
+
+        public async Task<List<Department>> GetAllDepartment()
+        {
+            return await _dbContext.Departments.ToListAsync();
         }
 
         public async Task<Department> GetDepartment(string name)

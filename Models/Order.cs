@@ -7,6 +7,7 @@ using SSIS.Utils;
 
 namespace SSIS.Models
 {
+    [ToString]
     public class Order
     {
         [Key]
@@ -15,14 +16,13 @@ namespace SSIS.Models
         public Guid SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime OrderedOn { get; set; }
 
-        [Required]
         public string OrderedByEmail { get; set; }
         public virtual StoreStaff OrderedBy { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public Nullable<DateTime> ReceivedOn { get; set; }
         public string ReceivedByEmail { get; set; }
         public virtual StoreStaff ReceivedBy { get; set; }

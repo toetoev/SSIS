@@ -18,9 +18,7 @@ namespace SSIS.Databases
         public void Seed()
         {
             _dbContext.Database.EnsureDeleted();
-            System.Console.WriteLine("Start Creating Model");
             _dbContext.Database.EnsureCreated();
-            System.Console.WriteLine("Finish Creating Model");
             SeedCollectionPoint();
             SeedDepartment();
             SeedDeptStaff();
@@ -28,7 +26,6 @@ namespace SSIS.Databases
             SeedSupplier();
             SeedCategory();
             SeedItem();
-            System.Console.WriteLine("Finish Seeding");
         }
 
         private void SeedDeptStaff()
@@ -70,9 +67,9 @@ namespace SSIS.Databases
         {
             ICollection<Item> items = new List<Item>
             {
-                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
-                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
-                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 100, GetCategoryByName("Clip")),
+                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
+                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
                 new Item("C4", "Clips Paper Large", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C5", "Clips Paper Medium ", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C6", "Clips Paper Small", "Box", 50, 30, 100, GetCategoryByName("Clip")),
@@ -179,9 +176,9 @@ namespace SSIS.Databases
         {
             ICollection<Supplier> suppliers = new List<Supplier>
             {
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "", Phone = "", Fax = "", GST = "", Address = "" }
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "Supplier One Contact", Phone = "45723494", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "Supplier Two Contact", Phone = "94367954", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "Supplier Three Contact", Phone = "13096528", Fax = "", GST = "", Address = "" }
             };
             foreach (var supplier in suppliers)
             {

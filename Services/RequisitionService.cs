@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SSIS.Databases;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {
@@ -13,17 +14,23 @@ namespace SSIS.Services
     {
         private readonly IDeptStaffRepository _deptStaffRepository;
         private readonly IRequisitionRepository _requisitionRepository;
+        private readonly IRequisitionItemRepository _requisitionItemRepository;
         private readonly IRetrievalRepository _retrievalRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IDeptRepository _deptRepository;
+        private readonly IDelegationRepository _delegationRepository;
 
         public RequisitionService(IDeptStaffRepository deptStaffRepository,
             IRequisitionRepository requisitionRepository,
-            IItemRepository itemRepository, IRetrievalRepository retrievalRepository)
+            IItemRepository itemRepository, IRetrievalRepository retrievalRepository, IDeptRepository deptRepository, IRequisitionItemRepository requisitionItemRepository, IDelegationRepository delegationRepository)
         {
             _deptStaffRepository = deptStaffRepository;
             _requisitionRepository = requisitionRepository;
             _itemRepository = itemRepository;
             _retrievalRepository = retrievalRepository;
+            _deptRepository = deptRepository;
+            _requisitionItemRepository = requisitionItemRepository;
+            _delegationRepository = delegationRepository;
         }
 
         public async Task<ApiResponse> CreateRequisition(List<RequisitionItem> requisitionItems, string email)
@@ -35,7 +42,7 @@ namespace SSIS.Services
                 RequestedOn = DateTime.Now,
                 Status = RequisitionStatus.APPLIED,
                 RequestedBy = requestedBy,
-                DepartmentName = requestedBy.DepartmentName,
+                Department = requestedBy.Department,
             };
 
             foreach (var requisitionItem in requisitionItems)
@@ -45,8 +52,9 @@ namespace SSIS.Services
                 if (requisitionItem.Need < 1)
                     return new ApiResponse { Success = false, Message = "Item requested should at least have one" };
                 requisitionItem.RequisitionId = requisition.Id;
-                requisitionItem.Actual = -1;
+                requisitionItem.Actual = 0;
             }
+
             requisition.RequisitionItems = requisitionItems;
             await _requisitionRepository.CreateRequisition(requisition);
             return new ApiResponse { Success = true };
@@ -113,12 +121,57 @@ namespace SSIS.Services
                         }
                         return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
                     }
+                    if (deptStaff.Role == DeptRole.Employee && requisition.Status == RequisitionStatus.APPLIED && (status == RequisitionStatus.APPROVED || status == RequisitionStatus.REJECTED))
+                    {
+                        if (await _delegationRepository.IsDelegated(email))
+                        {
+                            requisition.Status = status;
+                            requisition.ReviewedBy = deptStaff;
+                            requisition.ReviewedOn = DateTime.Now;
+                            requisition.Comment = comment;
+                            return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
+
+                        }
+                        else
+                            return new ApiResponse { Success = false, Message = "Sorry, only delegated employee can review requisition" };
+
+                    }
 
                 }
                 else return new ApiResponse { Success = false, Message = "Sorry, you can only review requisition of your own department" };
 
             }
             return new ApiResponse { Success = false, Message = "Cannot find requisition reviewing" };
+        }
+
+        public async Task<ApiResponse> GetPopularItems(string email)
+        {
+            DeptStaff deptStaff = await _deptStaffRepository.GetDeptStaffByEmail(email);
+            if (await _deptRepository.DepartmentExist(deptStaff.DepartmentName))
+            {
+                List<Item> items = await _requisitionRepository.GetPopularItems(deptStaff.DepartmentName);
+                foreach (var item in items)
+                {
+                    Item itemFromRepo = await _itemRepository.GetItemById(item.Id);
+                    item.Description = itemFromRepo.Description;
+                }
+                return new ApiResponse { Success = true, Data = items };
+
+            }
+            else
+                return new ApiResponse { Success = false, Message = "Popular items you are searching for does not exist" };
+        }
+
+        public async Task<ApiResponse> GetRequisitionTrend(DateTime startDate, DateTime endDate, string department)
+        {
+            if (startDate.CompareTo(endDate) < 0)
+            {
+                if (!await _deptRepository.DepartmentExist(department))
+                    return new ApiResponse { Success = false, Data = "Some of the departments doesn't exist" };
+                return new ApiResponse { Success = true, Data = await _requisitionItemRepository.GetRequisitionTrend(startDate, endDate, department) };
+            }
+            else
+                return new ApiResponse { Success = false, Message = "End date should be after start date" };
         }
     }
 }

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace SSIS.Models
 {
+    [ToString]
     public class OrderItem
     {
         [Key]

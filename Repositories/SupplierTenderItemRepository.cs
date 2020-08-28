@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SSIS.Databases;
+using SSIS.IRepositories;
 using SSIS.Models;
 
 namespace SSIS.Repositories
@@ -17,9 +18,20 @@ namespace SSIS.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<SupplierTenderItem>> GetSupplierTenderByItemId(Guid itemId)
+        public async Task<List<SupplierTenderItem>> GetSupplierTenderBySupplierId(Guid supplierId)
         {
-            return await _dbContext.SupplyTenderItems.Where(sti => sti.ItemId == itemId).ToListAsync();
+            List<SupplierTenderItem> supplierTenderItems = await _dbContext.SupplierTenderItems.Where(sti => sti.SupplierId == supplierId).ToListAsync();
+            foreach (var supplierTenderItem in supplierTenderItems)
+            {
+                supplierTenderItem.Description = supplierTenderItem.Item.Description;
+                supplierTenderItem.UoM = supplierTenderItem.Item.UoM;
+            }
+            return supplierTenderItems;
+        }
+
+        public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority)
+        {
+            return await _dbContext.SupplierTenderItems.Where(sti => sti.ItemId == itemId && sti.Priority == priority).FirstOrDefaultAsync();
         }
     }
 }

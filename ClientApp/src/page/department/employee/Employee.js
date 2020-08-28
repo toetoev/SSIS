@@ -1,5 +1,5 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-
+import { FileProtectOutlined, SolutionOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
 import { Navbar } from "../../component/Navbar";
 import React from "react";
@@ -11,10 +11,20 @@ const { Header, Sider, Content } = Layout;
 
 export default function Employee() {
 	let { path } = useRouteMatch();
+
 	const items = [
-		{ to: `${path}`, title: "Submit Requisition" },
-		{ to: `${path}/requisition-history`, title: "Requisition History" },
+		{
+			to: `${path}`,
+			title: "Submit Requisition",
+			icon: <FileProtectOutlined />,
+		},
+		{
+			to: `${path}/requisition-history`,
+			title: "Requisition History",
+			icon: <SolutionOutlined />,
+		},
 	];
+
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
 			<Header className="header">

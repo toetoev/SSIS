@@ -1,20 +1,27 @@
-import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
+import { Button, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Success from "../../../../component/Success";
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-// IMPROVE: search bar
-export const Disbursement = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
+export const Disbursement = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["retrievedItem", "amountRetrieved"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Retrieved Item",
 			dataIndex: "retrievedItem",
+			sorter: (a, b) => sorter(a.retrievedItem, b.retrievedItem),
 		},
 		{
 			title: "Amount Retrieved",
 			dataIndex: "amountRetrieved",
+			sorter: (a, b) => sorter(a.amountRetrieved, b.amountRetrieved),
 		},
 		{
 			title: "Action",
@@ -31,16 +38,18 @@ export const Disbursement = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log("Disbursement -> result", result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, retrieval) => {
 							return [
 								...rows,
 								{
-									key: retrieval.itemId,
+									key: retrieval.retrievalId,
 									retrievedItem: retrieval.item.description,
-									amountRetrieved: retrieval.totalQtyRetrieved,
+									amountRetrieved:
+										retrieval.totalQtyRetrieved === -1
+											? ""
+											: retrieval.totalQtyRetrieved,
 									action: retrieval,
 								},
 							];
@@ -60,6 +69,7 @@ export const Disbursement = ({ loading, setLoading }) => {
 const DisburseModal = ({ text, setLoading }) => {
 	const retrieval = text.action;
 	const [visible, setVisible] = useState(false);
+	const [disable, setDisable] = useState(false);
 	const onChange = (val, row) => {
 		const newData = [...dataSource];
 		const index = dataSource.findIndex((item) => row.key === item.key);
@@ -110,10 +120,9 @@ const DisburseModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 	const handleConfirm = (e) => {
-		console.log(dataSource);
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.actualAmount != -1)
+			if (item.actualAmount !== -1)
 				data = [
 					...data,
 					{
@@ -133,78 +142,78 @@ const DisburseModal = ({ text, setLoading }) => {
 				})
 				.then((res) => {
 					const result = res.data;
-					if (result.success) setLoading(true);
-					else Error(result.message);
+					if (result.success) {
+						Success("Done item disbursement");
+						setLoading(true);
+					} else Error(result.message);
 				});
 			setVisible(false);
 		} else Error("Please enter disbursed quantity for all the items");
 		setVisible(false);
 	};
 	useEffect(() => {
-		axios
-			.get(
-				`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
-				{
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-					},
-				}
-			)
-			.then((res) => {
-				const result = res.data;
-				if (result.success) {
-					setDataSource(
-						result.data.reduce((rows, requisition) => {
-							return [
-								...rows,
-								{
-									key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
-									department: requisition.department.name,
-									requestedBy: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
-									neededAmount: requisition.requisitionItems[0].need,
-									actualAmount: requisition.requisitionItems[0].actual,
-								},
-							];
-						}, [])
-					);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, []);
+		if (text.amountRetrieved !== "") {
+			axios
+				.get(
+					`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						},
+					}
+				)
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setDataSource(
+							result.data.reduce((rows, requisition) => {
+								return [
+									...rows,
+									{
+										key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
+										department: requisition.department.name,
+										requestedBy: requisition.requestedBy.name,
+										requestedDate: requisition.requestedOn,
+										neededAmount: requisition.requisitionItems[0].need,
+										actualAmount: requisition.requisitionItems[0].actual,
+									},
+								];
+							}, [])
+						);
+						setDisable(false);
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		} else setDisable(true);
+	}, [visible]);
 	return (
 		<div>
-			<Button type="primary" onClick={showModal}>
+			<Button type="primary" onClick={showModal} disabled={disable}>
 				Disburse
 			</Button>
 			<Modal
 				title="Disburse among departments"
 				visible={visible}
 				onCancel={hideModal}
-				footer={null}
+				footer={[
+					<Button key="cancel" type="secondary" onClick={hideModal}>
+						Cancel
+					</Button>,
+					<Button key="confirm" type="primary" onClick={handleConfirm}>
+						Confirm
+					</Button>,
+				]}
 				width="700px"
 			>
-				<Space direction="vertical">
-					<Row>
-						<Table
-							dataSource={dataSource}
-							columns={columns}
-							pagination={false}
-							scroll={{ y: 400 }}
-							size="small"
-						/>
-					</Row>
-					<Row justify="end">
-						<Space>
-							<Button type="secondary">Print</Button>
-							<Button type="primary" onClick={handleConfirm}>
-								Confirm
-							</Button>
-						</Space>
-					</Row>
-				</Space>
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 400 }}
+					size="small"
+				/>
 			</Modal>
 		</div>
 	);

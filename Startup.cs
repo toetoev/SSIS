@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SSIS.Databases;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Repositories;
 using SSIS.Services;
 
@@ -57,6 +59,7 @@ namespace SSIS
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IRequisitionItemService, RequisitionItemService>();
             services.AddScoped<IRequisitionService, RequisitionService>();
@@ -64,6 +67,7 @@ namespace SSIS
             services.AddScoped<IRetrievalService, RetrievalService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<ISupplierTenderItemService, SupplierTenderItemService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -71,7 +75,9 @@ namespace SSIS
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IRetrievalItemRepository, RetrievalItemRepository>();
@@ -79,6 +85,7 @@ namespace SSIS
             services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<ISupplierTenderItemRepository, SupplierTenderItemRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,7 +125,7 @@ namespace SSIS
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            // dataInitializer.Seed();
+            //dataInitializer.Seed();
         }
     }
 }

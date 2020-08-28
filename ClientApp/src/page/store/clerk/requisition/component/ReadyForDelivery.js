@@ -2,27 +2,35 @@ import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-// IMPROVE: search bar
-export const ReadyForDelivery = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
+export const ReadyForDelivery = ({ keyword }) => {
+	const options = {
+		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
+			sorter: (a, b) => sorter(a.departmentName, b.departmentName),
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
 			dataIndex: "requestedDate",
+			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
+			sorter: (a, b) => sorter(a.collectionPoint, b.collectionPoint),
 		},
 		{
 			title: "Disbursement List",
@@ -39,7 +47,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -71,7 +78,6 @@ export const ReadyForDelivery = ({ loading, setLoading }) => {
 
 const ReadyForDeliveryModal = ({ text }) => {
 	const requisition = text.action;
-	console.log(requisition);
 	const [dataSource] = useState(
 		requisition.requisitionItems.reduce((rows, requisitionItem) => {
 			return [
@@ -127,11 +133,6 @@ const ReadyForDeliveryModal = ({ text }) => {
 							scroll={{ y: 300 }}
 							size="small"
 						/>
-					</Row>
-					<Row justify="end">
-						<Space>
-							<Button type="primary">Print</Button>
-						</Space>
 					</Row>
 				</Space>
 			</Modal>

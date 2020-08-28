@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Services;
+using SSIS.Utils;
 
 namespace SSIS.Controllers
 {
@@ -24,7 +26,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPut("{requisitionId}")]
-        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.DeptRep)]
+        [Authorize(Roles = DeptRole.All)]
         public IActionResult UpdateRequisitionStatus([FromRoute] Guid requisitionId, [FromBody] Requisition requisition)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;
@@ -59,6 +61,21 @@ namespace SSIS.Controllers
         public IActionResult GetRequisitionsByRetrievalId([FromRoute] Guid retrievalId, [FromRoute] Guid itemId)
         {
             return Ok(_requisitionService.GetRequisitionsByRetrievalId(retrievalId, itemId).Result);
+        }
+
+        [HttpGet("popular")]
+        [Authorize(Roles = DeptRole.Employee)]
+        public IActionResult GetPopularItems()
+        {
+            string email = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_requisitionService.GetPopularItems(email).Result);
+        }
+
+        [HttpPost("{startDate}/{endDate}")]
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetRequisitionTrend([FromRoute][JsonConverter(typeof(DateConverter))] DateTime startDate, [FromRoute][JsonConverter(typeof(DateConverter))] DateTime endDate, [FromBody] string department)
+        {
+            return Ok(_requisitionService.GetRequisitionTrend(startDate, endDate, department).Result);
         }
     }
 }

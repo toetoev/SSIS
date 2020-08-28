@@ -1,51 +1,52 @@
-import { default as React, useEffect, useState } from "react";
-
 import { Table } from "antd";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
+import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 
-export const Stock = () => {
-	const [dataSource, setDataSource] = useState([]);
+export const Stock = ({ keyword }) => {
+	const options = {
+		keys: ["category", "bin", "description", "uoM"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
 	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Category",
 			dataIndex: "category",
-			key: "category",
+			sorter: (a, b) => sorter(a.category, b.category),
 		},
 		{
 			title: "Bin",
 			dataIndex: "bin",
-			key: "bin",
+			sorter: (a, b) => sorter(a.bin, b.bin),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			key: "description",
+			sorter: (a, b) => sorter(a.description, b.description),
 		},
 		{
 			title: "UoM",
-			dataIndex: "uom",
-			key: "uom",
+			dataIndex: "uoM",
+			sorter: (a, b) => sorter(a.uoM, b.uoM),
 		},
 		{
 			title: "Reorder Level",
 			dataIndex: "reorderLevel",
-			key: "reorderLevel",
+			sorter: (a, b) => sorter(a.reorderLevel, b.reorderLevel),
 		},
 		{
 			title: "Reorder Quantity",
 			dataIndex: "reorderQuantity",
-			key: "reorderQuantity",
+			sorter: (a, b) => sorter(a.reorderQuantity, b.reorderQuantity),
 		},
 		{
 			title: "Stock",
 			dataIndex: "stock",
-			key: "stock",
+			sorter: (a, b) => sorter(a.stock, b.stock),
 		},
 	];
-	const handleDataChange = (data) => {
-		setDataSource(data);
-	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -57,7 +58,6 @@ export const Stock = () => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, items) => {
@@ -68,7 +68,7 @@ export const Stock = () => {
 									category: items.categoryName,
 									bin: items.bin,
 									description: items.description,
-									uom: items.uoM,
+									uoM: items.uoM,
 									reorderLevel: items.reorderLevel,
 									reorderQuantity: items.reorderQty,
 									stock: items.stock,
@@ -91,7 +91,6 @@ export const Stock = () => {
 			dataSource={dataSource}
 			loading={loading}
 			scroll={{ y: 400 }}
-			pagination={false}
 			size="small"
 		/>
 	);

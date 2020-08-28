@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
 using SSIS.Repositories;
@@ -31,14 +33,17 @@ namespace SSIS.Services
         {
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
-        public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, Adjustment adjustment)
+        public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems)
         {
             StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(submittedByEmail);
-            adjustment.Id = Guid.NewGuid();
-            adjustment.SubmittedBy = submittedBy;
-            adjustment.SubmittedOn = DateTime.Now;
-            adjustment.Status = AdjustmentStatus.APPLIED;
-            foreach (var adjustmentItem in adjustment.AdjustmentItems)
+            Adjustment adjustment = new Adjustment
+            {
+                Id = Guid.NewGuid(),
+                SubmittedOn = DateTime.Now,
+                SubmittedBy = submittedBy,
+                Status = AdjustmentStatus.APPLIED
+            };
+            foreach (var adjustmentItem in adjustmentItems)
             {
                 Item itemFromRepo = await _itemRepository.GetItemById(adjustmentItem.ItemId);
                 if (itemFromRepo != null)
@@ -53,6 +58,7 @@ namespace SSIS.Services
                 else
                     return new ApiResponse { Success = false, Message = "Some items do not exist" };
             }
+            adjustment.AdjustmentItems = adjustmentItems;
             return new ApiResponse { Success = true, Data = await _adjustmentRepository.CreateAdjustment(adjustment) };
         }
 
@@ -62,7 +68,6 @@ namespace SSIS.Services
             StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
             if (adjustmentFromRepo != null && adjustmentFromRepo.Status == AdjustmentStatus.APPLIED)
             {
-                // TODO: check voucher price by role
                 bool itemsValid = true;
                 foreach (var adjustmentItem in adjustmentFromRepo.AdjustmentItems)
                 {
@@ -85,6 +90,11 @@ namespace SSIS.Services
                 if (itemsValid)
                 {
                     adjustmentFromRepo.Status = status;
+                    if (status == AdjustmentStatus.ISSUED)
+                    {
+                        adjustmentFromRepo.IssuedOn = DateTime.Now;
+                        adjustmentFromRepo.IssuedBy = storeStaffFromRepo;
+                    }
                     return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
                 }
             }
@@ -112,6 +122,17 @@ namespace SSIS.Services
             }
             else
                 return new ApiResponse { Success = false, Message = "Cannot find adjustment to delete" };
+        }
+
+        public async Task<ApiResponse> GetAdjustmentByStoreStaff(string email)
+        {
+            StoreStaff storeStaffFromRepo = await _storeStaffRepository.GetStoreStaffByEmail(email);
+            if (storeStaffFromRepo.Role == StoreRole.Supervisor)
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(true) };
+            else if (storeStaffFromRepo.Role == StoreRole.Manager)
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAdjustmentByTotalPrice(false) };
+            else
+                return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
         }
     }
 }

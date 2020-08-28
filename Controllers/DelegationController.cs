@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -19,6 +19,7 @@ namespace SSIS.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = DeptRole.DeptHead)]
         public IActionResult CreateDelegation([FromBody] Delegation delegation)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
@@ -26,24 +27,26 @@ namespace SSIS.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetDelegationByDeptHeadEmail()
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.Employee)]
+        public IActionResult GetDelegation()
         {
-            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.GetDelegationByDeptHeadEmail(delegatedByEmail).Result);
+            string deptStaffEmail = User.FindFirst(ClaimTypes.Email).Value;
+            return Ok(_delegationService.GetDelegation(deptStaffEmail).Result);
         }
 
-        [HttpPut("")]
-        public IActionResult UpdateDelegation([FromBody] Delegation delegation)
+        [HttpPut("{delegationId}")]
+        [Authorize(Roles = DeptRole.DeptHead)]
+        public IActionResult UpdateDelegation([FromRoute] Guid delegationId, [FromBody] Delegation delegation)
         {
             string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.UpdateDelegation(delegation, delegatedByEmail).Result);
+            return Ok(_delegationService.UpdateDelegation(delegation, delegationId, delegatedByEmail).Result);
         }
 
-        [HttpDelete("{startDate}")]
-        public IActionResult DeleteDelegation([FromRoute] DateTime startDate)
+        [HttpDelete("{delegationId}")]
+        [Authorize(Roles = DeptRole.DeptHead)]
+        public IActionResult DeleteDelegation([FromRoute] Guid delegationId)
         {
-            string delegatedByEmail = User.FindFirst(ClaimTypes.Email).Value;
-            return Ok(_delegationService.DeleteDelegation(startDate, delegatedByEmail).Result);
+            return Ok(_delegationService.DeleteDelegation(delegationId).Result);
         }
     }
 }

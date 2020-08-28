@@ -1,22 +1,28 @@
 import { Button, InputNumber, Modal, Row, Space, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import useSearch from "../../../../../hook/useSearch";
+import sorter from "../../../../../util/sorter";
 import Confirm from "../../../../component/Confirm";
 import Error from "../../../../component/Error";
-import axios from "axios";
+import Success from "../../../../component/Success";
 
-// IMPROVE: search bar
-export const Retrieval = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
+export const Retrieval = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["createdBy", "createdOn"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Created By",
 			dataIndex: "createdBy",
+			sorter: (a, b) => sorter(a.createdBy, b.createdBy),
 		},
 		{
 			title: "Created On",
 			dataIndex: "createdOn",
+			sorter: (a, b) => sorter(a.createdOn, b.createdOn),
 		},
 		{
 			title: "Action",
@@ -145,6 +151,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 				.then((res) => {
 					const result = res.data;
 					if (result.success) {
+						Success("Retrieval list deleted");
 						setLoading(true);
 					} else Error(result.message);
 				});
@@ -154,7 +161,7 @@ const RetrievalModal = ({ text, setLoading }) => {
 	const handleConfirm = (e) => {
 		let data = [];
 		dataSource.forEach((item) => {
-			if (item.retrieved != -1)
+			if (item.retrieved !== -1)
 				data = [...data, { itemId: item.key, totalQtyRetrieved: item.retrieved }];
 		});
 		if (data.length === dataSource.length) {
@@ -201,12 +208,9 @@ const RetrievalModal = ({ text, setLoading }) => {
 						/>
 					</Row>
 					<Row justify="end">
-						<Space>
-							<Button type="secondary">Print</Button>
-							<Button type="primary" onClick={handleConfirm}>
-								Confirm
-							</Button>
-						</Space>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
 					</Row>
 				</Space>
 			</Modal>

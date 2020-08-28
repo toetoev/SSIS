@@ -1,7 +1,7 @@
 using System;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using SSIS.Services;
+using Microsoft.AspNetCore.Mvc;
+using SSIS.IService;
 using SSIS.Models;
 
 namespace SSIS.Controllers
@@ -17,11 +17,11 @@ namespace SSIS.Controllers
             _supplierTenderItemService = supplierTenderItemService;
         }
 
-        [HttpGet("{itemId}")]
-        [Authorize(Roles = StoreRole.Clerk)]
-        public IActionResult GetSupplierTenderByItemId([FromRoute] Guid itemId)
+        [HttpGet("{supplierId}")]
+        [Authorize(Roles = StoreRole.Clerk  + "," + StoreRole.Manager)]
+        public IActionResult GetSupplierTenderBySupplierId([FromRoute] Guid supplierId)
         {
-            return Ok(_supplierTenderItemService.GetSupplierTenderByItemId(itemId).Result);
+            return Ok(_supplierTenderItemService.GetSupplierTenderBySupplierId(supplierId).Result);
         }
     }
 }

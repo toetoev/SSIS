@@ -28,6 +28,16 @@ Content-Type: application/json
     "role": "STORE"
 }
 
+### AuthController Login Manager
+POST https://localhost:5001/api/auth
+Content-Type: application/json
+
+{
+    "name" : "zana",
+    "password": "1",
+    "role": "STORE"
+}
+
 ### AuthController Get Test
 GET https://localhost:5001/api/auth
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkNsZXJrIiwibmJmIjoxNTk2OTYzMzQyLCJleHAiOjE1OTcwNDk3NDIsImlhdCI6MTU5Njk2MzM0Mn0.bzRr_ma71tu1JLDIfs0Pkj5M_Urmq_KPaIsP1IqZZXh3P4sNSjrBZt0dSRciyXvqZwUKDgNPKlpnvlgrXUUdvw
@@ -96,7 +106,9 @@ Content-Type: application/json
 
 "APPROVED"
 
-
+### RequisitionController Get Popular Items
+GET https://localhost:5001/api/requisition/popular/?deptName=Computer%20Science
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoYW80MzUwMjE2NDBAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNYXJ0aW5pIiwicm9sZSI6IkVNUExPWUVFIiwibmJmIjoxNTk4MTExNjQyLCJleHAiOjE1OTgxOTgwNDIsImlhdCI6MTU5ODExMTY0Mn0.17fbXFwBEZXI7qq0HDwg2r7RUemHaifp4RraBSgcacrp3gDtM9uOLZpqMGPpqakwhcIqs-npzfaH8UOxsiFvlw
 
 
 
@@ -121,3 +133,36 @@ Content-Type: application/json
     "itemId" :"54ADF800-F952-4843-BCFF-D8655E8F8924",
     "totalQtyRetrieved" : 2
 }]
+
+### OrderController Create order
+POST https://localhost:5001/api/order
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbkBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6IldpbiIsInJvbGUiOiJDTEVSSyIsIm5iZiI6MTU5ODA5Nzk4MSwiZXhwIjoxNTk4MTg0MzgxLCJpYXQiOjE1OTgwOTc5ODF9.qdbcKKLdh6qy808HyyCgSm8zw1A-tt5E6f2W7lVbX3lydV5HVC03nrD59AiYnKM8FjUZFv84arVCNhsTTFtEQw
+Content-Type: application/json
+
+[{
+    "supplierId": "235156e0-24bc-4e02-812a-094415fa55ec",
+    "orderItems": [{
+        "itemId": "ea502710-6f92-4611-a335-023c54cbf6bc",
+        "orderedQty": 10,
+    }],
+},
+{
+    "supplierId": "34ae1357-fbe4-48fd-86d0-77d8e53c3482",
+    "orderItems": [{
+        "itemId": "ea502710-6f92-4611-a335-023c54cbf6bc",
+        "orderedQty": 5,
+    }],
+},
+{
+    "supplierId": "3ca7ddce-6c3f-49e1-a200-f50ea438f3e6",
+    "orderItems": [{
+        "itemId": "ea502710-6f92-4611-a335-023c54cbf6bc",
+        "orderedQty": 5,
+    }],
+}]
+
+### OrderController Get Order Trend
+POST https://localhost:5001/api/order/2020-06-22%2020:58:08/2020-08-22%2020:59:13
+Content-Type: application/json
+
+["Ruler", "Clip"]

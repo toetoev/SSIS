@@ -1,42 +1,61 @@
-import { Button, Form, Input, Modal, Select, Space, Table } from "antd";
+import { Button, Input, InputNumber, Modal, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import Confirm from "../../../../component/Confirm";
+import Error from "../../../../component/Error";
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import toTitleCase from "../../../../../util/toTitleCase";
+import useSearch from "../../../../../hook/useSearch";
 
-export const Order = () => {
-	const [dataSource, setDataSource] = useState([]);
-	const handleDataChange = (data) => {
-		setDataSource(data);
+export const Order = ({ loading, setLoading, keyword }) => {
+	const options = {
+		keys: ["supplier", "orderedBy", "orderedOn", "receivedBy", "receivedOn"],
 	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
-			title: "Category",
-			dataIndex: "category",
-		},
-		{
-			title: "Description",
-			dataIndex: "description",
-		},
-		{
-			title: "Reorder Quantity",
-			dataIndex: "reorderQuantity",
-		},
-		{
 			title: "Supplier",
-			dataIndex: "supplier" || "supplier2" || "supplier3",
+			dataIndex: "supplier",
+			sorter: (a, b) => sorter(a.supplier, b.supplier),
+		},
+		{
+			title: "Ordered By",
+			dataIndex: "orderedBy",
+			sorter: (a, b) => sorter(a.orderedBy, b.orderedBy),
+		},
+		{
+			title: "Ordered Date",
+			dataIndex: "orderedOn",
+			sorter: (a, b) => sorter(a.orderedOn, b.orderedOn),
+		},
+		{
+			title: "Received By",
+			dataIndex: "receivedBy",
+			sorter: (a, b) => sorter(a.receivedBy, b.receivedBy),
+		},
+		{
+			title: "Received Date",
+			dataIndex: "receivedOn",
+			sorter: (a, b) => sorter(a.receivedOn, b.receivedOn),
+		},
+		{
+			title: "Status",
+			dataIndex: "status",
+			sorter: (a, b) => sorter(a.status, b.status),
 		},
 		{
 			title: "Action",
 			key: "action",
 			render: (text) => (
 				<Space>
-					<Receive text={text}></Receive>
-					<Remove
-						dataSource={dataSource}
-						handleDataChange={handleDataChange}
-						text={text}
-					></Remove>
+					<OrderModal text={text} setLoading={setLoading} />
+					{text.status === "Ordered" ? (
+						<Remove text={text} setLoading={setLoading} />
+					) : (
+						<></>
+					)}
 				</Space>
 			),
 		},
@@ -52,121 +71,197 @@ export const Order = () => {
 			.then((res) => {
 				const result = res.data;
 				if (result.success) {
-					const test = result.data;
-
-					console.log(test);
 					setDataSource(
-						result.data.reduce((rows, orders) => {
+						result.data.reduce((rows, order) => {
 							return [
 								...rows,
 								{
-									key: orders.id,
-									//category: orders.map(orderItems.id),
-									//category: orders.orderItems[item],
-									//description :
-									//reorderQuantity :
-									supplier : orders.supplier.name,
-									action: orders,
+									key: order.id,
+									supplier: order.supplier.name,
+									orderedBy: order.orderedBy.name,
+									orderedOn: order.orderedOn,
+									receivedBy:
+										order.receivedBy === null ? "" : order.receivedBy.name,
+									receivedOn: order.receivedOn,
+									status: toTitleCase(order.status),
+									action: order,
 								},
 							];
 						}, [])
 					);
 				}
 			})
-
 			.catch(function (error) {
 				console.log(error);
 			});
-	}, []);
-
+	}, [loading]);
 	return <Table columns={columns} dataSource={dataSource} size="middle" />;
 };
 
-const Receive = ({ dataSource, handleDataChange }) => {
-	const [form] = Form.useForm();
-	const [item, setItem] = useState("");
-	const [quantity, setQuantity] = useState(0);
+const OrderModal = ({ text, setLoading }) => {
+	const order = text.action;
 	const [visible, setVisible] = useState(false);
-	const [itemOptions, setItemOptions] = useState([]);
-
+	const [dataSource, setDataSource] = useState(
+		order.orderItems.reduce((rows, orderItem) => {
+			return [
+				...rows,
+				{
+					key: orderItem.itemId,
+					description: orderItem.item.description,
+					orderedQty: orderItem.orderedQty,
+					deliveredQty: orderItem.deliveredQty,
+					remarks: orderItem.remarks,
+				},
+			];
+		}, [])
+	);
+	const onChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].deliveredQty = val;
+		newData[index].remarks = row.remarks;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const onRemarksChange = (val, row) => {
+		const newData = [...dataSource];
+		const index = dataSource.findIndex((item) => row.key === item.key);
+		newData[index].remarks = val;
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
+		setDataSource(newData);
+	};
+	const columns = [
+		{
+			title: "Description",
+			dataIndex: "description",
+		},
+		{
+			title: "Ordered Qty",
+			dataIndex: "orderedQty",
+		},
+		{
+			title: "Delivered Qty",
+			dataIndex: "deliveredQty",
+			render:
+				text.status === "Ordered"
+					? (text, record) => (
+							<InputNumber
+								min={0}
+								max={record.orderedQty}
+								onChange={(val) => onChange(val, record)}
+							/>
+					  )
+					: undefined,
+		},
+		{
+			title: "Remarks (Optional)",
+			dataIndex: "remarks",
+			render:
+				text.status === "Ordered"
+					? (text, record) => (
+							<Input
+								type="text"
+								onChange={(e) => onRemarksChange(e.target.value, record)}
+							/>
+					  )
+					: null,
+		},
+	];
 	const showModal = () => {
 		setVisible(true);
 	};
 
-	// TODO: call receive order
 	const handleSubmit = () => {
-		form.validateFields()
-			.then((val) => {
-				if (dataSource.find((val) => val.key === item)) {
-					handleDataChange(
-						dataSource.map((val) => {
-							if (val.key === item) {
-								val.quantity = val.quantity + quantity;
-							}
-							return val;
-						})
-					);
-				} else {
-					handleDataChange([
-						...dataSource,
-						{
-							key: item,
-							description: itemOptions.find((val) => val.value === item).label,
-							quantity: quantity,
-						},
-					]);
-				}
-				setVisible(false);
-			})
-			.catch((err) => {});
+		let data = [];
+		dataSource.forEach((item) => {
+			debugger;
+			if (item.deliveredQty !== null && item.deliveredQty != -1)
+				data = [
+					...data,
+					{ itemId: item.key, deliveredQty: item.deliveredQty, remarks: item.remarks },
+				];
+		});
+		if (data.length === dataSource.length) {
+			axios
+				.put("https://localhost:5001/api/order/" + order.id, data, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+						"Content-type": "application/json",
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+						setVisible(false);
+					} else Error(result.message);
+				});
+		}
 	};
 
 	const hideModal = (e) => {
 		setVisible(false);
 	};
 
-	const onValuesChange = (val) => {
-		if (val.quantity) setQuantity(Number(val.quantity));
-		if (val.item) setItem(val.item);
-	};
-
 	return (
 		<>
 			<Button type="primary" onClick={showModal}>
-				Receive
+				View
 			</Button>
 			<Modal
 				title="Purchase Orders"
 				visible={visible}
 				onCancel={hideModal}
-				footer={[
-					<Button key="cancel" onClick={hideModal}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={handleSubmit}>
-						Submit
-					</Button>,
-				]}
+				width="700px"
+				footer={
+					text.status === "Ordered"
+						? [
+								<Button key="cancel" onClick={hideModal}>
+									Cancel
+								</Button>,
+								<Button key="submit" type="primary" onClick={handleSubmit}>
+									Submit
+								</Button>,
+						  ]
+						: null
+				}
 			>
-				<Form form={form} layout="vertical" onValuesChange={onValuesChange}>
-					<Form.Item name="item" label="Item Description : ">
-						<Select options={itemOptions} style={{ width: "100%" }}></Select>
-					</Form.Item>
-					<Form.Item name="quantity" label="Quantity : ">
-						<Input type="number" placeholder="0" />
-					</Form.Item>
-				</Form>
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={false}
+					scroll={{ y: 400 }}
+					size="small"
+				/>
 			</Modal>
 		</>
 	);
 };
 
-const Remove = ({ dataSource, handleDataChange, text }) => {
-	// TODO: call delete order
+const Remove = ({ text, setLoading }) => {
 	const handleDelete = () => {
-		Confirm("Are you sure delete the item?", "", () =>
-			handleDataChange(dataSource.filter((val) => val.key !== text.key))
-		);
+		Confirm("Are you sure about deleting the order?", "", () => {
+			axios
+				.delete("https://localhost:5001/api/order/" + text.action.id, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				})
+				.then((res) => {
+					const result = res.data;
+					if (result.success) {
+						setLoading(true);
+					} else Error(result.message);
+				});
+		});
 	};
 	return (
 		<Button type="danger" onClick={handleDelete}>

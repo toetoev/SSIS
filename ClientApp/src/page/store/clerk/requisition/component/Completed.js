@@ -2,27 +2,35 @@ import { Button, Modal, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
 import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-// IMPROVE: search bar
-export const Completed = ({ loading, setLoading }) => {
-	const [dataSource, setDataSource] = useState([]);
-	// IMPROVE: sorter
+export const Completed = ({ keyword }) => {
+	const options = {
+		keys: ["departmentName", "requestedBy", "requestedOn", "collectionPoint"],
+	};
+	const [dataSource, setDataSource] = useSearch({ keyword, options });
+
 	const columns = [
 		{
 			title: "Department Name",
 			dataIndex: "departmentName",
+			sorter: (a, b) => sorter(a.departmentName, b.departmentName),
 		},
 		{
 			title: "Requested By",
 			dataIndex: "requestedBy",
+			sorter: (a, b) => sorter(a.requestedBy, b.requestedBy),
 		},
 		{
 			title: "Requested Date",
-			dataIndex: "requestedDate",
+			dataIndex: "requestedOn",
+			sorter: (a, b) => sorter(a.requestedOn, b.requestedOn),
 		},
 		{
 			title: "Collection Point",
 			dataIndex: "collectionPoint",
+			sorter: (a, b) => sorter(a.collectionPoint, b.collectionPoint),
 		},
 		{
 			title: "Disbursement List",
@@ -40,7 +48,6 @@ export const Completed = ({ loading, setLoading }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					setDataSource(
 						result.data.reduce((rows, requisition) => {
@@ -53,7 +60,7 @@ export const Completed = ({ loading, setLoading }) => {
 										requisition.requestedBy === null
 											? ""
 											: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
+									requestedOn: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
 									action: requisition,
 								},

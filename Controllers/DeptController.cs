@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SSIS.IService;
 using SSIS.Models;
-using SSIS.Services;
 
 namespace SSIS.Controllers
 {
@@ -23,6 +23,13 @@ namespace SSIS.Controllers
         {
             string currentUser = User.FindFirst(ClaimTypes.Email).Value;
             return Ok(_deptService.GetCollectionPointByStaff(currentUser).Result);
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = StoreRole.All)]
+        public IActionResult GetAllDepartment()
+        {
+            return Ok(_deptService.GetAllDepartment().Result);
         }
 
         [HttpPost("")]

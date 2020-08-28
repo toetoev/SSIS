@@ -37,14 +37,15 @@ namespace SSIS.Models
         public string UoM { get; set; }
 
         [Required]
-        [Range(1, Double.PositiveInfinity)]
+        [Range(0, Double.PositiveInfinity)]
         public int ReorderLevel { get; set; }
 
         [Required]
-        [Range(1, Double.PositiveInfinity)]
+        [Range(0, Double.PositiveInfinity)]
         public int ReorderQty { get; set; }
 
         [Required]
+        [Range(0, Double.PositiveInfinity)]
         public int Stock { get; set; }
         public string CategoryName { get; set; }
         public virtual Category Category { get; set; }
@@ -52,7 +53,7 @@ namespace SSIS.Models
         [JsonIgnore]
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
 
-        public virtual ICollection<SupplierTenderItem> SupplyTenderItems { get; set; }
+        public virtual ICollection<SupplierTenderItem> SupplierTenderItems { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<RetrievalItem> RetrievalItems { get; set; }

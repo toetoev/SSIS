@@ -14,7 +14,6 @@ namespace SSIS.Databases
             modelBuilder.Entity<RetrievalItem>().HasKey(ri => new { ri.ItemId, ri.RetrievalId });
             modelBuilder.Entity<AdjustmentItem>().HasKey(ai => new { ai.ItemId, ai.AdjustmentId });
             modelBuilder.Entity<OrderItem>().HasKey(oi => new { oi.ItemId, oi.OrderId });
-            modelBuilder.Entity<Delegation>().HasKey(d => new { d.DelegatedByEmail, d.StartDate });
             modelBuilder.Entity<Requisition>().HasOne(r => r.RequestedBy).WithMany(ds => ds.RequestedRequisitions).HasForeignKey(r => r.RequestedByEmail);
             modelBuilder.Entity<Requisition>().HasOne(r => r.ReviewedBy).WithMany(ds => ds.ReviewedRequisitions).HasForeignKey(r => r.ReviewedByEmail);
             modelBuilder.Entity<Requisition>().HasOne(r => r.AcknowledgedBy).WithMany(ds => ds.AcknowledgedRequisitions).HasForeignKey(r => r.AcknowledgedByEmail);
@@ -35,7 +34,7 @@ namespace SSIS.Databases
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<SupplierTenderItem> SupplyTenderItems { get; set; }
+        public DbSet<SupplierTenderItem> SupplierTenderItems { get; set; }
         public DbSet<Retrieval> Retrievals { get; set; }
         public DbSet<RetrievalItem> RetrievalItems { get; set; }
         public DbSet<Adjustment> Adjustments { get; set; }

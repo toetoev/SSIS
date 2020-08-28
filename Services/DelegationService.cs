@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SSIS.Databases;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {
@@ -23,67 +24,74 @@ namespace SSIS.Services
         {
             DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegatedByEmail);
             DeptStaff delegatedTo = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedToEmail);
-            DateTime startDate = DateTime.Now;
-
             if (delegatedTo != null && delegatedBy.DepartmentName == delegatedTo.DepartmentName)
             {
-                if (delegation.EndDate != null && DateTime.Compare(delegation.EndDate, startDate) > 0)
+                if (delegation.EndDate != null && DateTime.Compare(delegation.EndDate, delegation.StartDate) > 0)
                 {
-                    Delegation newDelegation = new Delegation { DelegatedBy = delegatedBy, StartDate = startDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
-                    return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
+                    if (DateTime.Compare(DateTime.Now, delegation.StartDate) < 0)
+                    {
+
+                        Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
+                        if (delegationFromRepo == null)
+                        {
+                            Delegation newDelegation = new Delegation { Id = Guid.NewGuid(), DelegatedBy = delegatedBy, DelegatedTo = delegatedTo, StartDate = delegation.StartDate, EndDate = delegation.EndDate, Comment = delegation.Comment };
+                            return new ApiResponse { Success = true, Data = await _delegationRepository.CreateDelegation(newDelegation) };
+                        }
+                        else
+                            return new ApiResponse { Success = false, Message = "A delegate has already been selected during this date range selected" };
+                    }
+                    else
+                        return new ApiResponse { Success = false, Message = "The delegation start date should be after the current date" };
                 }
                 else
-                {
-                    return new ApiResponse { Success = false, Message = "Error with EndDate." };
-                }
+                    return new ApiResponse { Success = false, Message = "The delegation end date should be after the start date" };
             }
             else
-            {
-                return new ApiResponse { Success = false, Message = "Department name of the DeptHead and the DeptStaff getting delegated MUST be the same." };
-            }
+                return new ApiResponse { Success = false, Message = "The Department Head and Department Employee being delegated must be in the same department" };
         }
 
-        public async Task<ApiResponse> GetDelegationByDeptHeadEmail(string delegatedByEmail)
+        public async Task<ApiResponse> GetDelegation(string deptStaffEmail)
         {
-
-            return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDeptHeadEmail(delegatedByEmail) };
+            DeptStaff deptStaffFromRepo = await _deptStaffRepository.GetDeptStaffByEmail(deptStaffEmail);
+            if (deptStaffFromRepo.Role == DeptRole.DeptHead)
+                return new ApiResponse { Success = true, Data = await _delegationRepository.GetDelegationsByDepartment(deptStaffFromRepo.DepartmentName) };
+            else
+                return new ApiResponse { Success = true, Data = await _delegationRepository.IsDelegated(deptStaffEmail) };
         }
 
-        public async Task<ApiResponse> UpdateDelegation(Delegation delegation, string delegatedByEmail)
+        public async Task<ApiResponse> UpdateDelegation(Delegation delegation, Guid delegationId, string delegatedByEmail)
         {
             DeptStaff delegatedBy = await _deptStaffRepository.GetDeptStaffByEmail(delegatedByEmail);
-            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, delegation.StartDate);
+            Delegation delegationFromRepo = await _delegationRepository.GetDelegationsById(delegationId);
             if (delegationFromRepo != null)
             {
                 DeptStaff delegatedTo = await _deptStaffRepository.GetDeptStaffByEmail(delegation.DelegatedToEmail);
                 if (delegatedTo != null && delegatedBy.DepartmentName == delegatedTo.DepartmentName)
                 {
-                    delegationFromRepo.DelegatedTo = delegation.DelegatedTo;
-                    delegationFromRepo.EndDate = delegation.EndDate;
-                    delegationFromRepo.Comment = delegation.Comment;
-                    return new ApiResponse { Success = true, Data = await _delegationRepository.UpdateDelegation() };
+                    if (delegationFromRepo.StartDate.CompareTo(delegation.EndDate) < 0 && DateTime.Now.CompareTo(delegation.EndDate) < 0)
+                    {
+                        delegationFromRepo.DelegatedTo = delegatedTo;
+                        delegationFromRepo.StartDate = delegation.StartDate;
+                        delegationFromRepo.EndDate = delegation.EndDate;
+                        return new ApiResponse { Success = true, Data = await _delegationRepository.UpdateDelegation() };
+                    }
+                    else
+                        return new ApiResponse { Success = false, Message = "Updated end date should be after now" };
                 }
                 else
-                {
-                    return new ApiResponse { Success = false, Message = "Department name of the DeptHead and the DeptStaff getting delegated MUST be the same." };
-                }
+                    return new ApiResponse { Success = false, Message = "You can only delegate authority to your department staff" };
             }
             else
-            {
-                return new ApiResponse { Success = false, Message = "Cannot find the delegation" };
-            }
+                return new ApiResponse { Success = false, Message = "Cannot find the delegation to be updated" };
         }
-        public async Task<ApiResponse> DeleteDelegation(DateTime startDate, string delegatedByEmail)
+
+        public async Task<ApiResponse> DeleteDelegation(Guid delegationId)
         {
-            Delegation delegationFromRepo = await _delegationRepository.GetDelegationByDelegatedByEmailAndStartDate(delegatedByEmail, startDate);
+            Delegation delegationFromRepo = await _delegationRepository.GetDelegationsById(delegationId);
             if (delegationFromRepo != null)
-            {
                 return new ApiResponse { Success = true, Data = await _delegationRepository.DeleteDelegation(delegationFromRepo) };
-            }
             else
-            {
-                return new ApiResponse { Success = false, Message = "Cannot find the delegation" };
-            }
+                return new ApiResponse { Success = false, Message = "Cannot find the delegation to be deleted" };
         }
     }
 }

@@ -1,9 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SSIS.Databases;
+using SSIS.IRepositories;
+using SSIS.IService;
 using SSIS.Models;
 using SSIS.Payloads;
-using SSIS.Repositories;
 
 namespace SSIS.Services
 {
@@ -15,6 +16,11 @@ namespace SSIS.Services
         {
             _deptRepository = deptRepository;
             _deptStaffRepository = deptStaffRepository;
+        }
+
+        public async Task<ApiResponse> GetAllDepartment()
+        {
+            return new ApiResponse { Success = true, Data = await _deptRepository.GetAllDepartment() };
         }
 
         public async Task<ApiResponse> GetCollectionPointByStaff(string currentUser)

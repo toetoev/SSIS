@@ -1,23 +1,39 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-
-import Dashboard from "../Dashboard";
 import { Layout } from "antd";
-import { Navbar } from "../../component/Navbar";
-import Ordering from "./ordering/Ordering";
 import React from "react";
-import Requisition from "./requisition/Requisition";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navbar } from "../../component/Navbar";
 import Sidebar from "../../component/Sidebar";
+import Dashboard from "../dashboard/Dashboard";
+import Ordering from "./ordering/Ordering";
+import Requisition from "./requisition/Requisition";
 import StockAdjustment from "./StockAdjustment";
+import { AreaChartOutlined, FileTextOutlined, ShoppingOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
-// IMPROVE: make default page to be requisition
 export default function Clerk() {
 	let { path } = useRouteMatch();
+
 	const items = [
-		{ to: `${path}`, title: "Dashboard" },
-		{ to: `${path}/requisition`, title: "Requisitions" },
-		{ to: `${path}/ordering`, title: "Ordering" },
-		{ to: `${path}/stock-adjustment`, title: "Stock Adjustment" },
+		{
+			to: `${path}/dashboard`,
+			title: "Dashboard",
+			icon: <AreaChartOutlined />,
+		},
+		{
+			to: `${path}`,
+			title: "Requisitions",
+			icon: <FileTextOutlined />,
+		},
+		{
+			to: `${path}/ordering`,
+			title: "Ordering",
+			icon: <ShoppingOutlined />,
+		},
+		{
+			to: `${path}/stock-adjustment`,
+			title: "Stock Adjustment",
+			icon: <MenuUnfoldOutlined />,
+		},
 	];
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
@@ -27,10 +43,10 @@ export default function Clerk() {
 			<Layout>
 				<Sider width={200} className="site-layout-background">
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/dashboard`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
-						<Route path={`${path}/requisition`}>
+						<Route exact path={`${path}`}>
 							<Sidebar items={items}></Sidebar>
 						</Route>
 						<Route path={`${path}/ordering`}>
@@ -50,10 +66,10 @@ export default function Clerk() {
 					}}
 				>
 					<Switch>
-						<Route exact path={`${path}`}>
+						<Route path={`${path}/dashboard`}>
 							<Dashboard></Dashboard>
 						</Route>
-						<Route path={`${path}/requisition`}>
+						<Route exact path={`${path}`}>
 							<Requisition></Requisition>
 						</Route>
 						<Route path={`${path}/ordering`}>
