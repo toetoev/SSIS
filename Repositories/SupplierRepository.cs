@@ -35,8 +35,6 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> SupplierExistById(Guid id) => await _dbContext.Suppliers.AnyAsync(s => s.Id == id);
-
         public async Task<bool> SupplierNameExist(string name) => await _dbContext.Suppliers.AnyAsync(s => s.Name == name);
     }
 }

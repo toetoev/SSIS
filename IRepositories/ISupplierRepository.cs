@@ -13,7 +13,6 @@ namespace SSIS.IRepositories
         Task<int> CreateSupplier(Supplier supplier);
         Task<int> UpdateSupplier();
         Task<int> DeleteSupplier(Supplier supplier);
-        Task<bool> SupplierExistById(Guid id);
         Task<bool> SupplierNameExist(string name);
     }
 }

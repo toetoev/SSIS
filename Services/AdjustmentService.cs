@@ -23,16 +23,6 @@ namespace SSIS.Services
             _storeStaffRepository = storeStaffRepository;
             _itemRepository = itemRepository;
         }
-
-        public AdjustmentService(IAdjustmentRepository adjustmentRepository, ItemRepository itemRepository)
-        {
-            _adjustmentRepository = adjustmentRepository;
-            _itemRepository = itemRepository;
-        }
-        public async Task<ApiResponse> GetAllAdjustments()
-        {
-            return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
-        }
         public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems)
         {
             StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(submittedByEmail);

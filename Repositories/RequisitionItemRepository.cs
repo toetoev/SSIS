@@ -18,8 +18,6 @@ namespace SSIS.Repositories
 
         public async Task<RequisitionItem> GetRequisitionItemByPK(Guid requisitionId, Guid itemId) => await _dbContext.RequisitionItems.Where(ri => ri.RequisitionId == requisitionId && ri.ItemId == itemId).FirstOrDefaultAsync();
 
-        public async Task<List<RequisitionItem>> GetRequisitionItemByRetrievalIdAndItemId(Guid retrievalId, Guid itemId) => await _dbContext.RequisitionItems.Where(ri => ri.ItemId == itemId && ri.Requisition.RetrievalId == retrievalId).ToListAsync();
-
         public async Task<List<TrendViewModel>> GetRequisitionTrend(DateTime startDate, DateTime endDate, string department)
         {
             List<RequisitionItem> validRequisitionItems = await _dbContext.RequisitionItems

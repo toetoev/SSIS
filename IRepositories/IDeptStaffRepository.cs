@@ -6,7 +6,6 @@ namespace SSIS.IRepositories
 {
     public interface IDeptStaffRepository
     {
-        Task<bool> DeptRepExist(DeptStaff deptStaff);
         Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo);
         Task<DeptStaff> GetDeptStaffByEmail(string email);
         Task UpdateDeptStaff();
