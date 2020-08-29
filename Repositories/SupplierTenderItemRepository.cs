@@ -26,7 +26,7 @@ namespace SSIS.Repositories
                 supplierTenderItem.Description = supplierTenderItem.Item.Description;
                 supplierTenderItem.UoM = supplierTenderItem.Item.UoM;
             }
-            return supplierTenderItems;
+            return supplierTenderItems.OrderBy(sti => sti.Description).ToList();
         }
 
         public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority)

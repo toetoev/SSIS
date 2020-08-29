@@ -36,12 +36,16 @@ namespace SSIS.Repositories
 
         public async Task<List<Item>> GetItemsByCategory(string name)
         {
-            return await _dbContext.Items.Where(i => i.CategoryName == name).ToListAsync();
+            return await _dbContext.Items.Where(i => i.CategoryName == name).OrderBy(i => i.Description).ToListAsync();
         }
 
         public async Task<List<Item>> GetLowStockItems()
         {
-            return await _dbContext.Items.Where(i => i.Stock <= i.ReorderLevel).Where(i => !i.OrderItems.Any(oi => oi.Order.OrderedOn.Date.CompareTo(DateTime.Now.Date) <= 0)).ToListAsync();
+            return await _dbContext.Items
+                .Where(i => i.Stock <= i.ReorderLevel)
+                .Where(i => !i.OrderItems.Any(oi => oi.Order.OrderedOn.Date.CompareTo(DateTime.Now.Date) <= 0))
+                .OrderBy(i => i.CategoryName)
+                .ToListAsync();
         }
 
         public async Task<bool> ItemExist(Guid itemId)

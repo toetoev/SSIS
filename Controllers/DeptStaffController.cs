@@ -21,7 +21,7 @@ namespace SSIS.Controllers
 
         // /?roles=DEPTREP&roles=EMPLOYEE
         [HttpGet("")]
-        [Authorize(Roles = DeptRole.DeptHead)]
+        [Authorize(Roles = DeptRole.DeptHead + "," + DeptRole.Employee)]
         public IActionResult GetDeptStaffByRole([FromQuery] string[] roles)
         {
             string email = User.FindFirst(ClaimTypes.Email).Value;

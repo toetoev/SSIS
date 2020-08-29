@@ -1,7 +1,9 @@
 import { Button, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Confirm from "../../../../component/Confirm";
 import axios from "axios";
+import email from "../../../../../util/email";
 import sorter from "../../../../../util/sorter";
 import useSearch from "../../../../../hook/useSearch";
 
@@ -35,7 +37,12 @@ export const ReadyForDelivery = ({ keyword }) => {
 		{
 			title: "Disbursement List",
 			key: "action",
-			render: (text) => <ReadyForDeliveryModal text={text} />,
+			render: (text) => (
+				<Space>
+					<ReadyForDeliveryModal text={text} />
+					<SendEmail text={text} />
+				</Space>
+			),
 		},
 	];
 	useEffect(() => {
@@ -137,5 +144,22 @@ const ReadyForDeliveryModal = ({ text }) => {
 				</Space>
 			</Modal>
 		</div>
+	);
+};
+
+const SendEmail = ({ text }) => {
+	const sendEmail = () => {
+		Confirm("Notify department requested items are ready for collection?", "", () => {
+			email(
+				text.action.requestedByEmail,
+				text.action.requestedBy.name,
+				`The requisition requested on ${text.action.requestedOn} is ready for collection, department rep can collect items within working hours.`
+			);
+		});
+	};
+	return (
+		<Button type="primary" onClick={sendEmail}>
+			Notify
+		</Button>
 	);
 };

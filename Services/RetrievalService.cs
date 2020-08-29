@@ -72,7 +72,7 @@ namespace SSIS.Services
 
         public async Task<ApiResponse> GetAllRetrievalsByCurrentStaff(string currentStaffEmail)
         {
-            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAllByCurrentStaff(currentStaffEmail) };
+            return new ApiResponse { Success = true, Data = await _retrievalRepository.GetAllRetrievalsByCurrentStaff(currentStaffEmail) };
         }
 
         public async Task<ApiResponse> UpdateRetrievalActualQuantity(Guid retrievalId, List<RetrievalItem> retrievalItems, string email)

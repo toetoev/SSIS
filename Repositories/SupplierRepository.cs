@@ -39,11 +39,6 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Supplier>> GetAllSuppliers()
-        {
-            return await _dbContext.Suppliers.ToListAsync();
-        }
-
         public async Task<int> UpdateSupplier()
         {
             return await _dbContext.SaveChangesAsync();
@@ -53,11 +48,6 @@ namespace SSIS.Repositories
         {
             _dbContext.Suppliers.Remove(supplier);
             return await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<bool> SupplierExistById(Guid id)
-        {
-            return await _dbContext.Suppliers.AnyAsync(s => s.Id == id);
         }
 
         public async Task<bool> SupplierNameExist(string name)

@@ -31,13 +31,9 @@ namespace SSIS.Repositories
 
         public async Task<List<Department>> GetAllDepartment()
         {
-            return await _dbContext.Departments.ToListAsync();
+            return await _dbContext.Departments.OrderBy(d => d.Name).ToListAsync();
         }
 
-        public async Task<Department> GetDepartment(string name)
-        {
-            return await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();
-        }
         public async Task<int> UpdateCollectionPoint()
         {
             return await _dbContext.SaveChangesAsync();

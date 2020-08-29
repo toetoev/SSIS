@@ -31,18 +31,15 @@ namespace SSIS.Services
 
         public async Task<List<Order>> GetAll()
         {
-            return await _dbContext.Orders.ToListAsync();
+            return await _dbContext.Orders.OrderBy(o => o.Status).ThenBy(o => o.OrderedOn).ToListAsync();
         }
 
         public async Task<Order> GetOrderById(Guid orderId)
         {
-            return await _dbContext.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
+            return await _dbContext.Orders.Where(o => o.Id == orderId).OrderBy(o => o.Status).ThenBy(o => o.OrderedOn).FirstOrDefaultAsync();
         }
 
-        public async Task<Order> GetOrderBySupplierAndDate(Guid supplierId, DateTime date)
-        {
-            return await _dbContext.Orders.Where(o => o.SupplierId == supplierId && o.OrderedOn.Date == date.Date).FirstOrDefaultAsync();
-        }
+        public async Task<Order> GetOrderBySupplierAndDate(Guid supplierId, DateTime date) => await _dbContext.Orders.Where(o => o.SupplierId == supplierId && o.OrderedOn.Date == date.Date).FirstOrDefaultAsync();
 
         public async Task<int> UpdateOrder()
         {

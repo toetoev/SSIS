@@ -26,6 +26,24 @@ namespace SSIS.Databases
             SeedSupplier();
             SeedCategory();
             SeedItem();
+            SeedSupplierTenderItem();
+        }
+
+        private void SeedSupplierTenderItem()
+        {
+            List<Item> items = _dbContext.Items.ToList();
+            foreach (var item in items)
+            {
+                SupplierTenderItem supplierTenderItem1 = new SupplierTenderItem(10, 1, item.Id, GetSupplierByName("Supplier 1").Id);
+                SupplierTenderItem supplierTenderItem2 = new SupplierTenderItem(10, 2, item.Id, GetSupplierByName("Supplier 2").Id);
+                SupplierTenderItem supplierTenderItem3 = new SupplierTenderItem(10, 3, item.Id, GetSupplierByName("Supplier 3").Id);
+                _dbContext.Add(supplierTenderItem1);
+                _dbContext.SaveChanges();
+                _dbContext.Add(supplierTenderItem2);
+                _dbContext.SaveChanges();
+                _dbContext.Add(supplierTenderItem3);
+                _dbContext.SaveChanges();
+            }
         }
 
         private void SeedDeptStaff()
@@ -34,12 +52,8 @@ namespace SSIS.Databases
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
                 new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "meka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "Kai Huei", Email = "kaihueiboss@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
-
-                new DeptStaff { Name = "ABC", Email = "abc@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "DEF", Email = "def@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "GHI", Email = "ghi@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "Meka", Email = "pranammeka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "Kai Huei", Email = "taihuei0114@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -52,9 +66,9 @@ namespace SSIS.Databases
         {
             ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
             {
-                new StoreStaff { Name = "Win", Email = "win@gmail.com", Password = "1", Role = "CLERK" },
-                new StoreStaff { Name = "Kai", Email = "kai@gmail.com", Password = "1", Role = "SUPERVISOR" },
-                new StoreStaff { Name = "Zana", Email = "zana@gmail.com", Password = "1", Role = "MANAGER" }
+                new StoreStaff { Name = "Win", Email = "hkw1996@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "Chris", Email = "christophercolinfong@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "Zana", Email = "yuzanayushwe@gmail.com", Password = "1", Role = "MANAGER" }
             };
             foreach (var storeStaff in storeStaffs)
             {
@@ -176,9 +190,9 @@ namespace SSIS.Databases
         {
             ICollection<Supplier> suppliers = new List<Supplier>
             {
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier One", ContactName = "Supplier One Contact", Phone = "45723494", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Two", ContactName = "Supplier Two Contact", Phone = "94367954", Fax = "", GST = "", Address = "" },
-                new Supplier { Id = Guid.NewGuid(), Name = "Supplier Three", ContactName = "Supplier Three Contact", Phone = "13096528", Fax = "", GST = "", Address = "" }
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier 1", ContactName = "Supplier 1 Contact", Phone = "45723494", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier 2", ContactName = "Supplier 2 Contact", Phone = "94367954", Fax = "", GST = "", Address = "" },
+                new Supplier { Id = Guid.NewGuid(), Name = "Supplier 3", ContactName = "Supplier 3 Contact", Phone = "13096528", Fax = "", GST = "", Address = "" }
             };
             foreach (var supplier in suppliers)
             {
