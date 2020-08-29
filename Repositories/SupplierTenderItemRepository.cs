@@ -13,7 +13,10 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public SupplierTenderItemRepository(DataContext dbContext) => _dbContext = dbContext;
+        public SupplierTenderItemRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<List<SupplierTenderItem>> GetSupplierTenderBySupplierId(Guid supplierId)
         {
@@ -26,6 +29,9 @@ namespace SSIS.Repositories
             return supplierTenderItems.OrderBy(sti => sti.Description).ToList();
         }
 
-        public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority) => await _dbContext.SupplierTenderItems.Where(sti => sti.ItemId == itemId && sti.Priority == priority).FirstOrDefaultAsync();
+        public async Task<SupplierTenderItem> GetSupplierTenderItemByItemIdAndPriority(Guid itemId, int priority)
+        {
+            return await _dbContext.SupplierTenderItems.Where(sti => sti.ItemId == itemId && sti.Priority == priority).FirstOrDefaultAsync();
+        }
     }
 }

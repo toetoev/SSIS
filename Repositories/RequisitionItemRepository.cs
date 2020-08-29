@@ -14,7 +14,10 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public RequisitionItemRepository(DataContext dbContext) => _dbContext = dbContext;
+        public RequisitionItemRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<RequisitionItem> GetRequisitionItemByPK(Guid requisitionId, Guid itemId) => await _dbContext.RequisitionItems.Where(ri => ri.RequisitionId == requisitionId && ri.ItemId == itemId).FirstOrDefaultAsync();
 
@@ -52,6 +55,9 @@ namespace SSIS.Repositories
             return requisitionTrends;
         }
 
-        public async Task<int> UpdateRequisitionItems() => await _dbContext.SaveChangesAsync();
+        public async Task<int> UpdateRequisitionItems()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

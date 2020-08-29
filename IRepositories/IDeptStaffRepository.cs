@@ -8,7 +8,7 @@ namespace SSIS.IRepositories
     {
         Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo);
         Task<DeptStaff> GetDeptStaffByEmail(string email);
-        Task UpdateDeptStaff();
+        Task<int> UpdateDeptStaff();
         Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles);
         Task<string> GetCollectionPointByStaff(string deptStaff);
     }

@@ -13,7 +13,10 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public ItemRepository(DataContext dbContext) => _dbContext = dbContext;
+        public ItemRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<int> CreateItem(Item item)
         {
@@ -21,11 +24,20 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Item>> GetAll() => await _dbContext.Items.OrderBy(i => i.Description).ToListAsync();
+        public async Task<List<Item>> GetAll()
+        {
+            return await _dbContext.Items.OrderBy(i => i.Description).ToListAsync();
+        }
 
-        public async Task<Item> GetItemById(Guid itemId) => await _dbContext.Items.Where(i => i.Id == itemId).FirstOrDefaultAsync();
+        public async Task<Item> GetItemById(Guid itemId)
+        {
+            return await _dbContext.Items.Where(i => i.Id == itemId).FirstOrDefaultAsync();
+        }
 
-        public async Task<List<Item>> GetItemsByCategory(string name) => await _dbContext.Items.Where(i => i.CategoryName == name).OrderBy(i => i.Description).ToListAsync();
+        public async Task<List<Item>> GetItemsByCategory(string name)
+        {
+            return await _dbContext.Items.Where(i => i.CategoryName == name).OrderBy(i => i.Description).ToListAsync();
+        }
 
         public async Task<List<Item>> GetLowStockItems()
         {
@@ -36,13 +48,19 @@ namespace SSIS.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> ItemExist(Guid itemId) => await _dbContext.Items.AnyAsync(i => i.Id == itemId);
+        public async Task<bool> ItemExist(Guid itemId)
+        {
+            return await _dbContext.Items.AnyAsync(i => i.Id == itemId);
+        }
         public async Task<int> DeleteItem(Item itemFromRepo)
         {
             _dbContext.Items.Remove(itemFromRepo);
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateItem() => await _dbContext.SaveChangesAsync();
+        public async Task<int> UpdateItem()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

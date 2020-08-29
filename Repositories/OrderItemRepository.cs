@@ -14,9 +14,15 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public OrderItemRepository(DataContext dbContext) => _dbContext = dbContext;
+        public OrderItemRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-        public async Task<OrderItem> GetOrderItemByPK(Guid itemId, Guid orderId) => await _dbContext.OrderItems.Where(oi => oi.ItemId == itemId && oi.OrderId == orderId).FirstOrDefaultAsync();
+        public async Task<OrderItem> GetOrderItemByPK(Guid itemId, Guid orderId)
+        {
+            return await _dbContext.OrderItems.Where(oi => oi.ItemId == itemId && oi.OrderId == orderId).FirstOrDefaultAsync();
+        }
 
         public async Task<List<TrendViewModel>> GetOrderTrend(DateTime startDate, DateTime endDate, List<string> categories)
         {

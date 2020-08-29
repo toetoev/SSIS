@@ -9,7 +9,10 @@ namespace SSIS.Repositories
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _dbContext;
-        public AuthRepository(DataContext dbContext) => _dbContext = dbContext;
+        public AuthRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public async Task<User> Login(string nameOrEmail, string pasword, string role)
         {
             if (role.Equals("STORE"))

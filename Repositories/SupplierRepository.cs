@@ -13,13 +13,25 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public SupplierRepository(DataContext dbContext) => _dbContext = dbContext;
+        public SupplierRepository(DataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-        public async Task<List<Supplier>> GetAll() => await _dbContext.Suppliers.OrderBy(s => s.Name).ToListAsync();
+        public async Task<List<Supplier>> GetAll()
+        {
+            return await _dbContext.Suppliers.OrderBy(s => s.Name).ToListAsync();
+        }
 
-        public async Task<Supplier> GetSupplierById(Guid supplierId) => await _dbContext.Suppliers.Where(s => s.Id == supplierId).FirstOrDefaultAsync();
+        public async Task<Supplier> GetSupplierById(Guid supplierId)
+        {
+            return await _dbContext.Suppliers.Where(s => s.Id == supplierId).FirstOrDefaultAsync();
+        }
 
-        public async Task<bool> SupplierExist(string supplierName) => await _dbContext.Suppliers.AnyAsync(s => s.Name == supplierName);
+        public async Task<bool> SupplierExist(string supplierName)
+        {
+            return await _dbContext.Suppliers.AnyAsync(s => s.Name == supplierName);
+        }
 
         public async Task<int> CreateSupplier(Supplier supplier)
         {
@@ -27,7 +39,10 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateSupplier() => await _dbContext.SaveChangesAsync();
+        public async Task<int> UpdateSupplier()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
 
         public async Task<int> DeleteSupplier(Supplier supplier)
         {
@@ -35,6 +50,9 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> SupplierNameExist(string name) => await _dbContext.Suppliers.AnyAsync(s => s.Name == name);
+        public async Task<bool> SupplierNameExist(string name)
+        {
+            return await _dbContext.Suppliers.AnyAsync(s => s.Name == name);
+        }
     }
 }
