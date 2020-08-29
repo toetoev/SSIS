@@ -20,7 +20,6 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
         public async Task<List<Adjustment>> GetAll() => await _dbContext.Adjustments.OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToListAsync();
-        public async Task<int> UpdateAdjustmentStatus() => await _dbContext.SaveChangesAsync();
         public async Task<int> UpdateAdjustment() => await _dbContext.SaveChangesAsync();
         public async Task<int> DeleteAdjustment(Adjustment adjustment)
         {
@@ -44,9 +43,9 @@ namespace SSIS.Repositories
                 adjustmentTotalPrices[adjustment.Id] = totalPrice;
             }
             if (isLowerThan)
-                return adjustments.Where(a => adjustmentTotalPrices[a.Id] <= 250).ToList();
+                return adjustments.Where(a => adjustmentTotalPrices[a.Id] <= 250).OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToList();
             else
-                return adjustments.Where(a => adjustmentTotalPrices[a.Id] > 250).ToList();
+                return adjustments.Where(a => adjustmentTotalPrices[a.Id] > 250).OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToList();
         }
     }
 }

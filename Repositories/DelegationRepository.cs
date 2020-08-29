@@ -12,10 +12,7 @@ namespace SSIS.Repositories
     public class DelegationRepository : IDelegationRepository
     {
         private readonly DataContext _dbContext;
-        public DelegationRepository(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public DelegationRepository(DataContext dbContext) => _dbContext = dbContext;
 
         public async Task<int> CreateDelegation(Delegation delegation)
         {
@@ -23,34 +20,19 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate)
-        {
-            return await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail && d.StartDate == startDate).FirstOrDefaultAsync();
-        }
+        public async Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate) => await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail && d.StartDate == startDate).FirstOrDefaultAsync();
 
-        public async Task<List<Delegation>> GetDelegationsByDepartment(string deptName)
-        {
-            return await _dbContext.Delegations.Where(d => d.DelegatedBy.DepartmentName == deptName).ToListAsync();
-        }
+        public async Task<List<Delegation>> GetDelegationsByDepartment(string deptName) => await _dbContext.Delegations.Where(d => d.DelegatedBy.DepartmentName == deptName).OrderBy(d => d.StartDate).ToListAsync();
 
-        public async Task<int> UpdateDelegation()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
+        public async Task<int> UpdateDelegation() => await _dbContext.SaveChangesAsync();
         public async Task<int> DeleteDelegation(Delegation delegationFromRepo)
         {
             _dbContext.Delegations.Remove(delegationFromRepo);
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> IsDelegated(string deptStaffEmail)
-        {
-            return await _dbContext.Delegations.AnyAsync(d => d.DelegatedToEmail == deptStaffEmail && d.StartDate.CompareTo(DateTime.Now) <= 0 && d.EndDate.CompareTo(DateTime.Now) >= 0);
-        }
+        public async Task<bool> IsDelegated(string deptStaffEmail) => await _dbContext.Delegations.AnyAsync(d => d.DelegatedToEmail == deptStaffEmail && d.StartDate.CompareTo(DateTime.Now) <= 0 && d.EndDate.CompareTo(DateTime.Now) >= 0);
 
-        public async Task<Delegation> GetDelegationsById(Guid delegationId)
-        {
-            return await _dbContext.Delegations.Where(d => d.Id == delegationId).FirstOrDefaultAsync();
-        }
+        public async Task<Delegation> GetDelegationsById(Guid delegationId) => await _dbContext.Delegations.Where(d => d.Id == delegationId).FirstOrDefaultAsync();
     }
 }

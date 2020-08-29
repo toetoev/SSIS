@@ -7,6 +7,14 @@ namespace SSIS.Models
 {
     public class SupplierTenderItem
     {
+        public SupplierTenderItem(double price, int priority, Guid itemId, Guid supplierId)
+        {
+            Price = price;
+            Priority = priority;
+            ItemId = itemId;
+            SupplierId = supplierId;
+        }
+
         [Key]
         public Guid ItemId { get; set; }
 

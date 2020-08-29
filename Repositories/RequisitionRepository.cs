@@ -12,35 +12,20 @@ namespace SSIS.Repositories
     public class RequisitionRepository : IRequisitionRepository
     {
         private readonly DataContext _dbContext;
-        public RequisitionRepository(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public RequisitionRepository(DataContext dbContext) => _dbContext = dbContext;
         public async Task<int> CreateRequisition(Requisition requisition)
         {
             _dbContext.Add(requisition);
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status)
-        {
-            return await _dbContext.Requisitions.Where(r => r.Status == status).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
-        }
+        public async Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status) => await _dbContext.Requisitions.Where(r => r.Status == status).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
 
-        public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses)
-        {
-            return await _dbContext.Requisitions.Where(r => r.DepartmentName == deptName && requisitionStatuses.Contains(r.Status)).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
-        }
+        public async Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses) => await _dbContext.Requisitions.Where(r => r.DepartmentName == deptName && requisitionStatuses.Contains(r.Status)).OrderBy(r => r.Status).ThenBy(r => r.RequestedOn).ToListAsync();
 
-        public async Task<Requisition> GetRequisitionById(Guid requisitionId)
-        {
-            return await _dbContext.Requisitions.Where(r => r.Id == requisitionId).FirstOrDefaultAsync();
-        }
+        public async Task<Requisition> GetRequisitionById(Guid requisitionId) => await _dbContext.Requisitions.Where(r => r.Id == requisitionId).FirstOrDefaultAsync();
 
-        public async Task<int> UpdateRequisition()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
+        public async Task<int> UpdateRequisition() => await _dbContext.SaveChangesAsync();
 
         public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId)
         {
@@ -61,7 +46,7 @@ namespace SSIS.Repositories
                 r.AcknowledgedBy,
                 r.RequisitionItems.Where(ri => ri.ItemId == itemId).ToList(),
                 r.RetrievalId
-            )).ToListAsync();
+            )).OrderBy(r => r.RequestedOn).ToListAsync();
         }
 
         public async Task<List<Item>> GetPopularItems(string deptName)

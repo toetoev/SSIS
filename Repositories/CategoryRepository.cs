@@ -13,24 +13,12 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public CategoryRepository(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public CategoryRepository(DataContext dbContext) => _dbContext = dbContext;
 
-        public async Task<bool> CategoryExist(string name)
-        {
-            return await _dbContext.Categories.AnyAsync(c => c.Name == name);
-        }
+        public async Task<bool> CategoryExist(string name) => await _dbContext.Categories.AnyAsync(c => c.Name == name);
 
-        public async Task<List<Category>> GetAll()
-        {
-            return await _dbContext.Categories.OrderBy(c => c.Name).ToListAsync();
-        }
+        public async Task<List<Category>> GetAll() => await _dbContext.Categories.OrderBy(c => c.Name).ToListAsync();
 
-        public async Task<Category> GetCategoryByName(string name)
-        {
-            return await _dbContext.Categories.Where(c => c.Name == name).FirstOrDefaultAsync();
-        }
+        public async Task<Category> GetCategoryByName(string name) => await _dbContext.Categories.Where(c => c.Name == name).FirstOrDefaultAsync();
     }
 }

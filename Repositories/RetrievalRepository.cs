@@ -14,10 +14,7 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public RetrievalRepository(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public RetrievalRepository(DataContext dbContext) => _dbContext = dbContext;
 
         public async Task<int> CreateRetrieval(Retrieval retrieval)
         {
@@ -25,15 +22,9 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Retrieval>> GetAllByCurrentStaff(string currentStaffEmail)
-        {
-            return await _dbContext.Retrievals.Where(r => r.CreatedBy.Email == currentStaffEmail).ToListAsync();
-        }
+        public async Task<List<Retrieval>> GetAllRetrievalsByCurrentStaff(string currentStaffEmail) => await _dbContext.Retrievals.Where(r => r.CreatedBy.Email == currentStaffEmail).OrderBy(r => r.CreatedOn).ToListAsync();
 
-        public async Task<Retrieval> GetRetrievalById(Guid id)
-        {
-            return await _dbContext.Retrievals.Where(r => r.Id == id).FirstOrDefaultAsync();
-        }
+        public async Task<Retrieval> GetRetrievalById(Guid id) => await _dbContext.Retrievals.Where(r => r.Id == id).FirstOrDefaultAsync();
 
         public async Task<int> DeleteRetrieval(Retrieval retrieval)
         {
@@ -41,9 +32,6 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateRetrieval()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
+        public async Task<int> UpdateRetrieval() => await _dbContext.SaveChangesAsync();
     }
 }

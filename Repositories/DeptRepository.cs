@@ -12,10 +12,7 @@ namespace SSIS.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public DeptRepository(DataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public DeptRepository(DataContext dbContext) => _dbContext = dbContext;
         public async Task<bool> CollectionPointExist(string collectionPointId)
         {
             if (await _dbContext.CollectionPoints.AnyAsync(x => x.Location == collectionPointId))
@@ -29,18 +26,9 @@ namespace SSIS.Repositories
             return false;
         }
 
-        public async Task<List<Department>> GetAllDepartment()
-        {
-            return await _dbContext.Departments.ToListAsync();
-        }
+        public async Task<List<Department>> GetAllDepartment() => await _dbContext.Departments.OrderBy(d => d.Name).ToListAsync();
 
-        public async Task<Department> GetDepartment(string name)
-        {
-            return await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();
-        }
-        public async Task<int> UpdateCollectionPoint()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
+        public async Task<Department> GetDepartment(string name) => await _dbContext.Departments.Where(dept => dept.Name == name).FirstOrDefaultAsync();
+        public async Task<int> UpdateCollectionPoint() => await _dbContext.SaveChangesAsync();
     }
 }

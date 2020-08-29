@@ -11,7 +11,6 @@ namespace SSIS.IRepositories
         Task<Supplier> GetSupplierById(Guid supplierId);
         Task<List<Supplier>> GetAll();
         Task<int> CreateSupplier(Supplier supplier);
-        Task<List<Supplier>> GetAllSuppliers();
         Task<int> UpdateSupplier();
         Task<int> DeleteSupplier(Supplier supplier);
         Task<bool> SupplierExistById(Guid id);

@@ -95,7 +95,7 @@ namespace SSIS.Services
                         adjustmentFromRepo.IssuedOn = DateTime.Now;
                         adjustmentFromRepo.IssuedBy = storeStaffFromRepo;
                     }
-                    return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
+                    return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustment() };
                 }
             }
             return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };
