@@ -6,7 +6,7 @@
 		"@ant-design/icons": "^4.2.2",
 		"antd": "^4.6.1",
 		"axios": "^0.19.2",
-		"echarts": "^4.8.0",
+		"echarts": "^4.9.0",
 		"echarts-for-react": "^2.0.16",
 		"emailjs-com": "^2.6.3",
 		"fuse.js": "^6.4.1",
