@@ -50,7 +50,7 @@ namespace SSIS.Repositories
                     double avgPrice = 0;
                     foreach (var item in adjustmentItem.Item.SupplierTenderItems)
                         avgPrice += item.Price;
-                    totalPrice += Math.Abs(adjustmentItem.AdjustedQty) * avgPrice;
+                    totalPrice += Math.Abs(adjustmentItem.AdjustedQty) * (avgPrice / adjustmentItem.Item.SupplierTenderItems.Count());
                 }
                 adjustmentTotalPrices[adjustment.Id] = totalPrice;
             }
