@@ -182,7 +182,6 @@ const OrderModal = ({ text, setLoading }) => {
 	const handleSubmit = () => {
 		let data = [];
 		dataSource.forEach((item) => {
-			debugger;
 			if (item.deliveredQty !== null && item.deliveredQty != -1)
 				data = [
 					...data,

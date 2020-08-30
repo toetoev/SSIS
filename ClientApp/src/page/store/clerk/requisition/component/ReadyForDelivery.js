@@ -7,7 +7,7 @@ import email from "../../../../../util/email";
 import sorter from "../../../../../util/sorter";
 import useSearch from "../../../../../hook/useSearch";
 
-export const ReadyForDelivery = ({ keyword }) => {
+export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 	const options = {
 		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
 	};
@@ -74,11 +74,13 @@ export const ReadyForDelivery = ({ keyword }) => {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };

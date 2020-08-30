@@ -5,7 +5,7 @@ import axios from "axios";
 import sorter from "../../../../../util/sorter";
 import useSearch from "../../../../../hook/useSearch";
 
-export const Completed = ({ keyword }) => {
+export const Completed = ({ loading, setLoading, keyword }) => {
 	const options = {
 		keys: ["departmentName", "requestedBy", "requestedOn", "collectionPoint"],
 	};
@@ -68,11 +68,13 @@ export const Completed = ({ keyword }) => {
 						}, [])
 					);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
+				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return <Table columns={columns} dataSource={dataSource} pagination={false} size="middle" />;
 };

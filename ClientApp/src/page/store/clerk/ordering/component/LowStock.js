@@ -1,17 +1,17 @@
 import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
-import sorter from "../../../../../util/sorter";
+
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
+import axios from "axios";
+import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
 export const LowStock = ({ loading, setLoading, keyword }) => {
 	const options = {
-		keys: ["category", "description", "uoM"],
+		keys: ["category", "bin", "description", "uoM"],
 	};
 	const [dataSource, setDataSource] = useSearch({ keyword, options });
-
 	const columns = [
 		{
 			title: "Category",
@@ -118,19 +118,21 @@ const LowStockModal = ({ text, setLoading }) => {
 	};
 	useEffect(() => {
 		setDataSource(
-			items.supplierTenderItems.reduce(
-				(items, item) => [
-					...items,
-					{
-						key: item.supplierId,
-						supplierName: item.supplier === null ? "" : item.supplier.name,
-						orderedQty: 0,
-						priority: item.priority,
-						action: item,
-					},
-				],
-				[]
-			)
+			items.supplierTenderItems
+				.reduce(
+					(items, item) => [
+						...items,
+						{
+							key: item.supplierId,
+							supplierName: item.supplier === null ? "" : item.supplier.name,
+							orderedQty: 0,
+							priority: item.priority,
+							action: item,
+						},
+					],
+					[]
+				)
+				.sort((a, b) => a.priority - b.priority)
 		);
 	}, []);
 
