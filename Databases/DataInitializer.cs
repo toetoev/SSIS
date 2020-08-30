@@ -81,9 +81,9 @@ namespace SSIS.Databases
         {
             ICollection<Item> items = new List<Item>
             {
-                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
-                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
-                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C1", "Clips Double 1\''", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
+                new Item("C2", "Clips Double 2\''", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C3", "Clips Double 3/4\''", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
                 new Item("C4", "Clips Paper Large", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C5", "Clips Paper Medium ", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C6", "Clips Paper Small", "Box", 50, 30, 100, GetCategoryByName("Clip")),
@@ -147,8 +147,8 @@ namespace SSIS.Databases
                 new Item("P44", "Pencil 4H ", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
                 new Item("P45", "Pencil B", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
                 new Item("P46", "Pencil B with Eraser End", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
-                new Item("R2", "Ruler 12\"", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
-                new Item("R1", "Ruler 6\"", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
+                new Item("R2", "Ruler 12\''", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
+                new Item("R1", "Ruler 6\''", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
                 new Item("S100", "Scissors", "Each", 50, 20, 100, GetCategoryByName("Scissors")),
                 new Item("S40", "Scotch Tape", "Each", 50, 20, 100, GetCategoryByName("Tape")),
                 new Item("S41", "Scotch Tape Dispenser", "Each", 50, 20, 100, GetCategoryByName("Tape")),

@@ -1,6 +1,7 @@
-import { Button, Descriptions, InputNumber, Modal, Table } from "antd";
+import { Button, Descriptions, InputNumber, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
+import { CSVLink } from "react-csv";
 import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
@@ -54,6 +55,15 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 			render: (text) => <LowStockModal text={text} setLoading={setLoading} />,
 		},
 	];
+	const headers = [
+		{ label: "Category", key: "category" },
+		{ label: "Bin", key: "bin" },
+		{ label: "Description", key: "description" },
+		{ label: "UoM", key: "uoM" },
+		{ label: "Reorder Level", key: "reorderLevel" },
+		{ label: "Reorder Quantity", key: "reorderQty" },
+		{ label: "Stock", key: "stock" },
+	];
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item/low-stock", {
@@ -91,13 +101,29 @@ export const LowStock = ({ loading, setLoading, keyword }) => {
 			});
 	}, [loading]);
 	return (
-		<Table
-			columns={columns}
-			loading={loading}
-			dataSource={dataSource}
-			scroll={{ y: 400 }}
-			size="small"
-		/>
+		<Row>
+			<Space direction="vertical">
+				<Table
+					columns={columns}
+					loading={loading}
+					dataSource={dataSource}
+					pagination={false}
+					scroll={{ y: 500 }}
+					size="small"
+				/>
+				<Row justify="end">
+					<Button type="primary">
+						<CSVLink
+							data={dataSource}
+							headers={headers}
+							filename={`Low Stock List.csv`}
+						>
+							Print
+						</CSVLink>
+					</Button>
+				</Row>
+			</Space>
+		</Row>
 	);
 };
 

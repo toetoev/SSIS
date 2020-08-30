@@ -13,6 +13,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 
+import { CSVLink } from "react-csv";
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
@@ -67,7 +68,13 @@ export default function StationeryCatalogue() {
 			),
 		},
 	];
-
+	const headers = [
+		{ label: "Category", key: "category" },
+		{ label: "UoM", key: "uoM" },
+		{ label: "Description", key: "description" },
+		{ label: "Reorder Quantity", key: "reorderQuantity" },
+		{ label: "Reorder Level", key: "reorderLevel" },
+	];
 	useEffect(() => {
 		axios
 			.get("https://localhost:5001/api/item", {
@@ -115,6 +122,15 @@ export default function StationeryCatalogue() {
 							style={{ width: 200 }}
 						/>
 						<Add setLoading={setLoading} />
+						<Button type="primary">
+							<CSVLink
+								data={dataSource}
+								headers={headers}
+								filename={`Tender List.csv`}
+							>
+								Print
+							</CSVLink>
+						</Button>
 					</Space>
 				</Col>
 			</Row>
@@ -216,7 +232,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	useEffect(() => {
@@ -447,18 +463,20 @@ const Add = ({ setLoading }) => {
 const Details = ({ text }) => {
 	const item = text.action;
 	const [visible, setVisible] = useState(false);
-
 	const [dataSource] = useState(
-		item.supplierTenderItems.reduce((rows, supplierItem) => {
-			return [
-				...rows,
-				{
-					key: supplierItem.supplierId,
-					supplierName: supplierItem.supplier.name,
-					price: supplierItem.price,
-				},
-			];
-		}, [])
+		item.supplierTenderItems
+			.reduce((rows, supplierItem) => {
+				return [
+					...rows,
+					{
+						key: supplierItem.supplierId,
+						supplierName: supplierItem.supplier.name,
+						priority: supplierItem.priority,
+						price: supplierItem.price,
+					},
+				];
+			}, [])
+			.sort((a, b) => a.priority - b.priority)
 	);
 
 	const showModal = () => {
@@ -475,6 +493,10 @@ const Details = ({ text }) => {
 			dataIndex: "supplierName",
 		},
 		{
+			title: "Priority",
+			dataIndex: "priority",
+		},
+		{
 			title: "Price",
 			dataIndex: "price",
 		},
@@ -483,7 +505,6 @@ const Details = ({ text }) => {
 	return (
 		<>
 			<Button onClick={showModal}>View</Button>
-
 			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
 					<Descriptions.Item label="Description">{item.description}</Descriptions.Item>
@@ -519,16 +540,19 @@ const Edit = ({ text, setLoading }) => {
 
 	const item = text.action;
 	const [dataSource] = useState(
-		item.supplierTenderItems.reduce((rows, supplierItem) => {
-			return [
-				...rows,
-				{
-					key: supplierItem.supplierId,
-					supplierName: supplierItem.supplier.name,
-					price: supplierItem.price,
-				},
-			];
-		}, [])
+		item.supplierTenderItems
+			.reduce((rows, supplierItem) => {
+				return [
+					...rows,
+					{
+						key: supplierItem.supplierId,
+						supplierName: supplierItem.supplier.name,
+						priority: supplierItem.priority,
+						price: supplierItem.price,
+					},
+				];
+			}, [])
+			.sort((a, b) => a.priority - b.priority)
 	);
 	const [category, setCategory] = useState(item.categoryName);
 	const [description, setDescription] = useState(item.description);
@@ -627,7 +651,7 @@ const Edit = ({ text, setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	useEffect(() => {

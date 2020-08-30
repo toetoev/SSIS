@@ -340,7 +340,7 @@ const Details = ({ text }) => {
 				<Table
 					columns={columns}
 					pagination={false}
-					scroll={{ y: 400 }}
+					scroll={{ y: 300 }}
 					size="small"
 					dataSource={dataSource}
 				/>
