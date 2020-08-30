@@ -69,7 +69,6 @@ export const Disbursement = ({ loading, setLoading, keyword }) => {
 const DisburseModal = ({ text, setLoading }) => {
 	const retrieval = text.action;
 	const [visible, setVisible] = useState(false);
-	const [disable, setDisable] = useState(false);
 	const onChange = (val, row) => {
 		const newData = [...dataSource];
 		const index = dataSource.findIndex((item) => row.key === item.key);
@@ -152,45 +151,42 @@ const DisburseModal = ({ text, setLoading }) => {
 		setVisible(false);
 	};
 	useEffect(() => {
-		if (text.amountRetrieved !== "") {
-			axios
-				.get(
-					`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
-					{
-						headers: {
-							Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
-						},
-					}
-				)
-				.then((res) => {
-					const result = res.data;
-					if (result.success) {
-						setDataSource(
-							result.data.reduce((rows, requisition) => {
-								return [
-									...rows,
-									{
-										key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
-										department: requisition.department.name,
-										requestedBy: requisition.requestedBy.name,
-										requestedDate: requisition.requestedOn,
-										neededAmount: requisition.requisitionItems[0].need,
-										actualAmount: requisition.requisitionItems[0].actual,
-									},
-								];
-							}, [])
-						);
-						setDisable(false);
-					}
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
-		} else setDisable(true);
+		axios
+			.get(
+				`https://localhost:5001/api/requisition/${retrieval.retrievalId}/requisition-item/${retrieval.itemId}`,
+				{
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+					},
+				}
+			)
+			.then((res) => {
+				const result = res.data;
+				if (result.success) {
+					setDataSource(
+						result.data.reduce((rows, requisition) => {
+							return [
+								...rows,
+								{
+									key: `${requisition.id} ${requisition.requisitionItems[0].itemId}`,
+									department: requisition.department.name,
+									requestedBy: requisition.requestedBy.name,
+									requestedDate: requisition.requestedOn,
+									neededAmount: requisition.requisitionItems[0].need,
+									actualAmount: requisition.requisitionItems[0].actual,
+								},
+							];
+						}, [])
+					);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
 	}, []);
 	return (
 		<div>
-			<Button type="primary" onClick={showModal} disabled={disable}>
+			<Button type="primary" onClick={showModal}>
 				Disburse
 			</Button>
 			<Modal
