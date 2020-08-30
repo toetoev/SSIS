@@ -260,14 +260,14 @@ const ReviewRequisitionModal = ({ text, setLoading }) => {
 				{status === "DELIVERED" ? (
 					<>
 						<Descriptions>
-							<Descriptions.Item label="Delivered by:">
+							<Descriptions.Item label="Collected By">
 								{requisition.acknowledgedBy === null
 									? ""
 									: requisition.acknowledgedBy.name}
 							</Descriptions.Item>
 						</Descriptions>
 						<Descriptions>
-							<Descriptions.Item label="Delivered date:">
+							<Descriptions.Item label="Delivered Date">
 								{requisition.acknowledgedOn}
 							</Descriptions.Item>
 						</Descriptions>
