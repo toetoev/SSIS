@@ -32,18 +32,15 @@ namespace SSIS.Services
             if (requisitionItemsFromRepo.Count() == requisitionItems.Count())
             {
                 totalQtyRetrieved = requisitionItemsFromRepo.First().Requisition.Retrieval.RetrievalItems.Where(ri => ri.ItemId == requisitionItems.First().ItemId).Select(ri => ri.TotalQtyRetrieved).Single();
-                System.Console.WriteLine(totalQtyRetrieved);
                 foreach (var requisitionItem in requisitionItemsFromRepo)
                 {
                     RequisitionItem requisitionItemInput = requisitionItems.Find(ri => ri.ItemId == requisitionItem.ItemId && ri.RequisitionId == requisitionItem.RequisitionId);
-                    System.Console.WriteLine("${0} - ${1}", requisitionItem.Need, requisitionItemInput.Actual);
                     if (requisitionItem.Need >= requisitionItemInput.Actual)
                     {
                         totalQtyDisbursed += requisitionItemInput.Actual;
                         requisitionItem.Actual = requisitionItemInput.Actual;
                     }
                 }
-                System.Console.WriteLine("totalQtyDisbursed -> ", totalQtyDisbursed);
                 if (totalQtyRetrieved >= totalQtyDisbursed)
                 {
                     foreach (var requisitionItem in requisitionItemsFromRepo)
