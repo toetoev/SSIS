@@ -9,7 +9,6 @@ namespace SSIS.IRepositories
     {
         Task<int> CreateRequisition(Requisition requisition);
         Task<List<Requisition>> GetRequisitionsByDeptStaff(string deptName, List<RequisitionStatus> requisitionStatuses);
-
         Task<List<Requisition>> GetRequisitionsByStatus(RequisitionStatus status);
         Task<Requisition> GetRequisitionById(Guid requisitionId);
         Task<int> UpdateRequisition();

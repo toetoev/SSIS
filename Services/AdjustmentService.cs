@@ -23,16 +23,6 @@ namespace SSIS.Services
             _storeStaffRepository = storeStaffRepository;
             _itemRepository = itemRepository;
         }
-
-        public AdjustmentService(IAdjustmentRepository adjustmentRepository, ItemRepository itemRepository)
-        {
-            _adjustmentRepository = adjustmentRepository;
-            _itemRepository = itemRepository;
-        }
-        public async Task<ApiResponse> GetAllAdjustments()
-        {
-            return new ApiResponse { Success = true, Data = await _adjustmentRepository.GetAll() };
-        }
         public async Task<ApiResponse> CreateAdjustment(string submittedByEmail, List<AdjustmentItem> adjustmentItems)
         {
             StoreStaff submittedBy = await _storeStaffRepository.GetStoreStaffByEmail(submittedByEmail);
@@ -95,7 +85,7 @@ namespace SSIS.Services
                         adjustmentFromRepo.IssuedOn = DateTime.Now;
                         adjustmentFromRepo.IssuedBy = storeStaffFromRepo;
                     }
-                    return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustmentStatus() };
+                    return new ApiResponse { Success = true, Data = await _adjustmentRepository.UpdateAdjustment() };
                 }
             }
             return new ApiResponse { Success = false, Message = "Cannot find adjustment for reviewing" };

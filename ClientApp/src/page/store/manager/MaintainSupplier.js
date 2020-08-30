@@ -144,7 +144,7 @@ const Add = ({ setLoading }) => {
 					});
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	const handleCancel = (e) => {
@@ -382,7 +382,6 @@ const Edit = ({ setLoading, text }) => {
 			})
 			.then((res) => {
 				const result = res.data;
-				console.log(result);
 				if (result.success) {
 					Success("Supplier updated successfully");
 					setLoading(true);

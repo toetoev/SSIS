@@ -32,7 +32,6 @@ namespace SSIS
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddDbContext<DataContext>(opt => opt.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DbConn")));
-            // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
@@ -88,7 +87,6 @@ namespace SSIS
             services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataInitializer dataInitializer)
         {
             if (env.IsDevelopment())
@@ -98,12 +96,9 @@ namespace SSIS
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            // app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-            // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -119,13 +114,12 @@ namespace SSIS
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-
                 if (env.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            //dataInitializer.Seed();
+            dataInitializer.Seed();
         }
     }
 }

@@ -23,14 +23,11 @@ namespace SSIS.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate)
-        {
-            return await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail && d.StartDate == startDate).FirstOrDefaultAsync();
-        }
+        public async Task<Delegation> GetDelegationByDelegatedByEmailAndStartDate(string delegatedByEmail, DateTime startDate) => await _dbContext.Delegations.Where(d => d.DelegatedBy.Email == delegatedByEmail && d.StartDate == startDate).FirstOrDefaultAsync();
 
         public async Task<List<Delegation>> GetDelegationsByDepartment(string deptName)
         {
-            return await _dbContext.Delegations.Where(d => d.DelegatedBy.DepartmentName == deptName).ToListAsync();
+            return await _dbContext.Delegations.Where(d => d.DelegatedBy.DepartmentName == deptName).OrderBy(d => d.StartDate).ToListAsync();
         }
 
         public async Task<int> UpdateDelegation()

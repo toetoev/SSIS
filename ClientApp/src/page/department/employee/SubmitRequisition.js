@@ -6,6 +6,7 @@ import Error from "../../component/Error";
 import { PlusOutlined } from "@ant-design/icons";
 import Success from "../../component/Success";
 import axios from "axios";
+import email from "../../../util/email";
 import sorter from "../../../util/sorter";
 
 export default function SubmitRequisition() {
@@ -132,7 +133,7 @@ const Add = ({ dataSource, handleDataChange }) => {
 				form.resetFields();
 				setVisible(false);
 			})
-			.catch((err) => { });
+			.catch((err) => {});
 	};
 
 	const showModal = () => {
@@ -197,7 +198,11 @@ const Add = ({ dataSource, handleDataChange }) => {
 						label="Item Description : "
 						rules={[{ required: true, message: "Please choose one item" }]}
 					>
-						<Select options={itemOptions} style={{ width: "100%" }} placeholder="Select one item"></Select>
+						<Select
+							options={itemOptions}
+							style={{ width: "100%" }}
+							placeholder="Select one item"
+						></Select>
 					</Form.Item>
 					<Form.Item
 						name="quantity"
@@ -248,6 +253,25 @@ const Submit = ({ dataSource, handleDataChange }) => {
 					if (result.success) {
 						handleDataChange([]);
 						Success("Requisition Applied Successfully");
+						axios
+							.get("https://localhost:5001/api/deptStaff?roles=DEPTHEAD", {
+								headers: {
+									Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
+								},
+							})
+							.then((res) => {
+								const result = res.data;
+								if (result.success && result.data.length > 0) {
+									email(
+										result.data[0].email,
+										result.data[0].name,
+										"I've submitted a new requisition request, please review it."
+									);
+								}
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
 					} else {
 						Error(result.message);
 					}

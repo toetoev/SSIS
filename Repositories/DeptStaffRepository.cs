@@ -15,12 +15,6 @@ namespace SSIS.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<bool> DeptRepExist(DeptStaff deptStaff)
-        {
-            if (await _dbContext.DeptStaffs.AnyAsync(x => x.Email == deptStaff.Email && x.Department.Name == deptStaff.Department.Name))
-                return true;
-            return false;
-        }
         public async Task<DeptStaff> GetCurrentDeptRep(DeptStaff deptStaffFromRepo)
         {
             return await _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptStaffFromRepo.Department.Name && ds.Role == DeptRole.DeptRep).FirstOrDefaultAsync();
@@ -31,11 +25,11 @@ namespace SSIS.Repositories
         }
         public async Task<List<DeptStaff>> GetDeptStaffByDeptAndRole(string deptName, string[] roles)
         {
-            return await _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptName && roles.Contains(ds.Role)).ToListAsync();
+            return await _dbContext.DeptStaffs.Where(ds => ds.Department.Name == deptName && roles.Contains(ds.Role)).OrderBy(ds => ds.Name).ToListAsync();
         }
-        public async Task UpdateDeptStaff()
+        public async Task<int> UpdateDeptStaff()
         {
-            await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public async Task<string> GetCollectionPointByStaff(string deptStaff)
