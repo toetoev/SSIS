@@ -127,13 +127,15 @@ namespace SSIS.Services
                     Item itemFromRepo = await _itemRepository.GetItemById(orderItem.ItemId);
                     if (itemFromRepo != null)
                     {
-                        OrderItem orderItemFromRepo = await _orderItemRepository.GetOrderItemByPK(orderItem.ItemId, orderItem.OrderId);
+                        OrderItem orderItemFromRepo = await _orderItemRepository.GetOrderItemByPK(orderItem.ItemId, orderId);
                         if (orderItemFromRepo != null)
                         {
                             orderItemFromRepo.DeliveredQty = orderItem.DeliveredQty;
                             orderItemFromRepo.Remarks = orderItem.Remarks;
-                            itemFromRepo.Stock += orderItem.DeliveredQty;
+                            await _orderRepository.UpdateOrder();
                         }
+                        itemFromRepo.Stock += orderItem.DeliveredQty;
+                        await _orderRepository.UpdateOrder();
                     }
                     else
                         return new ApiResponse { Success = false, Message = "Some items cannot be found" };

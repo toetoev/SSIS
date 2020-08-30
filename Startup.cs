@@ -54,11 +54,11 @@ namespace SSIS
             services.AddScoped<IAdjustmentItemService, AdjustmentItemService>();
             services.AddScoped<IAdjustmentService, AdjustmentService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IDelegationService, DelegationService>();
             services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IDeptStaffService, DeptStaffService>();
             services.AddScoped<IItemService, ItemService>();
-            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IRequisitionItemService, RequisitionItemService>();
             services.AddScoped<IRequisitionService, RequisitionService>();
@@ -66,17 +66,16 @@ namespace SSIS
             services.AddScoped<IRetrievalService, RetrievalService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<ISupplierTenderItemService, SupplierTenderItemService>();
-            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IDelegationRepository, DelegationRepository>();
             services.AddScoped<IDeptRepository, DeptRepository>();
             services.AddScoped<IDeptStaffRepository, DeptStaffRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IRequisitionItemRepository, RequisitionItemRepository>();
             services.AddScoped<IRequisitionRepository, RequisitionRepository>();
             services.AddScoped<IRetrievalItemRepository, RetrievalItemRepository>();
@@ -84,7 +83,6 @@ namespace SSIS
             services.AddScoped<IStoreStaffRepository, StoreStaffRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<ISupplierTenderItemRepository, SupplierTenderItemRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataInitializer dataInitializer)

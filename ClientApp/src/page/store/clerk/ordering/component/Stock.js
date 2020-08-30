@@ -1,15 +1,15 @@
+import { default as React, useEffect } from "react";
+
 import { Table } from "antd";
 import axios from "axios";
-import { default as React, useEffect, useState } from "react";
-import useSearch from "../../../../../hook/useSearch";
 import sorter from "../../../../../util/sorter";
+import useSearch from "../../../../../hook/useSearch";
 
-export const Stock = ({ keyword }) => {
+export const Stock = ({ loading, setLoading, keyword }) => {
 	const options = {
 		keys: ["category", "bin", "description", "uoM"],
 	};
 	const [dataSource, setDataSource] = useSearch({ keyword, options });
-	const [loading, setLoading] = useState(false);
 	const columns = [
 		{
 			title: "Category",
@@ -49,7 +49,6 @@ export const Stock = ({ keyword }) => {
 	];
 
 	useEffect(() => {
-		setLoading(true);
 		axios
 			.get("https://localhost:5001/api/item", {
 				headers: {
@@ -83,7 +82,7 @@ export const Stock = ({ keyword }) => {
 				setLoading(false);
 				console.log(error);
 			});
-	}, []);
+	}, [loading]);
 
 	return (
 		<Table

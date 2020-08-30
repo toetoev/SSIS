@@ -1,5 +1,6 @@
 import { Input, Space, Tabs } from "antd";
 import React, { useState } from "react";
+
 import { Completed } from "./component/Completed";
 import { Disbursement } from "./component/Disbursement";
 import { ReadyForDelivery } from "./component/ReadyForDelivery";
@@ -28,10 +29,10 @@ export default function Requisition() {
 				</TabPane>
 				ReadyForDelivery
 				<TabPane tab="Ready for Delivery" key="RFD">
-					<ReadyForDelivery keyword={keyword} />
+					<ReadyForDelivery loading={loading} setLoading={setLoading} keyword={keyword} />
 				</TabPane>
 				<TabPane tab="Completed" key="Completed">
-					<Completed keyword={keyword} />
+					<Completed loading={loading} setLoading={setLoading} keyword={keyword} />
 				</TabPane>
 			</Tabs>
 		</Space>
