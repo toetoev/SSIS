@@ -38,7 +38,7 @@ namespace SSIS.Repositories
 
         public async Task<List<Requisition>> GetRequisitionsByRetrievalId(Guid retrievalId, Guid itemId)
         {
-            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId && r.RequisitionItems.Any(ri => ri.ItemId == itemId)).OrderBy(r => r.RequestedOn).Select(r => new Requisition(
+            return await _dbContext.Requisitions.Where(r => r.RetrievalId == retrievalId && r.RequisitionItems.Any(ri => ri.ItemId == itemId)).OrderByDescending(r => r.RequestedOn).Select(r => new Requisition(
                 r.Id,
                 r.RequestedOn,
                 r.ReviewedOn,

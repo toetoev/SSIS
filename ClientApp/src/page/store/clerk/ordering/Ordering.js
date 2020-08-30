@@ -16,14 +16,14 @@ export default function Ordering() {
 				defaultActiveKey="Low-Stock"
 				tabBarExtraContent={<SearchBar setKeyword={setKeyword} />}
 			>
-				<TabPane tab="Low-Stock" key="Low-Stock">
+				<TabPane tab="Low-Stock" key="Low-Stock" forceRender={true}>
 					<LowStock loading={loading} setLoading={setLoading} keyword={keyword} />
 				</TabPane>
-				<TabPane tab="Order" key="Order">
+				<TabPane tab="Order" key="Order" forceRender={true}>
 					<Order loading={loading} setLoading={setLoading} keyword={keyword} />
 				</TabPane>
-				<TabPane tab="Stocked" key="Stocked">
-					<Stock keyword={keyword} />
+				<TabPane tab="Stocked" key="Stocked" forceRender={true}>
+					<Stock loading={loading} setLoading={setLoading} keyword={keyword} />
 				</TabPane>
 			</Tabs>
 		</Space>

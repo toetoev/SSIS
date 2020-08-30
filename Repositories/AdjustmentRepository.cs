@@ -27,7 +27,7 @@ namespace SSIS.Repositories
         }
         public async Task<List<Adjustment>> GetAll()
         {
-            return await _dbContext.Adjustments.OrderBy(a => a.Status).ThenBy(a => a.SubmittedOn).ToListAsync();
+            return await _dbContext.Adjustments.OrderBy(a => a.Status).ThenByDescending(a => a.SubmittedOn).ToListAsync();
         }
         public async Task<int> UpdateAdjustment()
         {
@@ -50,7 +50,7 @@ namespace SSIS.Repositories
                     double avgPrice = 0;
                     foreach (var item in adjustmentItem.Item.SupplierTenderItems)
                         avgPrice += item.Price;
-                    totalPrice += Math.Abs(adjustmentItem.AdjustedQty) * avgPrice;
+                    totalPrice += Math.Abs(adjustmentItem.AdjustedQty) * (avgPrice / adjustmentItem.Item.SupplierTenderItems.Count());
                 }
                 adjustmentTotalPrices[adjustment.Id] = totalPrice;
             }
