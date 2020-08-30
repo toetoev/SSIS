@@ -1,6 +1,7 @@
 import { Button, InputNumber, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
+import Error from "../../../../component/Error";
 import Success from "../../../../component/Success";
 import axios from "axios";
 import sorter from "../../../../../util/sorter";
@@ -103,7 +104,7 @@ const DisburseModal = ({ text, setLoading }) => {
 			dataIndex: "actualAmount",
 			render: (text, record) => (
 				<InputNumber
-					min={1}
+					min={0}
 					max={record.neededAmount}
 					defaultValue={record.actualAmount === -1 ? null : record.actualAmount}
 					onChange={(val) => onChange(val, record)}
