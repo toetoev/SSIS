@@ -51,9 +51,13 @@ namespace SSIS.Databases
             ICollection<Department> departments = _dbContext.Departments.ToList();
             ICollection<DeptStaff> deptStaffs = new List<DeptStaff>
             {
-                new DeptStaff { Name = "Martini", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
-                new DeptStaff { Name = "Meka", Email = "pranammeka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
-                new DeptStaff { Name = "Kai Huei", Email = "taihuei0114@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "CSE1", Email = "zhao435021640@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "CSE2", Email = "e0533360@u.nus.edu", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "CSDH", Email = "pranammeka@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "CSDR", Email = "taihuei0114@gmail.com", Department = departments.Where(d => d.Name == "Computer Science").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
+                new DeptStaff { Name = "LE1", Email = "martini.reinherz@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "EMPLOYEE" },
+                new DeptStaff { Name = "LDH", Email = "pranammek1@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTHEAD" },
+                new DeptStaff { Name = "LDR", Email = "taihuei0111@gmail.com", Department = departments.Where(d => d.Name == "Law").FirstOrDefault(), Password = "1", Role = "DEPTREP" },
             };
             foreach (var deptStaff in deptStaffs)
             {
@@ -66,9 +70,9 @@ namespace SSIS.Databases
         {
             ICollection<StoreStaff> storeStaffs = new List<StoreStaff>
             {
-                new StoreStaff { Name = "Win", Email = "hkw1996@gmail.com", Password = "1", Role = "CLERK" },
-                new StoreStaff { Name = "Chris", Email = "christophercolinfong@gmail.com", Password = "1", Role = "SUPERVISOR" },
-                new StoreStaff { Name = "Zana", Email = "yuzanayushwe@gmail.com", Password = "1", Role = "MANAGER" }
+                new StoreStaff { Name = "SC1", Email = "hkw1996@gmail.com", Password = "1", Role = "CLERK" },
+                new StoreStaff { Name = "SS1", Email = "christophercolinfong@gmail.com", Password = "1", Role = "SUPERVISOR" },
+                new StoreStaff { Name = "SM1", Email = "yuzanayushwe@gmail.com", Password = "1", Role = "MANAGER" }
             };
             foreach (var storeStaff in storeStaffs)
             {
@@ -81,9 +85,9 @@ namespace SSIS.Databases
         {
             ICollection<Item> items = new List<Item>
             {
-                new Item("C1", "Clips Double 1\"", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
-                new Item("C2", "Clips Double 2\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
-                new Item("C3", "Clips Double 3/4\"", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C1", "Clips Double 1\''", "Dozen", 50, 30, 10, GetCategoryByName("Clip")),
+                new Item("C2", "Clips Double 2\''", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
+                new Item("C3", "Clips Double 3/4\''", "Dozen", 50, 30, 90, GetCategoryByName("Clip")),
                 new Item("C4", "Clips Paper Large", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C5", "Clips Paper Medium ", "Box", 50, 30, 100, GetCategoryByName("Clip")),
                 new Item("C6", "Clips Paper Small", "Box", 50, 30, 100, GetCategoryByName("Clip")),
@@ -147,8 +151,8 @@ namespace SSIS.Databases
                 new Item("P44", "Pencil 4H ", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
                 new Item("P45", "Pencil B", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
                 new Item("P46", "Pencil B with Eraser End", "Dozen", 100, 50, 100, GetCategoryByName("Pen")),
-                new Item("R2", "Ruler 12\"", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
-                new Item("R1", "Ruler 6\"", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
+                new Item("R2", "Ruler 12\''", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
+                new Item("R1", "Ruler 6\''", "Dozen", 50, 20, 100, GetCategoryByName("Ruler")),
                 new Item("S100", "Scissors", "Each", 50, 20, 100, GetCategoryByName("Scissors")),
                 new Item("S40", "Scotch Tape", "Each", 50, 20, 100, GetCategoryByName("Tape")),
                 new Item("S41", "Scotch Tape Dispenser", "Each", 50, 20, 100, GetCategoryByName("Tape")),
