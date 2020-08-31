@@ -1,11 +1,12 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import axios from "axios";
 import { default as React, useEffect, useState } from "react";
+
 import { CSVLink } from "react-csv";
-import useSearch from "../../../../../hook/useSearch";
+import Confirm from "../../../../component/Confirm";
+import axios from "axios";
 import email from "../../../../../util/email";
 import sorter from "../../../../../util/sorter";
-import Confirm from "../../../../component/Confirm";
+import useSearch from "../../../../../hook/useSearch";
 
 export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 	const options = {
@@ -127,7 +128,6 @@ const ReadyForDeliveryModal = ({ text }) => {
 	];
 	const [visible, setVisible] = useState(false);
 	const showModal = () => {
-		console.log(text);
 		setVisible(true);
 	};
 	const hideModal = (e) => {

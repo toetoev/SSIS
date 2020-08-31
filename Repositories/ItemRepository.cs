@@ -43,7 +43,7 @@ namespace SSIS.Repositories
         {
             return await _dbContext.Items
                 .Where(i => i.Stock <= i.ReorderLevel)
-                .Where(i => !i.OrderItems.Any(oi => oi.Order.OrderedOn.Date.CompareTo(DateTime.Now.Date) <= 0))
+                .Where(i => !i.OrderItems.Any(oi => oi.Order.Status == OrderStatus.ORDERED))
                 .OrderBy(i => i.CategoryName)
                 .ToListAsync();
         }
