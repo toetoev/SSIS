@@ -43,7 +43,9 @@ namespace SSIS.Services
                 }
                 if (totalQtyRetrieved >= totalQtyDisbursed)
                 {
-                    requisitionItemsFromRepo.First().Requisition.Status = RequisitionStatus.PENDING_COLLECTION;
+                    foreach (var requisitionItem in requisitionItemsFromRepo)
+                        if (requisitionItem.Requisition.RequisitionItems.All(ri => ri.Actual != -1))
+                            requisitionItem.Requisition.Status = RequisitionStatus.PENDING_COLLECTION;
                     return new ApiResponse { Success = true, Data = await _requisitionItemRepository.UpdateRequisitionItems() };
                 }
                 else

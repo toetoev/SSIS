@@ -1,6 +1,7 @@
 import { Button, Col, Descriptions, Divider, Input, Modal, Row, Space, Table } from "antd";
 import { default as React, useEffect, useState } from "react";
 
+import Error from "../../component/Error";
 import axios from "axios";
 import sorter from "../../../util/sorter";
 import toTitleCase from "../../../util/toTitleCase";

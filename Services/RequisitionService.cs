@@ -130,11 +130,9 @@ namespace SSIS.Services
                             requisition.ReviewedOn = DateTime.Now;
                             requisition.Comment = comment;
                             return new ApiResponse { Success = true, Data = await _requisitionRepository.UpdateRequisition() };
-
                         }
                         else
                             return new ApiResponse { Success = false, Message = "Sorry, only delegated employee can review requisition" };
-
                     }
 
                 }
