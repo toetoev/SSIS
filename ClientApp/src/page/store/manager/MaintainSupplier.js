@@ -309,7 +309,7 @@ const Details = ({ text }) => {
 	return (
 		<>
 			<Button onClick={showModal}>View</Button>
-			<Modal title="Stationery Details" visible={visible} onCancel={hideModal} footer={null}>
+			<Modal title="Supplier Details" visible={visible} onCancel={hideModal} footer={null}>
 				<Descriptions>
 					<Descriptions.Item label="Supplier Name">
 						{supplierDetails.name}
