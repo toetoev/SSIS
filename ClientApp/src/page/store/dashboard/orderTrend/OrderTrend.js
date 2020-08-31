@@ -55,7 +55,6 @@ export default function OrderTrend() {
 								data: el.monthlyTotalQty,
 							});
 						});
-						console.log(lineChartData);
 						setLineChartOption({
 							tooltip: {
 								trigger: "axis",
@@ -160,7 +159,7 @@ export default function OrderTrend() {
 						<Form.Item label="Month Range" name="dateRange">
 							<RangePicker picker="month" />
 						</Form.Item>
-						<Form.Item label="Item Category" name="categories">
+						<Form.Item label="Item Categories" name="categories">
 							<Select
 								mode="multiple"
 								style={{ width: "350px" }}

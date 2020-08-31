@@ -161,7 +161,7 @@ export default function RequisitionTrend() {
 						<Form.Item label="Month Range" name="dateRange">
 							<RangePicker picker="month" />
 						</Form.Item>
-						<Form.Item label="Departments" name="department">
+						<Form.Item label="Department" name="department">
 							<Select
 								placeholder="Please select"
 								style={{ width: "200px" }}
