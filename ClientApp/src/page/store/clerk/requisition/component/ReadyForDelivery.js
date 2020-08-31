@@ -1,16 +1,15 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
-import { CSVLink } from "react-csv";
-import Confirm from "../../../../component/Confirm";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
+import useSearch from "../../../../../hook/useSearch";
 import email from "../../../../../util/email";
 import sorter from "../../../../../util/sorter";
-import useSearch from "../../../../../hook/useSearch";
+import Confirm from "../../../../component/Confirm";
 
 export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 	const options = {
-		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
+		keys: ["departmentName", "requestedBy", "requestedOn", "collectionPoint"],
 	};
 	const [dataSource, setDataSource] = useSearch({ keyword, options });
 
@@ -27,8 +26,8 @@ export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 		},
 		{
 			title: "Requested Date",
-			dataIndex: "requestedDate",
-			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
+			dataIndex: "requestedOn",
+			sorter: (a, b) => sorter(a.requestedOn, b.requestedOn),
 		},
 		{
 			title: "Collection Point",
@@ -67,7 +66,7 @@ export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 										requisition.requestedBy === null
 											? ""
 											: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
+									requestedOn: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
 									action: requisition,
 								},
