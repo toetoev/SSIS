@@ -1,12 +1,13 @@
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table } from "antd";
-import axios from "axios";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
-import sorter from "../../../util/sorter";
-import useSearch from "../../../hook/useSearch";
+
 import Confirm from "../../component/Confirm";
 import Error from "../../component/Error";
 import Success from "../../component/Success";
+import axios from "axios";
+import moment from "moment";
+import sorter from "../../../util/sorter";
+import useSearch from "../../../hook/useSearch";
 
 const dateFormat = "YYYY-MM-DD";
 const { RangePicker } = DatePicker;
@@ -161,7 +162,7 @@ const Add = ({ setLoading }) => {
 
 	useEffect(() => {
 		axios
-			.get("https://localhost:5001/api/deptStaff?roles=DEPTREP&roles=EMPLOYEE", {
+			.get("https://localhost:5001/api/deptStaff?roles=EMPLOYEE", {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ACCESS_TOKEN"),
 				},
