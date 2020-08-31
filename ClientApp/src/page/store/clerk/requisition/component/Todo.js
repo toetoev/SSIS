@@ -10,7 +10,7 @@ import useSearch from "../../../../../hook/useSearch";
 export const Todo = ({ loading, setLoading, keyword }) => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const options = {
-		keys: ["category", "description", "uoM"],
+		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
 	};
 	const [dataSource, setDataSource] = useSearch({ keyword, options });
 
