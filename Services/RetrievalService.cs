@@ -93,8 +93,12 @@ namespace SSIS.Services
                             foreach (var requisition in requisitions)
                             {
                                 foreach (var item in requisition.RequisitionItems)
+                                {
                                     item.Actual = -1;
+                                    await _retrievalRepository.UpdateRetrieval();
+                                }
                                 requisition.Status = RequisitionStatus.PROCESSING_RETRIEVAL;
+                                await _retrievalRepository.UpdateRetrieval();
                             }
                             await _retrievalRepository.UpdateRetrieval();
                         }

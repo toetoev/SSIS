@@ -120,7 +120,7 @@ const CreateRetrieval = ({ selectedRowKeys, setLoading, setSelectedRowKeys }) =>
 				.then((res) => {
 					const result = res.data;
 					if (result.success) {
-						Success("Done creating retrieval list");
+						Success("Done creating Retrieval List");
 						setSelectedRowKeys([]);
 						setLoading(true);
 					} else {

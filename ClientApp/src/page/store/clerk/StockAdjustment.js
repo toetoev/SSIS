@@ -2,6 +2,7 @@ import { Button, Col, Descriptions, Form, Input, Modal, Row, Select, Space, Tabl
 import React, { useEffect, useState } from "react";
 
 import Confirm from "../../component/Confirm";
+import Error from "../../component/Error";
 import Success from "../../component/Success";
 import axios from "axios";
 import sorter from "../../../util/sorter";

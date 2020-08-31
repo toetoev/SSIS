@@ -51,10 +51,11 @@ export default function OrderTrend() {
 							lineChartData.push({
 								name: el.category,
 								type: "line",
-								stack: "Total",
+								// stack: "Total",
 								data: el.monthlyTotalQty,
 							});
 						});
+						console.log(lineChartData);
 						setLineChartOption({
 							tooltip: {
 								trigger: "axis",

@@ -1,15 +1,15 @@
 import { Button, Modal, Row, Space, Table } from "antd";
-import { default as React, useEffect, useState } from "react";
-
-import Confirm from "../../../../component/Confirm";
 import axios from "axios";
+import { default as React, useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
+import useSearch from "../../../../../hook/useSearch";
 import email from "../../../../../util/email";
 import sorter from "../../../../../util/sorter";
-import useSearch from "../../../../../hook/useSearch";
+import Confirm from "../../../../component/Confirm";
 
 export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 	const options = {
-		keys: ["departmentName", "requestedBy", "requestedDate", "collectionPoint"],
+		keys: ["departmentName", "requestedBy", "requestedOn", "collectionPoint"],
 	};
 	const [dataSource, setDataSource] = useSearch({ keyword, options });
 
@@ -26,8 +26,8 @@ export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 		},
 		{
 			title: "Requested Date",
-			dataIndex: "requestedDate",
-			sorter: (a, b) => sorter(a.requestedDate, b.requestedDate),
+			dataIndex: "requestedOn",
+			sorter: (a, b) => sorter(a.requestedOn, b.requestedOn),
 		},
 		{
 			title: "Collection Point",
@@ -66,7 +66,7 @@ export const ReadyForDelivery = ({ loading, setLoading, keyword }) => {
 										requisition.requestedBy === null
 											? ""
 											: requisition.requestedBy.name,
-									requestedDate: requisition.requestedOn,
+									requestedOn: requisition.requestedOn,
 									collectionPoint: requisition.department.collectionPointId,
 									action: requisition,
 								},
@@ -94,21 +94,21 @@ const ReadyForDeliveryModal = ({ text }) => {
 				{
 					key: requisitionItem.itemId,
 					itemDescription: requisitionItem.item.description,
-					uom: requisitionItem.item.uoM,
+					uoM: requisitionItem.item.uoM,
 					need: requisitionItem.need,
 					actual: requisitionItem.actual,
 				},
 			];
 		}, [])
 	);
-	const reqColumns = [
+	const columns = [
 		{
 			title: "Stationary Description",
 			dataIndex: "itemDescription",
 		},
 		{
 			title: "UoM",
-			dataIndex: "uom",
+			dataIndex: "uoM",
 		},
 		{
 			title: "Need",
@@ -119,9 +119,15 @@ const ReadyForDeliveryModal = ({ text }) => {
 			dataIndex: "actual",
 		},
 	];
-
+	const headers = [
+		{ label: "Item Description", key: "itemDescription" },
+		{ label: "UoM", key: "uoM" },
+		{ label: "Need", key: "need" },
+		{ label: "Actual", key: "actual" },
+	];
 	const [visible, setVisible] = useState(false);
 	const showModal = () => {
+		console.log(text);
 		setVisible(true);
 	};
 	const hideModal = (e) => {
@@ -129,19 +135,31 @@ const ReadyForDeliveryModal = ({ text }) => {
 	};
 	return (
 		<div>
-			<Button type="primary" onClick={showModal}>
+			<Button type="secondary" onClick={showModal}>
 				View
 			</Button>
 			<Modal title="Disbursement List" visible={visible} onCancel={hideModal} footer={null}>
 				<Space direction="vertical">
 					<Row>
 						<Table
+							id="disbursement-list"
 							dataSource={dataSource}
-							columns={reqColumns}
+							columns={columns}
 							pagination={false}
 							scroll={{ y: 300 }}
 							size="small"
 						/>
+					</Row>
+					<Row justify="end">
+						<Button type="primary">
+							<CSVLink
+								data={dataSource}
+								headers={headers}
+								filename={`Disbursement List-${text.departmentName}-${text.requestedOn}-${text.collectionPoint}.csv`}
+							>
+								Print
+							</CSVLink>
+						</Button>
 					</Row>
 				</Space>
 			</Modal>
