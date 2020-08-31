@@ -52,7 +52,7 @@ export default function RequisitionTrend() {
 							lineChartData.push({
 								name: el.category,
 								type: "line",
-								stack: "Total",
+								// stack: "Total",
 								data: el.monthlyTotalQty,
 							});
 							categories.push(el.category);
@@ -123,8 +123,7 @@ export default function RequisitionTrend() {
 								},
 							],
 						});
-					} else
-						Error("No records exist for this department in the chosen time range");
+					} else Error("No records exist for this department in the chosen time range");
 				}
 			})
 			.catch(function (error) {
