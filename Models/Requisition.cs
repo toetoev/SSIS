@@ -35,14 +35,14 @@ namespace SSIS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateConverter))]
         public DateTime RequestedOn { get; set; }
 
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateConverter))]
         public Nullable<DateTime> ReviewedOn { get; set; }
         public string Comment { get; set; }
 
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateConverter))]
         public Nullable<DateTime> AcknowledgedOn { get; set; }
         public RequisitionStatus Status { get; set; }
 
