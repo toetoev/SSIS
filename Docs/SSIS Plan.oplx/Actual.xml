@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario xmlns="http://www.omnigroup.com/namespace/OmniPlan/v2" xmlns:opns="http://www.omnigroup.com/namespace/OmniPlan/v2" id="eq7B0aaaaaa">
+  <start-date>2020-08-04T00:00:00.000Z</start-date>
+  <granularity>hours</granularity>
+  <top-resource idref="r-1"/>
+  <resource id="r-1">
+    <name/>
+    <type>Group</type>
+    <schedule>
+      <schedule-day day-of-week="sunday"/>
+      <schedule-day day-of-week="monday">
+        <time-span start-time="28800" end-time="43200"/>
+        <time-span start-time="46800" end-time="61200"/>
+      </schedule-day>
+      <schedule-day day-of-week="tuesday">
+        <time-span start-time="28800" end-time="43200"/>
+        <time-span start-time="46800" end-time="61200"/>
+      </schedule-day>
+      <schedule-day day-of-week="wednesday">
+        <time-span start-time="28800" end-time="43200"/>
+        <time-span start-time="46800" end-time="61200"/>
+      </schedule-day>
+      <schedule-day day-of-week="thursday">
+        <time-span start-time="28800" end-time="43200"/>
+        <time-span start-time="46800" end-time="61200"/>
+      </schedule-day>
+      <schedule-day day-of-week="friday">
+        <time-span start-time="28800" end-time="43200"/>
+        <time-span start-time="46800" end-time="61200"/>
+      </schedule-day>
+      <schedule-day day-of-week="saturday"/>
+      <calendar name="Overtime" editable="yes" overtime="yes"/>
+      <calendar name="Time Off" editable="yes" overtime="no"/>
+    </schedule>
+  </resource>
+  <top-task idref="t-1"/>
+  <task id="t-1">
+    <type>group</type>
+    <child-task idref="t257"/>
+    <child-task idref="t261"/>
+    <child-task idref="t269"/>
+    <child-task idref="t274"/>
+    <child-task idref="t283"/>
+  </task>
+  <task id="t257">
+    <title>1: Project Planning</title>
+    <type>group</type>
+    <priority>500</priority>
+    <child-task idref="t258"/>
+    <child-task idref="t259"/>
+    <child-task idref="t260"/>
+  </task>
+  <task id="t258">
+    <title>1.1 Produce Project Plan</title>
+    <priority>500</priority>
+    <effort>93600</effort>
+    <effort-done>93600</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>93600</fixed-duration>
+  </task>
+  <task id="t259">
+    <title>1.2 Review/approve Project Plan</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <effort-done>14400</effort-done>
+    <end-constraint-date>2020-08-07T07:00:00.000Z</end-constraint-date>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <prerequisite-task idref="t258"/>
+    <end-no-later-than>2020-08-07T07:00:00.000Z</end-no-later-than>
+  </task>
+  <task id="t260">
+    <title>Project Planning Completion</title>
+    <type>milestone</type>
+    <priority>500</priority>
+    <completion-percentage>1</completion-percentage>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t259"/>
+  </task>
+  <task id="t261">
+    <title>2: Requirements Workflow</title>
+    <type>group</type>
+    <priority>500</priority>
+    <child-task idref="t262"/>
+    <child-task idref="t263"/>
+    <child-task idref="t264"/>
+    <child-task idref="t265"/>
+    <child-task idref="t266"/>
+    <child-task idref="t267"/>
+    <child-task idref="t268"/>
+  </task>
+  <task id="t262">
+    <title>2.1 User Interview</title>
+    <priority>500</priority>
+    <effort>7200</effort>
+    <effort-done>7200</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>7200</fixed-duration>
+  </task>
+  <task id="t263">
+    <title>2.2 Produce Functional Requirement (Use Case/ UI Prototype)</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <effort-done>14400</effort-done>
+    <start-constraint-date>2020-08-04T05:00:00.000Z</start-constraint-date>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <start-no-earlier-than>2020-08-04T05:00:00.000Z</start-no-earlier-than>
+  </task>
+  <task id="t264">
+    <title>2.3 First Review/Amend UI Prototype with user</title>
+    <priority>500</priority>
+    <effort>10800</effort>
+    <effort-done>10800</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>10800</fixed-duration>
+    <prerequisite-task idref="t263"/>
+  </task>
+  <task id="t265">
+    <title>2.4 Final Review/Approve UI Prototype</title>
+    <priority>500</priority>
+    <effort>7200</effort>
+    <effort-done>7200</effort-done>
+    <end-constraint-date>2020-08-05T06:00:00.000Z</end-constraint-date>
+    <recalculate>effort</recalculate>
+    <fixed-duration>7200</fixed-duration>
+    <prerequisite-task idref="t264"/>
+    <end-no-later-than>2020-08-05T06:00:00.000Z</end-no-later-than>
+  </task>
+  <task id="t266">
+    <title>2.5 Compile User Requirements Specifications</title>
+    <priority>500</priority>
+    <effort>43200</effort>
+    <effort-done>43200</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>43200</fixed-duration>
+    <prerequisite-task idref="t265"/>
+  </task>
+  <task id="t267">
+    <title>2.6 Review/approve User Requirement Specifications</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <effort-done>14400</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <prerequisite-task idref="t266"/>
+  </task>
+  <task id="t268">
+    <title>Requirements Completion</title>
+    <type>milestone</type>
+    <priority>500</priority>
+    <completion-percentage>1</completion-percentage>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t267"/>
+  </task>
+  <task id="t269">
+    <title>3: Design Workflow</title>
+    <type>group</type>
+    <priority>500</priority>
+    <child-task idref="t270"/>
+    <child-task idref="t271"/>
+    <child-task idref="t272"/>
+    <child-task idref="t273"/>
+  </task>
+  <task id="t270">
+    <title>3.1 Relational Database Design</title>
+    <priority>500</priority>
+    <effort>28800</effort>
+    <effort-done>28800</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>28800</fixed-duration>
+    <prerequisite-task idref="t263"/>
+  </task>
+  <task id="t271">
+    <title>3.2 Review/approve Database Design</title>
+    <priority>500</priority>
+    <effort>7200</effort>
+    <effort-done>7200</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>7200</fixed-duration>
+    <prerequisite-task idref="t270"/>
+  </task>
+  <task id="t272">
+    <title>3.3 Produce Database</title>
+    <priority>500</priority>
+    <effort>7200</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>7200</fixed-duration>
+    <prerequisite-task idref="t271"/>
+  </task>
+  <task id="t273">
+    <title>Design Completion</title>
+    <type>milestone</type>
+    <priority>500</priority>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t272"/>
+  </task>
+  <task id="t274">
+    <title>4: Implementation Workflow</title>
+    <type>group</type>
+    <priority>500</priority>
+    <child-task idref="t275"/>
+    <child-task idref="t276"/>
+    <child-task idref="t277"/>
+    <child-task idref="t278"/>
+    <child-task idref="t279"/>
+    <child-task idref="t280"/>
+    <child-task idref="t281"/>
+    <child-task idref="t282"/>
+  </task>
+  <task id="t275">
+    <title>4.1 Set up development environment</title>
+    <priority>500</priority>
+    <effort>28800</effort>
+    <effort-done>28800</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>28800</fixed-duration>
+    <prerequisite-task idref="t268" kind="FF"/>
+    <prerequisite-task idref="t273"/>
+  </task>
+  <task id="t276">
+    <title>4.2 Code and unit test programs (Produce Presentation Tier)</title>
+    <priority>500</priority>
+    <effort>198000</effort>
+    <effort-done>24300</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>198000</fixed-duration>
+    <prerequisite-task idref="t275"/>
+  </task>
+  <task id="t277">
+    <title>4.3 Code and unit test programs (Produce Business Tier)</title>
+    <priority>500</priority>
+    <effort>198000</effort>
+    <effort-done>13500</effort-done>
+    <recalculate>effort</recalculate>
+    <fixed-duration>198000</fixed-duration>
+    <prerequisite-task idref="t275"/>
+  </task>
+  <task id="t278">
+    <title>4.4 Integrate and Cross Check codes</title>
+    <priority>500</priority>
+    <effort>57600</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>57600</fixed-duration>
+    <prerequisite-task idref="t275"/>
+  </task>
+  <task id="t279">
+    <title>4.5 Review/Check codes</title>
+    <priority>500</priority>
+    <effort>57600</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>57600</fixed-duration>
+    <prerequisite-task idref="t276"/>
+    <prerequisite-task idref="t277"/>
+    <prerequisite-task idref="t278"/>
+  </task>
+  <task id="t280">
+    <title>4.6 Develop user guide</title>
+    <priority>500</priority>
+    <effort>28800</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>28800</fixed-duration>
+    <prerequisite-task idref="t279"/>
+  </task>
+  <task id="t281">
+    <title>4.7 Review user guide</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <prerequisite-task idref="t280"/>
+  </task>
+  <task id="t282">
+    <title>Implementation Completion</title>
+    <type>milestone</type>
+    <priority>500</priority>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t281"/>
+  </task>
+  <task id="t283">
+    <title>5: Deployment Workflow</title>
+    <type>group</type>
+    <priority>500</priority>
+    <end-constraint-date>2020-08-26T16:00:00.000Z</end-constraint-date>
+    <child-task idref="t284"/>
+    <child-task idref="t285"/>
+    <child-task idref="t286"/>
+    <child-task idref="t287"/>
+    <child-task idref="t288"/>
+    <child-task idref="t289"/>
+    <child-task idref="t290"/>
+    <child-task idref="t291"/>
+    <child-task idref="t292"/>
+    <end-no-later-than>2020-08-26T16:00:00.000Z</end-no-later-than>
+  </task>
+  <task id="t284">
+    <title>5.1 Prepare Production Environment</title>
+    <priority>500</priority>
+    <effort>0</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t282"/>
+  </task>
+  <task id="t285">
+    <title>5.2 Develop UAT Performance Test Plans</title>
+    <priority>500</priority>
+    <effort>28800</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>28800</fixed-duration>
+    <prerequisite-task idref="t284"/>
+  </task>
+  <task id="t286">
+    <title>5.3 Review/Approve UAT Performance Test Plan</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <prerequisite-task idref="t285"/>
+  </task>
+  <task id="t287">
+    <title>5.4 Conduct Performance Testing in Development Environment</title>
+    <priority>500</priority>
+    <effort>14400</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>14400</fixed-duration>
+    <prerequisite-task idref="t286"/>
+  </task>
+  <task id="t288">
+    <title>5.5 Conduct Performance Testing in Production Environment</title>
+    <priority>500</priority>
+    <effort>0</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t287"/>
+  </task>
+  <task id="t289">
+    <title>5.6 Conduct UAT</title>
+    <priority>500</priority>
+    <effort>28800</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>28800</fixed-duration>
+    <prerequisite-task idref="t288"/>
+  </task>
+  <task id="t290">
+    <title>5.7 Review test results/ Perform Corrections</title>
+    <priority>500</priority>
+    <effort>0</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t289"/>
+  </task>
+  <task id="t291">
+    <title>5.8 Hold Hand-Over Meeting (UAT Signoff)</title>
+    <priority>500</priority>
+    <effort>0</effort>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t290"/>
+  </task>
+  <task id="t292">
+    <title>Deployment Completion</title>
+    <type>milestone</type>
+    <priority>500</priority>
+    <recalculate>effort</recalculate>
+    <fixed-duration>0</fixed-duration>
+    <prerequisite-task idref="t291"/>
+  </task>
+  <critical-path root="-1" enabled="false" resources="false">
+    <color space="srgb" r="1" g="0.5" b="0.5"/>
+  </critical-path>
+</scenario>

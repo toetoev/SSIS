@@ -237,3 +237,4 @@ _Pvt_Extensions
 # Database migration
 **/Migrations
 command.txt
+*.DS_Store
